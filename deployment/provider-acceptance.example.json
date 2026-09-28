@@ -1,0 +1,93 @@
+{
+  "schemaVersion": 2,
+  "release": {
+    "id": "REPLACE-WITH-RELEASE-ID",
+    "commitSha": "REPLACE-WITH-FULL-COMMIT-SHA",
+    "generatedAt": "REPLACE-WITH-ISO-8601-TIME"
+  },
+  "manualAcceptance": {
+    "planSha256": "63713bcb537381901f16ac8cf7c6953adce4e322e517743643a24edf08168a69",
+    "requiredCaseCount": 41
+  },
+  "provider": {
+    "institutionId": "REPLACE-WITH-INSTITUTION-ID",
+    "tenantId": "REPLACE-WITH-TENANT-ID",
+    "environment": "production",
+    "ssoIssuer": "https://REPLACE-WITH-SSO-ISSUER",
+    "apiOrigin": "https://REPLACE-WITH-API-ORIGIN",
+    "assetOrigin": "https://REPLACE-WITH-ASSET-ORIGIN",
+    "realtimeOrigin": "wss://REPLACE-WITH-REALTIME-ORIGIN",
+    "webOrigin": "https://REPLACE-WITH-WEB-ORIGIN"
+  },
+  "declaredCapabilities": [
+    "courses.read",
+    "courses.write",
+    "roster.read",
+    "roster.write",
+    "content.read",
+    "content.write",
+    "submissions.read",
+    "submissions.write",
+    "grades.read",
+    "grades.write",
+    "chat.read",
+    "chat.write",
+    "chat.realtime",
+    "live-sessions.read",
+    "live-sessions.write",
+    "live-sessions.realtime",
+    "assets.write",
+    "ai.generate"
+  ],
+  "web": {
+    "headerContractSha256": "a38a1f310aaf1e3c25365255521fb460fe4eba26e7acaea3011970f52cb5717e",
+    "indexPath": "/index.html",
+    "spaRoutePath": "/courses/provider-acceptance-probe",
+    "staticAssetPath": "/_expo/static/REPLACE-WITH-DEPLOYED-HASHED-ASSET"
+  },
+  "signing": {
+    "iosBundleIdentifier": "REPLACE-WITH-IOS-BUNDLE-ID",
+    "iosTeamId": "REPLACE123",
+    "iosCertificateSha256": "REPLACE-WITH-IOS-CERTIFICATE-SHA256",
+    "androidPackage": "replace.with.android.package",
+    "androidCertificateSha256": "REPLACE-WITH-ANDROID-CERTIFICATE-SHA256"
+  },
+  "checks": [
+    { "id": "identity.sso-subject-token-lifecycle", "status": "pending", "testedAt": "", "expiresAt": "", "environment": "production", "releaseId": "", "evidence": [] },
+    { "id": "identity.tenant-isolation-negative", "status": "pending", "testedAt": "", "expiresAt": "", "environment": "production", "releaseId": "", "evidence": [] },
+    { "id": "authorization.server-rbac-matrix", "status": "pending", "testedAt": "", "expiresAt": "", "environment": "production", "releaseId": "", "evidence": [] },
+    { "id": "gateway.principal-scoped-snapshots", "status": "pending", "testedAt": "", "expiresAt": "", "environment": "production", "releaseId": "", "evidence": [] },
+    { "id": "gateway.atomic-mutation-batches", "status": "pending", "testedAt": "", "expiresAt": "", "environment": "production", "releaseId": "", "evidence": [] },
+    { "id": "gateway.cas-conflict-across-devices", "status": "pending", "testedAt": "", "expiresAt": "", "environment": "production", "releaseId": "", "evidence": [] },
+    { "id": "gateway.idempotency-replay", "status": "pending", "testedAt": "", "expiresAt": "", "environment": "production", "releaseId": "", "evidence": [] },
+    { "id": "announcements.atomic-outbox-recovery", "status": "pending", "testedAt": "", "expiresAt": "", "environment": "production", "releaseId": "", "evidence": [] },
+    { "id": "realtime.thread-tenant-sender-scope", "status": "pending", "testedAt": "", "expiresAt": "", "environment": "production", "releaseId": "", "evidence": [] },
+    { "id": "realtime.revision-tombstone-cas", "status": "pending", "testedAt": "", "expiresAt": "", "environment": "production", "releaseId": "", "evidence": [] },
+    { "id": "uploads.authorization-and-object-scope", "status": "pending", "testedAt": "", "expiresAt": "", "environment": "production", "releaseId": "", "evidence": [] },
+    { "id": "uploads.malware-quarantine", "status": "pending", "testedAt": "", "expiresAt": "", "environment": "production", "releaseId": "", "evidence": [] },
+    { "id": "uploads.mime-digest-safe-disposition", "status": "pending", "testedAt": "", "expiresAt": "", "environment": "production", "releaseId": "", "evidence": [] },
+    { "id": "uploads.retention-and-deletion", "status": "pending", "testedAt": "", "expiresAt": "", "environment": "production", "releaseId": "", "evidence": [] },
+    { "id": "web.https-redirect-and-tls", "status": "pending", "testedAt": "", "expiresAt": "", "environment": "production", "releaseId": "", "evidence": [] },
+    { "id": "web.response-security-headers", "status": "pending", "testedAt": "", "expiresAt": "", "environment": "production", "releaseId": "", "evidence": [] },
+    { "id": "web.cache-and-spa-routing", "status": "pending", "testedAt": "", "expiresAt": "", "environment": "production", "releaseId": "", "evidence": [] },
+    { "id": "release.ios-signing", "status": "pending", "testedAt": "", "expiresAt": "", "environment": "production", "releaseId": "", "evidence": [] },
+    { "id": "release.android-signing", "status": "pending", "testedAt": "", "expiresAt": "", "environment": "production", "releaseId": "", "evidence": [] },
+    { "id": "operations.audit-monitoring-alert", "status": "pending", "testedAt": "", "expiresAt": "", "environment": "production", "releaseId": "", "evidence": [] },
+    { "id": "operations.backup-restore-drill", "status": "pending", "testedAt": "", "expiresAt": "", "environment": "production", "releaseId": "", "evidence": [] },
+    { "id": "acceptance.browser-five-role-journeys", "status": "pending", "testedAt": "", "expiresAt": "", "environment": "production", "releaseId": "", "evidence": [] },
+    { "id": "accessibility.web-keyboard-zoom-forced-colors-voiceover", "status": "pending", "testedAt": "", "expiresAt": "", "environment": "production", "releaseId": "", "evidence": [] },
+    { "id": "accessibility.ios-voiceover-media-permissions", "status": "pending", "testedAt": "", "expiresAt": "", "environment": "production", "releaseId": "", "evidence": [] },
+    { "id": "accessibility.android-talkback-media-permissions", "status": "pending", "testedAt": "", "expiresAt": "", "environment": "production", "releaseId": "", "evidence": [] },
+    { "id": "accessibility.disabled-user-critical-journeys", "status": "pending", "testedAt": "", "expiresAt": "", "environment": "production", "releaseId": "", "evidence": [] },
+    { "id": "privacy.final-data-flow-review", "status": "pending", "testedAt": "", "expiresAt": "", "environment": "production", "releaseId": "", "evidence": [] },
+    { "id": "legal.third-party-licenses-assets-release", "status": "pending", "testedAt": "", "expiresAt": "", "environment": "production", "releaseId": "", "evidence": [] }
+  ],
+  "approvals": {
+    "security": { "status": "pending", "approvedBy": "", "approvedAt": "", "releaseId": "" },
+    "operations": { "status": "pending", "approvedBy": "", "approvedAt": "", "releaseId": "" },
+    "privacy": { "status": "pending", "approvedBy": "", "approvedAt": "", "releaseId": "" },
+    "accessibility": { "status": "pending", "approvedBy": "", "approvedAt": "", "releaseId": "" },
+    "legal": { "status": "pending", "approvedBy": "", "approvedAt": "", "releaseId": "" },
+    "releaseOwner": { "status": "pending", "approvedBy": "", "approvedAt": "", "releaseId": "" }
+  }
+}

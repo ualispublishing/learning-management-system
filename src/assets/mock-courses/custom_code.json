@@ -1,0 +1,42 @@
+{
+  "course": {
+    "id": "c4",
+    "title": "Foundations of Programming (Learning Workspace Demo)",
+    "status": "active",
+    "presentationMode": "custom",
+    "description": "A comprehensive introduction to computer science and programming in Python. Covers computation, algorithms, data structures, and debugging.",
+    "enrollments": [
+      { "userId": "u1", "courseRole": "teacher" },
+      { "userId": "u2", "courseRole": "ta" },
+      { "userId": "u3", "courseRole": "student", "secondaryRoles": ["Group A"] },
+      { "userId": "u4", "courseRole": "student", "secondaryRoles": ["Group A"] },
+      { "userId": "u5", "courseRole": "student", "secondaryRoles": ["Group B"] },
+      { "userId": "u6", "courseRole": "it" },
+      { "userId": "u7", "courseRole": "admin" }
+    ],
+    "groupSets": [
+      { "id": "project-groups", "name": "Project Groups", "groups": [
+        { "id": "Group A", "name": "Group A", "memberIds": ["u3", "u4"] },
+        { "id": "Group B", "name": "Group B", "memberIds": ["u5"] }
+      ] }
+    ],
+    "termStart": 1718651715000,
+    "termEnd": 1726427715000,
+    "gradingWeights": { "Problem Sets": 40, "Midterm": 30, "Final Exam": 30 },
+    "visibilityTimer": 0,
+    "announcements": [
+      { "id": "a1", "title": "Welcome to Foundations of Programming", "content": "Please ensure you have a current Python 3 release installed before our first class.", "type": "info", "createdAt": 1721242715000 },
+      { "id": "a2", "title": "PSet 1 Released", "content": "Problem Set 1 is now available and due this Friday.", "type": "alert", "createdAt": 1721243715000 }
+    ]
+  },
+  "items": [
+    {
+      "category": "admin",
+      "title": "Professor Rivera posted: Algorithm Studio",
+      "description": "{\"isCustomWidget\":true,\"workspace\":{\"kind\":\"code-lab-v1\",\"eyebrow\":\"Professor-posted module · Week 4\",\"title\":\"Algorithm Studio: Compress a Signal\",\"summary\":\"Move between a progress dashboard, an annotated Python pattern, a safe code challenge, and a locally generated performance visualization—without leaving the course.\",\"language\":\"Python 3\",\"challenge\":{\"title\":\"Build a run-length encoder\",\"prompt\":\"Complete compress(values) so consecutive equal values become [value, count] pairs. Use one pass through the input and return the accumulated result.\",\"starterCode\":\"def compress(values):\\n    result = []\\n    # Track the current value and count.\\n    # Add each completed run to result.\",\"expectedTokens\":[\"def compress\",\"for value in values\",\"return result\"],\"hint\":\"Handle the empty list first, then compare each value with the previous run before appending the final pair.\"},\"snippet\":{\"title\":\"One-pass accumulator pattern\",\"code\":\"def compress(values):\\n    result = []\\n    for value in values:\\n        if result and result[-1][0] == value:\\n            result[-1][1] += 1\\n        else:\\n            result.append([value, 1])\\n    return result\",\"note\":\"Professor Rivera: notice how the same accumulator holds both the output and enough state to recognize the next run.\"},\"visualization\":{\"title\":\"Compare compression cost\",\"description\":\"Generate deterministic sample measurements and compare the number of operations across five input shapes.\",\"labels\":[\"Uniform\",\"Bursty\",\"Alternating\",\"Random\",\"Sorted\"],\"values\":[24,48,76,63,35]},\"milestones\":[{\"label\":\"Watch the accumulator walkthrough\",\"status\":\"complete\"},{\"label\":\"Inspect the annotated pattern\",\"status\":\"complete\"},{\"label\":\"Complete the safe source check\",\"status\":\"current\"},{\"label\":\"Explain the performance chart\",\"status\":\"up-next\"}]}}",
+      "presentationSlot": "current",
+      "createdAt": 1721243715000,
+      "metadata": { "lmsContentType": "custom", "lmsCustomWidgetKind": "workspace" }
+    }
+  ]
+}

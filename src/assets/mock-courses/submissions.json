@@ -1,0 +1,157 @@
+[
+  {
+    "id": "sub1_alice",
+    "studentId": "u3",
+    "contentItemId": "item_mc_indiv",
+    "courseId": "c1",
+    "status": "submitted",
+    "submittedAt": 1784401534713,
+    "totalScore": 20,
+    "responses": [
+      {
+        "questionId": "q1",
+        "answer": "4",
+        "isCorrect": true,
+        "score": 10,
+        "needsManualGrading": false,
+        "isManuallyGraded": true
+      },
+      {
+        "questionId": "q2",
+        "answer": "Paris",
+        "isCorrect": true,
+        "score": 10,
+        "needsManualGrading": false,
+        "isManuallyGraded": true
+      }
+    ]
+  },
+  {
+    "id": "sub1_bob",
+    "studentId": "u4",
+    "contentItemId": "item_mc_indiv",
+    "courseId": "c1",
+    "status": "submitted",
+    "submittedAt": 1784401534713,
+    "totalScore": 10,
+    "responses": [
+      {
+        "questionId": "q1",
+        "answer": "3",
+        "isCorrect": false,
+        "score": 0,
+        "needsManualGrading": false,
+        "isManuallyGraded": true
+      },
+      {
+        "questionId": "q2",
+        "answer": "Paris",
+        "isCorrect": true,
+        "score": 10,
+        "needsManualGrading": false,
+        "isManuallyGraded": true
+      }
+    ]
+  },
+  {
+    "id": "sub2_alice",
+    "studentId": "u3",
+    "contentItemId": "item_all_indiv",
+    "courseId": "c1",
+    "status": "submitted",
+    "submittedAt": 1784401534713,
+    "totalScore": 15,
+    "responses": [
+      {
+        "questionId": "q1",
+        "answer": [
+          "2",
+          "3",
+          "5"
+        ],
+        "isCorrect": true,
+        "score": 15,
+        "needsManualGrading": false,
+        "isManuallyGraded": true
+      },
+      {
+        "questionId": "q2",
+        "answer": "A function calling itself.",
+        "score": 0,
+        "needsManualGrading": true,
+        "isManuallyGraded": false
+      },
+      {
+        "questionId": "q3",
+        "answer": "https://example.com/essay.pdf",
+        "score": 0,
+        "needsManualGrading": true,
+        "isManuallyGraded": false
+      },
+      {
+        "questionId": "q4",
+        "answer": 5,
+        "score": 0,
+        "needsManualGrading": true,
+        "isManuallyGraded": false
+      },
+      {
+        "questionId": "q5",
+        "answer": "function hello() { return \"Hello World\"; }",
+        "score": 0,
+        "needsManualGrading": true,
+        "isManuallyGraded": false
+      }
+    ]
+  },
+  {
+    "id": "sub3_groupa",
+    "studentId": "u3",
+    "groupId": "Group A",
+    "contentItemId": "item_all_group",
+    "courseId": "c1",
+    "status": "submitted",
+    "submittedAt": 1784401534713,
+    "totalScore": 0,
+    "responses": [
+      {
+        "questionId": "q1",
+        "answer": [
+          "4"
+        ],
+        "isCorrect": false,
+        "score": 0,
+        "needsManualGrading": false,
+        "isManuallyGraded": true
+      },
+      {
+        "questionId": "q2",
+        "answer": "Group A recursion explanation.",
+        "score": 0,
+        "needsManualGrading": true,
+        "isManuallyGraded": false
+      },
+      {
+        "questionId": "q3",
+        "answer": "https://example.com/group_essay.pdf",
+        "score": 0,
+        "needsManualGrading": true,
+        "isManuallyGraded": false
+      },
+      {
+        "questionId": "q4",
+        "answer": 4,
+        "score": 0,
+        "needsManualGrading": true,
+        "isManuallyGraded": false
+      },
+      {
+        "questionId": "q5",
+        "answer": "function hello() { return \"Group A\"; }",
+        "score": 0,
+        "needsManualGrading": true,
+        "isManuallyGraded": false
+      }
+    ]
+  }
+]

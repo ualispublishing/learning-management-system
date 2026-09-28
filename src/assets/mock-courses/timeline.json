@@ -1,0 +1,405 @@
+{
+  "course": {
+    "id": "c1",
+    "title": "Foundations of Programming (Timeline Demo)",
+    "status": "active",
+    "presentationMode": "timeline",
+    "description": "A comprehensive introduction to computer science and programming in Python. Covers computation, algorithms, data structures, and debugging.",
+    "enrollments": [
+      {
+        "userId": "u1",
+        "courseRole": "teacher"
+      },
+      {
+        "userId": "u2",
+        "courseRole": "ta"
+      },
+      {
+        "userId": "u3",
+        "courseRole": "student",
+        "secondaryRoles": [
+          "Group A"
+        ]
+      },
+      {
+        "userId": "u4",
+        "courseRole": "student",
+        "secondaryRoles": [
+          "Group A"
+        ]
+      },
+      {
+        "userId": "u5",
+        "courseRole": "student",
+        "secondaryRoles": [
+          "Group B"
+        ]
+      },
+      {
+        "userId": "u6",
+        "courseRole": "it"
+      },
+      {
+        "userId": "u7",
+        "courseRole": "admin"
+      }
+    ],
+    "groupSets": [
+      {
+        "id": "project-groups",
+        "name": "Project Groups",
+        "groups": [
+          { "id": "Group A", "name": "Group A", "memberIds": ["u3", "u4"] },
+          { "id": "Group B", "name": "Group B", "memberIds": ["u5"] }
+        ]
+      }
+    ],
+    "termStart": 1718651715000,
+    "termEnd": 1726427715000,
+    "gradingWeights": {
+      "Problem Sets": 40,
+      "Midterm": 30,
+      "Final Exam": 30
+    },
+    "visibilityTimer": 0,
+    "announcements": [
+      {
+        "id": "a1",
+        "title": "Welcome to Foundations of Programming",
+        "content": "Please ensure you have a current Python 3 release installed before our first class.",
+        "type": "info",
+        "createdAt": 1721242715000
+      },
+      {
+        "id": "a2",
+        "title": "PSet 1 Released",
+        "content": "Problem Set 1 is now available and due this Friday.",
+        "type": "alert",
+        "createdAt": 1721243715000
+      }
+    ]
+  },
+  "items": [
+    {
+      "category": "admin",
+      "title": "Welcome to Foundations of Programming",
+      "presentationSlot": "past",
+      "createdAt": 1720379715000,
+      "description": "Welcome to the course! Please review the syllabus."
+    },
+    {
+      "category": "material",
+      "title": "Lecture 1: What is Computation?",
+      "presentationSlot": "past",
+      "createdAt": 1720466115000,
+      "description": "Introduction to the concepts of computation, algorithms, and computers.",
+      "contentUrl": "https://ocw.mit.edu/courses/6-0001-introduction-to-computer-science-and-programming-in-python-fall-2016/resources/lecture-1-what-is-computation/"
+    },
+    {
+      "category": "material",
+      "title": "Lecture 2: Branching and Iteration",
+      "presentationSlot": "past",
+      "createdAt": 1720552515000,
+      "description": "String manipulation, guess and check, approximations, bisection.",
+      "contentUrl": "https://ocw.mit.edu/courses/6-0001-introduction-to-computer-science-and-programming-in-python-fall-2016/resources/lecture-2-branching-and-iteration/"
+    },
+    {
+      "category": "admin",
+      "title": "Announcement: Midterm Approaching",
+      "presentationSlot": "current",
+      "createdAt": 1721157315000,
+      "description": "Start studying for the midterm next week."
+    },
+    {
+      "category": "material",
+      "title": "Lecture 3: String Manipulation, Guess and Check, Approximations, Bisection",
+      "presentationSlot": "current",
+      "createdAt": 1721243715000,
+      "description": "Deep dive into iterative algorithms.",
+      "contentUrl": "https://ocw.mit.edu/courses/6-0001-introduction-to-computer-science-and-programming-in-python-fall-2016/resources/lecture-3-string-manipulation-guess-and-check-approximations-bisection/"
+    },
+    {
+      "id": "item_live_poll_week1",
+      "courseId": "c1",
+      "category": "coursework",
+      "title": "Poll: How was Week 1?",
+      "presentationSlot": "current",
+      "createdAt": 1721243715000,
+      "description": "Live, ungraded pulse check for testing poll interactions and durable result archives.",
+      "isPoll": true,
+      "isGraded": false,
+      "workType": "individual",
+      "quizConfig": {
+        "maxAttempts": 10,
+        "questionsPerPage": 1,
+        "allowRevisit": false
+      },
+      "questions": [
+        {
+          "id": "q_live_poll_week1",
+          "label": "1",
+          "content": "How confident do you feel about this week's material?",
+          "answerType": "spectrum",
+          "points": 0,
+          "customConfig": {
+            "min": 1,
+            "max": 5,
+            "minLabel": "Need more practice",
+            "maxLabel": "Very confident"
+          }
+        }
+      ]
+    },
+    {
+      "id": "item_live_pop_quiz",
+      "courseId": "c1",
+      "category": "coursework",
+      "title": "Live Check: Python Basics",
+      "presentationSlot": "current",
+      "createdAt": 1721243715001,
+      "description": "Graded live-assessment fixture for testing host, participant, archive, and grader flows.",
+      "isPopQuiz": true,
+      "isGraded": true,
+      "gradingCategory": "Problem Sets",
+      "workType": "individual",
+      "quizConfig": {
+        "maxAttempts": 10,
+        "questionsPerPage": 1,
+        "allowRevisit": false
+      },
+      "questions": [
+        {
+          "id": "q_live_python_1",
+          "label": "1",
+          "content": "Which keyword defines a function in Python?",
+          "answerType": "multiple_choice",
+          "options": ["def", "function", "func"],
+          "correctAnswer": "def",
+          "gradingType": "points",
+          "points": 5,
+          "customConfig": {
+            "timerSeconds": 30
+          }
+        }
+      ]
+    },
+    {
+      "category": "material",
+      "title": "Code Example: Python Bisection Search",
+      "presentationSlot": "current",
+      "createdAt": 1721243715000,
+      "description": "{\"html\":\"<div style=\\\"font-family: monospace; background: #1e1e1e; color: #d4d4d4; padding: 20px; border-radius: 8px;\\\">\\n  <h3 style=\\\"color: #569cd6; margin-top:0;\\\">def bisection_search(L, e):</h3>\\n  <pre style=\\\"white-space: pre-wrap; background: #2d2d2d; border: 1px solid #333; padding: 10px;\\\">low = 0\\nhigh = len(L) - 1\\nwhile low &lt;= high:\\n    mid = (low + high) // 2\\n    if L[mid] == e:\\n        return True\\n    elif L[mid] &lt; e:\\n        low = mid + 1\\n    else:\\n        high = mid - 1\\nreturn False</pre>\\n  <p style=\\\"color: #9cdcfe;\\\">Static, read-only example. Use an institution-approved coding tool for executable labs.</p>\\n</div>\",\"css\":\"\",\"js\":\"\"}"
+    },
+    {
+      "category": "material",
+      "title": "Lecture 4: Decomposition, Abstractions, Functions",
+      "presentationSlot": "future",
+      "createdAt": 1721330115000,
+      "description": "Functions and scope.",
+      "contentUrl": "https://ocw.mit.edu/courses/6-0001-introduction-to-computer-science-and-programming-in-python-fall-2016/resources/lecture-4-decomposition-abstraction-and-functions/"
+    },
+    {
+      "category": "admin",
+      "title": "Final Project Guidelines",
+      "presentationSlot": "future",
+      "createdAt": 1721502915000,
+      "description": "Details on the final project."
+    },
+    {
+      "id": "item_mc_indiv",
+      "courseId": "c1",
+      "category": "coursework",
+      "title": "Assessment 1: Multiple Choice (Indiv)",
+      "description": "Simple multiple choice assessment.",
+      "presentationSlot": "current",
+      "isGraded": true,
+      "gradingCategory": "Problem Sets",
+      "isPopQuiz": false,
+      "workType": "individual",
+      "createdAt": 1783969534713,
+      "availableDate": 1783969534713,
+      "questions": [
+        {
+          "id": "q1",
+          "label": "1",
+          "content": "What is 2 + 2?",
+          "answerType": "multiple_choice",
+          "options": [
+            "3",
+            "4",
+            "5"
+          ],
+          "correctAnswer": "4",
+          "gradingType": "points",
+          "points": 10
+        },
+        {
+          "id": "q2",
+          "label": "2",
+          "content": "Capital of France?",
+          "answerType": "multiple_choice",
+          "options": [
+            "Paris",
+            "Rome"
+          ],
+          "correctAnswer": "Paris",
+          "gradingType": "points",
+          "points": 10
+        }
+      ]
+    },
+    {
+      "id": "item_all_indiv",
+      "courseId": "c1",
+      "category": "coursework",
+      "title": "Assessment 2: All Types (Indiv)",
+      "description": "Robust assessment testing every question type.",
+      "presentationSlot": "current",
+      "isGraded": true,
+      "gradingCategory": "Midterm",
+      "isPopQuiz": false,
+      "workType": "individual",
+      "createdAt": 1784055934713,
+      "availableDate": 1784055934713,
+      "questions": [
+        {
+          "id": "q1",
+          "label": "Q1",
+          "content": "Select all prime numbers.",
+          "answerType": "multiple_choice",
+          "options": [
+            "2",
+            "3",
+            "4",
+            "5"
+          ],
+          "correctAnswer": [
+            "2",
+            "3",
+            "5"
+          ],
+          "allowMultipleCorrect": true,
+          "gradingType": "points",
+          "points": 15
+        },
+        {
+          "id": "q2",
+          "label": "Q2",
+          "content": "Explain recursion in your own words.",
+          "answerType": "text",
+          "gradingType": "points",
+          "points": 20
+        },
+        {
+          "id": "q3",
+          "label": "Q3",
+          "content": "Upload your essay PDF.",
+          "answerType": "dropbox",
+          "gradingType": "points",
+          "points": 30
+        },
+        {
+          "id": "q4",
+          "label": "Q4",
+          "content": "Rate your confidence from 1 to 5.",
+          "answerType": "spectrum",
+          "customConfig": {
+            "min": 1,
+            "max": 5
+          },
+          "gradingType": "points",
+          "points": 5
+        },
+        {
+          "id": "q5",
+          "label": "Q5",
+          "content": "Write a function that returns \"Hello World\"",
+          "answerType": "custom_code",
+          "customConfig": {
+            "language": "javascript",
+            "testCases": "console.log(hello() === \"Hello World\")"
+          },
+          "gradingType": "points",
+          "points": 30
+        }
+      ]
+    },
+    {
+      "id": "item_all_group",
+      "courseId": "c1",
+      "category": "coursework",
+      "title": "Assessment 3: All Types (Group)",
+      "description": "Robust assessment testing every question type for groups.",
+      "presentationSlot": "current",
+      "isGraded": true,
+      "gradingCategory": "Final Exam",
+      "isPopQuiz": false,
+      "workType": "group",
+      "groupSetId": "project-groups",
+      "createdAt": 1784142334713,
+      "availableDate": 1784142334713,
+      "questions": [
+        {
+          "id": "q1",
+          "label": "Q1",
+          "content": "Select all prime numbers.",
+          "answerType": "multiple_choice",
+          "options": [
+            "2",
+            "3",
+            "4",
+            "5"
+          ],
+          "correctAnswer": [
+            "2",
+            "3",
+            "5"
+          ],
+          "allowMultipleCorrect": true,
+          "gradingType": "points",
+          "points": 15
+        },
+        {
+          "id": "q2",
+          "label": "Q2",
+          "content": "Explain recursion in your own words.",
+          "answerType": "text",
+          "gradingType": "points",
+          "points": 20
+        },
+        {
+          "id": "q3",
+          "label": "Q3",
+          "content": "Upload your essay PDF.",
+          "answerType": "dropbox",
+          "gradingType": "points",
+          "points": 30
+        },
+        {
+          "id": "q4",
+          "label": "Q4",
+          "content": "Rate your confidence from 1 to 5.",
+          "answerType": "spectrum",
+          "customConfig": {
+            "min": 1,
+            "max": 5
+          },
+          "gradingType": "points",
+          "points": 5
+        },
+        {
+          "id": "q5",
+          "label": "Q5",
+          "content": "Write a function that returns \"Hello World\"",
+          "answerType": "custom_code",
+          "customConfig": {
+            "language": "javascript",
+            "testCases": "console.log(hello() === \"Hello World\")"
+          },
+          "gradingType": "points",
+          "points": 30
+        }
+      ]
+    }
+  ]
+}

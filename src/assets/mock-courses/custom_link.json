@@ -1,0 +1,35 @@
+{
+  "course": {
+    "id": "c3",
+    "title": "Foundations of Programming (Linked Site Demo)",
+    "status": "active",
+    "presentationMode": "custom",
+    "description": "A comprehensive introduction to computer science and programming in Python. Covers computation, algorithms, data structures, and debugging.",
+    "enrollments": [
+      { "userId": "u1", "courseRole": "teacher" },
+      { "userId": "u2", "courseRole": "ta" },
+      { "userId": "u3", "courseRole": "student", "secondaryRoles": ["Group A"] },
+      { "userId": "u4", "courseRole": "student", "secondaryRoles": ["Group A"] },
+      { "userId": "u5", "courseRole": "student", "secondaryRoles": ["Group B"] },
+      { "userId": "u6", "courseRole": "it" },
+      { "userId": "u7", "courseRole": "admin" }
+    ],
+    "groupSets": [
+      { "id": "project-groups", "name": "Project Groups", "groups": [
+        { "id": "Group A", "name": "Group A", "memberIds": ["u3", "u4"] },
+        { "id": "Group B", "name": "Group B", "memberIds": ["u5"] }
+      ] }
+    ],
+    "termStart": 1718651715000,
+    "termEnd": 1726427715000,
+    "gradingWeights": { "Problem Sets": 40, "Midterm": 30, "Final Exam": 30 },
+    "visibilityTimer": 0,
+    "announcements": [
+      { "id": "a1", "title": "Welcome to Foundations of Programming", "content": "Please ensure you have a current Python 3 release installed before our first class.", "type": "info", "createdAt": 1721242715000 },
+      { "id": "a2", "title": "PSet 1 Released", "content": "Problem Set 1 is now available and due this Friday.", "type": "alert", "createdAt": 1721243715000 }
+    ]
+  },
+  "items": [
+    { "category": "admin", "title": "Programming Course Portal", "description": "Project-owned embedded course portal showcase", "contentUrl": "https://docs.python.org/3/tutorial/", "presentationSlot": "current", "createdAt": 1720811715000, "metadata": { "lmsContentType": "custom", "lmsCustomWidgetKind": "link", "lmsEmbedMode": "embedded", "lmsDemoPortal": "programming-course-v1" } }
+  ]
+}

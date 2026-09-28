@@ -1,0 +1,195 @@
+{
+  "schemaVersion": 1,
+  "sources": [
+    {
+      "id": "bplist-parser-0.3.1-readme-mit",
+      "components": [
+        "bplist-parser@0.3.1"
+      ],
+      "declaredLicense": "MIT",
+      "file": "licenses/bplist-parser-0.3.1-mit.txt",
+      "sha256": "ee3cfbe17c87702b4e1b1ce52be0d0cb923d39de3745a60a2ca09798977566b2",
+      "repository": "https://github.com/joeferner/node-bplist-parser",
+      "revision": "3113315a9bdd8fa83e369d29af8cabfc3eee8f43",
+      "sourcePath": "README.md lines 27-48 (License section)",
+      "sourceUrl": "https://raw.githubusercontent.com/joeferner/node-bplist-parser/3113315a9bdd8fa83e369d29af8cabfc3eee8f43/README.md",
+      "evidenceUrl": "https://registry.npmjs.org/bplist-parser/0.3.1",
+      "evidence": "The official bplist-parser@0.3.1 npm artifact records this gitHead and repository (now at its GitHub-redirected canonical owner); the included text is copied byte-for-byte from the artifact's README.md License section."
+    },
+    {
+      "id": "dotslash-0.5.8-apache-2.0",
+      "components": [
+        "fb-dotslash@0.5.8"
+      ],
+      "declaredLicense": "(MIT OR Apache-2.0)",
+      "file": "licenses/dotslash-apache-2.0.txt",
+      "sha256": "50e6751797c50dedd75ef1b8a0d9e42f5f8472e9fbce91f34718e9f97b0c780a",
+      "repository": "https://github.com/facebook/dotslash",
+      "revision": "8060e2dec764bceba5809cf6a15906644aad0078",
+      "sourcePath": "LICENSE-APACHE",
+      "sourceUrl": "https://raw.githubusercontent.com/facebook/dotslash/8060e2dec764bceba5809cf6a15906644aad0078/LICENSE-APACHE",
+      "evidenceUrl": "https://registry.npmjs.org/fb-dotslash/0.5.8",
+      "evidence": "Official npm metadata for fb-dotslash@0.5.8 binds the package to this gitHead and official repository."
+    },
+    {
+      "id": "dotslash-0.5.8-mit",
+      "components": [
+        "fb-dotslash@0.5.8"
+      ],
+      "declaredLicense": "(MIT OR Apache-2.0)",
+      "file": "licenses/meta-platforms-mit.txt",
+      "sha256": "da6d3703ed11cbe42bd212c725957c98da23cbff1998c05fa4b3d976d1a58e93",
+      "repository": "https://github.com/facebook/dotslash",
+      "revision": "8060e2dec764bceba5809cf6a15906644aad0078",
+      "sourcePath": "LICENSE-MIT",
+      "sourceUrl": "https://raw.githubusercontent.com/facebook/dotslash/8060e2dec764bceba5809cf6a15906644aad0078/LICENSE-MIT",
+      "evidenceUrl": "https://registry.npmjs.org/fb-dotslash/0.5.8",
+      "evidence": "Official npm metadata for fb-dotslash@0.5.8 binds the package to this gitHead and official repository."
+    },
+    {
+      "id": "hermes-compiler-250829098.0.17-mit",
+      "components": [
+        "hermes-compiler@250829098.0.17"
+      ],
+      "declaredLicense": "MIT",
+      "file": "licenses/meta-platforms-mit.txt",
+      "sha256": "da6d3703ed11cbe42bd212c725957c98da23cbff1998c05fa4b3d976d1a58e93",
+      "repository": "https://github.com/facebook/hermes",
+      "revision": "3477757eb2475555cf8d8df24bfb1deb0613880d",
+      "sourcePath": "LICENSE",
+      "sourceUrl": "https://raw.githubusercontent.com/facebook/hermes/3477757eb2475555cf8d8df24bfb1deb0613880d/LICENSE",
+      "evidenceUrl": "https://registry.npmjs.org/hermes-compiler/250829098.0.17",
+      "evidence": "Official npm metadata for hermes-compiler@250829098.0.17 binds the package to this gitHead and official repository."
+    },
+    {
+      "id": "metro-0.84.4-monorepo-mit",
+      "components": [
+        "metro-babel-transformer@0.84.4",
+        "metro-cache-key@0.84.4",
+        "metro-cache@0.84.4",
+        "metro-config@0.84.4",
+        "metro-core@0.84.4",
+        "metro-file-map@0.84.4",
+        "metro-minify-terser@0.84.4",
+        "metro-resolver@0.84.4",
+        "metro-runtime@0.84.4",
+        "metro-source-map@0.84.4",
+        "metro-symbolicate@0.84.4",
+        "metro-transform-plugins@0.84.4",
+        "metro-transform-worker@0.84.4",
+        "metro@0.84.4",
+        "ob1@0.84.4"
+      ],
+      "declaredLicense": "MIT",
+      "file": "licenses/meta-platforms-mit.txt",
+      "sha256": "da6d3703ed11cbe42bd212c725957c98da23cbff1998c05fa4b3d976d1a58e93",
+      "repository": "https://github.com/facebook/metro",
+      "revision": "f15550573c17e0ef19774547458baa185d11b56a",
+      "sourcePath": "LICENSE",
+      "sourceUrl": "https://raw.githubusercontent.com/facebook/metro/f15550573c17e0ef19774547458baa185d11b56a/LICENSE",
+      "evidenceUrl": "https://registry.npmjs.org/metro/0.84.4",
+      "evidence": "The official 0.84.4 package manifests identify the Metro monorepo and package directories; official npm metadata for metro@0.84.4 binds that coordinated release to this gitHead."
+    },
+    {
+      "id": "metro-0.84.5-monorepo-mit",
+      "components": [
+        "metro-babel-transformer@0.84.5",
+        "metro-cache-key@0.84.5",
+        "metro-cache@0.84.5",
+        "metro-config@0.84.5",
+        "metro-core@0.84.5",
+        "metro-file-map@0.84.5",
+        "metro-minify-terser@0.84.5",
+        "metro-resolver@0.84.5",
+        "metro-runtime@0.84.5",
+        "metro-source-map@0.84.5",
+        "metro-symbolicate@0.84.5",
+        "metro-transform-plugins@0.84.5",
+        "metro-transform-worker@0.84.5",
+        "metro@0.84.5",
+        "ob1@0.84.5"
+      ],
+      "declaredLicense": "MIT",
+      "file": "licenses/meta-platforms-mit.txt",
+      "sha256": "da6d3703ed11cbe42bd212c725957c98da23cbff1998c05fa4b3d976d1a58e93",
+      "repository": "https://github.com/react/metro",
+      "revision": "b71015ef83904e7086342ddb72205b7242dcd129",
+      "sourcePath": "LICENSE",
+      "sourceUrl": "https://raw.githubusercontent.com/react/metro/b71015ef83904e7086342ddb72205b7242dcd129/LICENSE",
+      "evidenceUrl": "https://registry.npmjs.org/metro/0.84.5",
+      "evidence": "The official 0.84.5 package manifests identify the Metro monorepo and package directories; official npm metadata for metro@0.84.5 binds that coordinated release to this gitHead."
+    },
+    {
+      "id": "react-compiler-1.0.0-mit",
+      "components": [
+        "babel-plugin-react-compiler@1.0.0"
+      ],
+      "declaredLicense": "MIT",
+      "file": "licenses/meta-platforms-mit.txt",
+      "sha256": "da6d3703ed11cbe42bd212c725957c98da23cbff1998c05fa4b3d976d1a58e93",
+      "repository": "https://github.com/facebook/react",
+      "revision": "5c15c1cd3442f28044217703b5625f98c40042ee",
+      "sourcePath": "LICENSE",
+      "sourceUrl": "https://raw.githubusercontent.com/facebook/react/5c15c1cd3442f28044217703b5625f98c40042ee/LICENSE",
+      "evidenceUrl": "https://registry.npmjs.org/babel-plugin-react-compiler/1.0.0",
+      "evidence": "Official npm metadata for babel-plugin-react-compiler@1.0.0 binds the package to this gitHead and official repository."
+    },
+    {
+      "id": "react-devtools-core-6.1.5-mit",
+      "components": [
+        "react-devtools-core@6.1.5"
+      ],
+      "declaredLicense": "MIT",
+      "file": "licenses/meta-platforms-mit.txt",
+      "sha256": "da6d3703ed11cbe42bd212c725957c98da23cbff1998c05fa4b3d976d1a58e93",
+      "repository": "https://github.com/facebook/react",
+      "revision": "5d87cd224452c68d09bef99656b6261e9772a210",
+      "sourcePath": "LICENSE",
+      "sourceUrl": "https://raw.githubusercontent.com/facebook/react/5d87cd224452c68d09bef99656b6261e9772a210/LICENSE",
+      "evidenceUrl": "https://registry.npmjs.org/react-devtools-core/6.1.5",
+      "evidence": "Official npm metadata for react-devtools-core@6.1.5 binds the package to this gitHead and official repository."
+    },
+    {
+      "id": "react-native-0.74.89-normalize-colors-mit",
+      "components": [
+        "@react-native/normalize-colors@0.74.89"
+      ],
+      "declaredLicense": "MIT",
+      "file": "licenses/meta-platforms-mit.txt",
+      "sha256": "da6d3703ed11cbe42bd212c725957c98da23cbff1998c05fa4b3d976d1a58e93",
+      "repository": "https://github.com/facebook/react-native",
+      "revision": "a2066d730d933126bbf7055f4e47c575936e62f3",
+      "sourcePath": "LICENSE",
+      "sourceUrl": "https://raw.githubusercontent.com/facebook/react-native/a2066d730d933126bbf7055f4e47c575936e62f3/LICENSE",
+      "evidenceUrl": "https://registry.npmjs.org/@react-native%2Fnormalize-colors/0.74.89",
+      "evidence": "Official npm metadata for @react-native/normalize-colors@0.74.89 binds the package to this gitHead and official repository."
+    },
+    {
+      "id": "react-native-0.86.3-monorepo-mit",
+      "components": [
+        "@react-native/assets-registry@0.86.3",
+        "@react-native/babel-plugin-codegen@0.86.3",
+        "@react-native/babel-preset@0.86.3",
+        "@react-native/codegen@0.86.3",
+        "@react-native/community-cli-plugin@0.86.3",
+        "@react-native/debugger-shell@0.86.3",
+        "@react-native/dev-middleware@0.86.3",
+        "@react-native/gradle-plugin@0.86.3",
+        "@react-native/js-polyfills@0.86.3",
+        "@react-native/metro-babel-transformer@0.86.3",
+        "@react-native/metro-config@0.86.3",
+        "@react-native/normalize-colors@0.86.3",
+        "@react-native/virtualized-lists@0.86.3"
+      ],
+      "declaredLicense": "MIT",
+      "file": "licenses/meta-platforms-mit.txt",
+      "sha256": "da6d3703ed11cbe42bd212c725957c98da23cbff1998c05fa4b3d976d1a58e93",
+      "repository": "https://github.com/react/react-native",
+      "revision": "4829a675c80e64f7c170b0f30d24b3808b7663d3",
+      "sourcePath": "LICENSE",
+      "sourceUrl": "https://raw.githubusercontent.com/react/react-native/4829a675c80e64f7c170b0f30d24b3808b7663d3/LICENSE",
+      "evidenceUrl": "https://registry.npmjs.org/@react-native%2Fassets-registry/0.86.3",
+      "evidence": "The official 0.86.3 package manifests identify the React Native monorepo and package directories; the installed official react-native@0.86.3 artifact carries this byte-identical LICENSE, and official npm metadata for @react-native/assets-registry@0.86.3 binds the coordinated release to this gitHead."
+    }
+  ]
+}

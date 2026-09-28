@@ -1,0 +1,34 @@
+name: Release checks
+
+on:
+  pull_request:
+  push:
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: release-check-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  release:
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+    steps:
+      - name: Check out source
+        uses: actions/checkout@08eba0b27e820071cde6df949e0beb9ba4906955 # v4.3.0
+      - name: Set up Node
+        uses: actions/setup-node@49933ea5288caeca8642d1e84afbd3f7d6820020 # v4.4.0
+        with:
+          node-version: 26.5.0
+          cache: npm
+      - name: Pin npm used for reproducible SBOM output
+        run: npm install --global npm@11.17.0 --ignore-scripts
+      - name: Install exact dependency graph
+        run: npm ci
+      - name: Enforce current production dependency audit policy
+        run: npm run audit:release
+      - name: Run repository release checks
+        run: npm run check:release

@@ -1,0 +1,44 @@
+[
+  {
+    "id": "u1",
+    "name": "Dr. Smith",
+    "email": "smith@example.invalid",
+    "role": "teacher"
+  },
+  {
+    "id": "u2",
+    "name": "John Doe",
+    "email": "john@example.invalid",
+    "role": "ta"
+  },
+  {
+    "id": "u3",
+    "name": "Alice Student",
+    "email": "alice@example.invalid",
+    "role": "student"
+  },
+  {
+    "id": "u4",
+    "name": "Bob Student",
+    "email": "bob@example.invalid",
+    "role": "student"
+  },
+  {
+    "id": "u5",
+    "name": "Charlie Student",
+    "email": "charlie@example.invalid",
+    "role": "student"
+  },
+  {
+    "id": "u6",
+    "name": "Riley IT",
+    "email": "riley.it@example.invalid",
+    "role": "it"
+  },
+  {
+    "id": "u7",
+    "name": "Avery Administrator",
+    "email": "avery.admin@example.invalid",
+    "role": "admin"
+  }
+]

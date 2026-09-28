@@ -1,0 +1,218 @@
+{
+  "schemaVersion": "1.0",
+  "syncId": "example-sync-2026-07-19T17:00:00Z",
+  "generatedAt": "2026-07-19T17:00:00Z",
+  "mode": "snapshot",
+  "cursor": "example-cursor-0001",
+  "institution": {
+    "id": "example-university",
+    "name": "Example University",
+    "timeZone": "America/Toronto",
+    "metadata": { "source": "sis-gateway" }
+  },
+  "integrations": [
+    {
+      "id": "example-institution-gateway",
+      "kind": "custom-gateway",
+      "displayName": "Example institution gateway",
+      "version": "2026.1",
+      "capabilities": [
+        "courses.read",
+        "courses.write",
+        "roster.read",
+        "roster.write",
+        "content.read",
+        "content.write",
+        "submissions.read",
+        "submissions.write",
+        "grades.read",
+        "grades.write",
+        "chat.read",
+        "chat.write",
+        "chat.realtime",
+        "live-sessions.read",
+        "live-sessions.write",
+        "live-sessions.realtime",
+        "assets.write",
+        "ai.generate"
+      ]
+    }
+  ],
+  "users": [
+    { "id": "teacher-100", "name": "Ada Teacher", "email": "ada.teacher@example.edu", "role": "teacher" },
+    { "id": "student-200", "name": "Sam Student", "role": "student", "secondaryRoles": ["Section 01"] }
+  ],
+  "courses": [
+    {
+      "course": {
+        "id": "course-chem-101",
+        "title": "Chemistry 101",
+        "timeZone": "America/Toronto",
+        "status": "active",
+        "description": "Foundations of chemistry.",
+        "presentationMode": "timeline",
+        "termStart": "2026-09-01T00:00:00Z",
+        "termEnd": "2026-12-15T23:59:59Z",
+        "gradingWeights": { "Assessments": 70, "Laboratories": 30 },
+        "visibilityTimer": 24,
+        "groupSets": [
+          { "id": "lab-groups", "name": "Laboratory Groups", "groups": [
+            { "id": "group-a", "name": "Group A", "memberIds": ["student-200"] }
+          ] }
+        ],
+        "announcements": [
+          { "id": "announcement-1", "title": "Welcome", "content": "The first module is available.", "type": "info", "createdAt": "2026-09-01T13:00:00Z" }
+        ]
+      },
+      "enrollments": [
+        { "userId": "teacher-100", "courseRole": "teacher" },
+        { "userId": "student-200", "courseRole": "student", "secondaryRoles": ["Section 01"] }
+      ],
+      "items": [
+        {
+          "id": "quiz-stoichiometry",
+          "category": "coursework",
+          "title": "Stoichiometry checkpoint",
+          "description": "A short knowledge check.",
+          "presentationSlot": "current",
+          "createdAt": "2026-09-05T13:00:00Z",
+          "isGraded": true,
+          "gradingCategory": "Assessments",
+          "workType": "individual",
+          "questions": [
+            {
+              "id": "question-1",
+              "label": "1",
+              "content": "What is the coefficient of H2O after balancing: H2 + O2 → H2O?",
+              "answerType": "multiple_choice",
+              "options": ["1", "2", "3", "4"],
+              "correctAnswer": "2",
+              "points": 10
+            }
+          ],
+          "quizConfig": { "questionsPerPage": "all", "maxAttempts": 2, "allowRevisit": true }
+        },
+        {
+          "id": "material-safety",
+          "category": "material",
+          "title": "Laboratory safety guide",
+          "contentUrl": "https://assets.example.edu/chemistry/safety.pdf",
+          "presentationSlot": "current",
+          "createdAt": "2026-09-01T13:00:00Z"
+        },
+        {
+          "id": "study-set-stoichiometry",
+          "category": "material",
+          "title": "Stoichiometry review cards",
+          "description": "Learner-visible cards verified against the Week 1 notes.",
+          "presentationSlot": "current",
+          "createdAt": "2026-09-05T14:00:00Z",
+          "studyCards": [
+            {
+              "id": "study-card-1",
+              "front": "What does a stoichiometric coefficient represent?",
+              "back": "The relative number of particles or moles in a balanced chemical reaction.",
+              "tags": ["stoichiometry"],
+              "sourceExcerpt": "Coefficients give relative particle and mole ratios in a balanced reaction.",
+              "sourceLocation": "Week 1 notes, page 4",
+              "confidence": 0.97,
+              "reviewerVerified": true
+            }
+          ],
+          "metadata": {
+            "ai": {
+              "task": "flashcards",
+              "promptVersion": "flashcards.v1.5.0",
+              "provenance": {
+                "promptVersion": "flashcards.v1.5.0",
+                "sourceSha256": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+                "evidenceVerified": true,
+                "requestId": "ai-request-example-1"
+              },
+              "humanReviewedAt": "2026-09-05T14:00:00Z"
+            }
+          }
+        }
+      ]
+    }
+  ],
+  "threads": [
+    {
+      "id": "thread-announcements",
+      "courseId": "course-chem-101",
+      "title": "Announcements",
+      "description": "Official Chemistry 101 notices and deadline changes.",
+      "guidelines": "Only course staff start posts; replies are reserved for requested acknowledgements and questions.",
+      "kind": "announcements",
+      "isAnnouncement": true,
+      "isLocked": false,
+      "isPinned": true,
+      "allowStudentPosts": false,
+      "allowReplies": true,
+      "allowAttachments": true,
+      "allowMentions": true,
+      "scope": "course",
+      "opensAt": "2026-09-01T00:00:00Z",
+      "closesAt": "2026-12-15T23:59:59Z",
+      "createdBy": "teacher-100",
+      "createdAt": "2026-09-01T12:00:00Z"
+    },
+    {
+      "id": "thread-group-a",
+      "courseId": "course-chem-101",
+      "title": "Group A laboratory forum",
+      "description": "Private, chat-based coordination for Laboratory Group A.",
+      "guidelines": "Record decisions and owners; keep personal or grading matters in direct messages.",
+      "kind": "study-group",
+      "isAnnouncement": false,
+      "isPinned": false,
+      "allowStudentPosts": true,
+      "allowReplies": true,
+      "allowAttachments": true,
+      "allowMentions": true,
+      "scope": "group",
+      "groupSetId": "lab-groups",
+      "groupId": "group-a",
+      "participantIds": ["teacher-100", "student-200"],
+      "createdBy": "teacher-100",
+      "createdAt": "2026-09-01T12:05:00Z"
+    },
+    {
+      "id": "thread-direct",
+      "title": "Ada and Sam",
+      "kind": "discussion",
+      "isAnnouncement": false,
+      "allowReplies": true,
+      "allowAttachments": true,
+      "allowMentions": true,
+      "scope": "direct",
+      "participantIds": ["teacher-100", "student-200"],
+      "createdBy": "student-200",
+      "createdAt": "2026-09-02T12:00:00Z"
+    }
+  ],
+  "messages": [
+    { "id": "message-1", "revision": 1, "threadId": "thread-announcements", "senderId": "teacher-100", "senderName": "Ada Teacher", "role": "teacher", "text": "Welcome to Chemistry 101.", "timestamp": "2026-09-01T13:00:00Z", "readBy": 1, "readByUserIds": ["teacher-100"] },
+    { "id": "message-2", "revision": 1, "threadId": "thread-direct", "senderId": "student-200", "senderName": "Sam Student", "role": "student", "text": "@Ada Teacher, could you clarify the lab schedule?", "mentionedUserIds": ["teacher-100"], "timestamp": "2026-09-02T13:00:00Z", "readBy": 1, "readByUserIds": ["student-200"] }
+  ],
+  "submissions": [
+    {
+      "id": "submission-1",
+      "studentId": "student-200",
+      "studentName": "Sam Student",
+      "contentItemId": "quiz-stoichiometry",
+      "courseId": "course-chem-101",
+      "submittedAt": "2026-09-06T13:00:00Z",
+      "updatedAt": "2026-09-06T13:00:00Z",
+      "revision": 1,
+      "attemptNumber": 1,
+      "status": "submitted",
+      "responses": [
+        { "questionId": "question-1", "answer": "2", "isCorrect": true, "score": 10, "isManuallyGraded": false, "needsManualGrading": false }
+      ],
+      "totalScore": 10,
+      "gradeRevision": 0,
+      "gradeStatus": "draft"
+    }
+  ]
+}

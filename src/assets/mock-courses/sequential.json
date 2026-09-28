@@ -1,0 +1,45 @@
+{
+  "course": {
+    "id": "c2",
+    "title": "Foundations of Programming (Sequential Demo)",
+    "status": "active",
+    "presentationMode": "sequential",
+    "description": "A comprehensive introduction to computer science and programming in Python. Covers computation, algorithms, data structures, and debugging.",
+    "enrollments": [
+      { "userId": "u1", "courseRole": "teacher" },
+      { "userId": "u2", "courseRole": "ta" },
+      { "userId": "u3", "courseRole": "student", "secondaryRoles": ["Group A"] },
+      { "userId": "u4", "courseRole": "student", "secondaryRoles": ["Group A"] },
+      { "userId": "u5", "courseRole": "student", "secondaryRoles": ["Group B"] },
+      { "userId": "u6", "courseRole": "it" },
+      { "userId": "u7", "courseRole": "admin" }
+    ],
+    "groupSets": [
+      { "id": "project-groups", "name": "Project Groups", "groups": [
+        { "id": "Group A", "name": "Group A", "memberIds": ["u3", "u4"] },
+        { "id": "Group B", "name": "Group B", "memberIds": ["u5"] }
+      ] }
+    ],
+    "termStart": 1718651715000,
+    "termEnd": 1726427715000,
+    "gradingWeights": { "Problem Sets": 40, "Midterm": 30, "Final Exam": 30 },
+    "visibilityTimer": 0,
+    "announcements": [
+      { "id": "a1", "title": "Welcome to Foundations of Programming", "content": "Please ensure you have a current Python 3 release installed before our first class.", "type": "info", "createdAt": 1721242715000 },
+      { "id": "a2", "title": "PSet 1 Released", "content": "Problem Set 1 is now available and due this Friday.", "type": "alert", "createdAt": 1721243715000 }
+    ]
+  },
+  "items": [
+    { "category": "admin", "title": "Week 1: Introduction to Python", "presentationSlot": "block-header", "groupIcon": "week1", "createdAt": 1720034115000 },
+    { "category": "material", "title": "Lecture 1: What is Computation?", "presentationSlot": "past", "groupIcon": "week1", "createdAt": 1720120515000, "description": "Basics of computing.", "contentUrl": "https://ocw.mit.edu/courses/6-0001-introduction-to-computer-science-and-programming-in-python-fall-2016/resources/lecture-1-what-is-computation/" },
+    { "category": "material", "title": "Lecture 2: Branching and Iteration", "presentationSlot": "past", "groupIcon": "week1", "createdAt": 1720206915000, "description": "Control flow.", "contentUrl": "https://ocw.mit.edu/courses/6-0001-introduction-to-computer-science-and-programming-in-python-fall-2016/resources/lecture-2-branching-and-iteration/" },
+    { "category": "coursework", "title": "Week 1 Quiz", "presentationSlot": "past", "groupIcon": "week1", "createdAt": 1720293315000, "description": "Test your knowledge.", "isGraded": true, "gradingCategory": "Problem Sets", "quizConfig": { "questionsPerPage": "all", "maxAttempts": 3, "allowRevisit": true }, "questions": [ { "id": "w1q1", "label": "1", "content": "What does `type(5)` evaluate to?", "answerType": "multiple_choice", "options": ["int", "float", "str", "bool"], "correctAnswer": "int", "points": 10 } ] },
+    { "category": "admin", "title": "Week 2: Simple Algorithms", "presentationSlot": "block-header", "groupIcon": "week2", "createdAt": 1720638915000 },
+    { "category": "material", "title": "Lecture 3: String Manipulation, Guess and Check", "presentationSlot": "current", "groupIcon": "week2", "createdAt": 1720725315000, "description": "Iterative algorithms.", "contentUrl": "https://ocw.mit.edu/courses/6-0001-introduction-to-computer-science-and-programming-in-python-fall-2016/resources/lecture-3-string-manipulation-guess-and-check-approximations-bisection/" },
+    { "category": "material", "title": "Reading: Chapter 3", "presentationSlot": "current", "groupIcon": "week2", "createdAt": 1720811715000, "description": "Textbook chapter 3." },
+    { "category": "coursework", "title": "Problem Set 1", "presentationSlot": "current", "groupIcon": "week2", "createdAt": 1720898115000, "description": "Paying off debt.", "isGraded": true, "gradingCategory": "Problem Sets", "submissionTarget": "in-app", "questions": [ { "id": "ps1-upload", "label": "1", "content": "Upload your completed problem set.", "answerType": "dropbox", "points": 100 } ] },
+    { "category": "admin", "title": "Week 3: Functions and Abstraction", "presentationSlot": "block-header", "groupIcon": "week3", "createdAt": 1721243715000 },
+    { "category": "material", "title": "Lecture 4: Decomposition, Abstractions, Functions", "presentationSlot": "future", "groupIcon": "week3", "createdAt": 1721330115000, "description": "Structuring code.", "contentUrl": "https://ocw.mit.edu/courses/6-0001-introduction-to-computer-science-and-programming-in-python-fall-2016/resources/lecture-4-decomposition-abstraction-and-functions/" },
+    { "category": "coursework", "title": "Week 3 Peer Review", "presentationSlot": "future", "groupIcon": "week3", "createdAt": 1721416515000, "description": "Review another student's code.", "isGraded": true, "gradingCategory": "Midterm", "workType": "group", "groupSetId": "project-groups", "questions": [ { "id": "peer-review-upload", "label": "1", "content": "Upload the group's peer-review report.", "answerType": "dropbox", "points": 100 } ] }
+  ]
+}

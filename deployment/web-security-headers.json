@@ -1,0 +1,23 @@
+{
+  "schemaVersion": 1,
+  "description": "Provider-neutral minimum response headers for the LMS web application. Apply these at the CDN or origin; a file in the bundle cannot set response headers itself.",
+  "globalHeaders": {
+    "Content-Security-Policy": "default-src 'self'; base-uri 'self'; object-src 'none'; frame-ancestors 'none'; form-action 'self'; script-src 'self'; style-src 'self' 'unsafe-inline'; font-src 'self' data:; img-src 'self' data: blob: https:; media-src 'self' data: blob: https:; connect-src 'self' https:; frame-src 'self' https:; worker-src 'self' blob:; manifest-src 'self'; upgrade-insecure-requests",
+    "Cross-Origin-Opener-Policy": "same-origin-allow-popups",
+    "Cross-Origin-Resource-Policy": "same-origin",
+    "Permissions-Policy": "camera=(), microphone=(), geolocation=(), payment=(), usb=(), serial=(), bluetooth=(), browsing-topics=(), accelerometer=(), gyroscope=(), magnetometer=(), autoplay=(self), fullscreen=*",
+    "Referrer-Policy": "no-referrer",
+    "Strict-Transport-Security": "max-age=31536000",
+    "X-Content-Type-Options": "nosniff",
+    "X-Frame-Options": "DENY",
+    "X-Permitted-Cross-Domain-Policies": "none"
+  },
+  "routeHeaders": {
+    "/index.html": {
+      "Cache-Control": "no-cache, no-store, must-revalidate"
+    },
+    "/_expo/static/*": {
+      "Cache-Control": "public, max-age=31536000, immutable"
+    }
+  }
+}

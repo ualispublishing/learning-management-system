@@ -1,6 +1,13 @@
 {
   "extends": "expo/tsconfig.base",
   "compilerOptions": {
-    "strict": true
-  }
+    "strict": true,
+    "types": ["node"]
+  },
+  "exclude": [
+    "node_modules",
+    "src/**/__tests__/**",
+    "generate_mocks.ts",
+    "test-rndmd2.tsx"
+  ]
 }

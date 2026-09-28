@@ -30,8 +30,18 @@ yarn-error.*
 .DS_Store
 *.pem
 
-# local env files
-.env*.local
+# environment files and credentials (commit only a value-free example)
+.env
+.env.*
+!.env.example
+
+# Filled production-acceptance manifests reference protected evidence and named
+# approvers. Commit only the deliberately pending template.
+/deployment/provider-acceptance*.json
+!/deployment/provider-acceptance.example.json
+
+# logs can contain URLs, identifiers, or upstream error details
+*.log
 
 # typescript
 *.tsbuildinfo
@@ -39,3 +49,14 @@ yarn-error.*
 # generated native folders
 /ios
 /android
+
+# local databases and journals (may contain learner data)
+*.db
+*.db-shm
+*.db-wal
+*.sqlite
+*.sqlite3
+
+# Quarantined local asset with unknown provenance; the app uses the documented
+# generated-original replacement instead.
+/assets/images/math_banner.jpg
