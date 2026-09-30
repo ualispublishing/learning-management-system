@@ -9,6 +9,7 @@ const root = path.resolve(path.dirname(fileURLToPath(import.meta.url)), '..');
 const outputPath = path.join(root, 'docs', 'sbom.cdx.json');
 const checkOnly = process.argv.includes('--check');
 const lockBytes = await readFile(path.join(root, 'package-lock.json'));
+const manifest = JSON.parse(await readFile(path.join(root, 'package.json'), 'utf8'));
 const lockDigest = createHash('sha256').update(lockBytes).digest('hex');
 const command = ['sbom', '--sbom-format', 'cyclonedx', '--omit', 'dev'];
 const generated = spawnSync('npm', command, {
@@ -41,6 +42,9 @@ const uuidHex = uuidBytes.toString('hex');
 sbom.serialNumber = `urn:uuid:${uuidHex.slice(0, 8)}-${uuidHex.slice(8, 12)}-${uuidHex.slice(12, 16)}-${uuidHex.slice(16, 20)}-${uuidHex.slice(20)}`;
 if (sbom.metadata) {
   delete sbom.metadata.timestamp;
+  // npm may label the root component with the checkout directory basename.
+  // Its package identity must remain stable across machines and CI paths.
+  if (sbom.metadata.component) sbom.metadata.component.name = manifest.name;
   const properties = Array.isArray(sbom.metadata.properties)
     ? sbom.metadata.properties.filter(property => !String(property?.name).startsWith('lms:'))
     : [];
