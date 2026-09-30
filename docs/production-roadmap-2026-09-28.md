@@ -8,14 +8,14 @@ This is a remaining-work plan. The original review records the 28 September base
 
 ## 1. Correct starting point
 
-**Automated tests already exist.** The baseline review observed all 391 tests passing across its runs. The implementation batch now passes **412 automated tests and 270 synthetic repository/store journeys from a clean checkout**, including two rendered assessment tests. Strict TypeScript, lint, fixture checks, dependency/security checks, SBOM/notices and a CI workflow definition are also present. See section 8 for current evidence and limits.
+**Automated tests already exist.** The baseline review observed all 391 tests passing across its runs. The first implementation batch passed **412 automated tests and 270 synthetic repository/store journeys from a clean checkout**. The second batch now passes **428 tests**, adding rendered startup/media regressions. Strict TypeScript, lint, fixture checks, dependency/security checks, SBOM/notices and a CI workflow definition are also present. See sections 8–9 for the exact evidence and limits.
 
 The missing pieces are broader maintained rendered-component coverage and browser E2E tests, real-provider integration evidence, additional failure/concurrency coverage, supported-device/accessibility acceptance, and enforced production promotion. Static source checks and synthetic journeys remain useful; they do not establish those other forms of assurance.
 
 | Status | Current evidence | Consequence for this plan |
 | --- | --- | --- |
 | Existing foundation | Domain rules, repository interfaces, role checks, principal scoping, bounded transports, tests and release scripts | Extend these; do not replace them merely to appear more professional |
-| Defect baseline | D01–D05 now have client repairs and regression coverage; D06 font recovery and D07 destination-bound media consent remain | Complete remaining repairs and verify the deployed provider and supported devices before a real-data pilot |
+| Defect baseline | D01–D07 now have client repairs and regression coverage; D08 has a principal-generation guard | Verify actual providers, browser/device behavior and the remaining production work before a real-data pilot |
 | Missing production implementation in this repository | Connected durable institutional backend, real identity bootstrap and service operations | Implement one reference production deployment and its supported service contracts |
 | Existing definition, deployment unverified | CI workflow, security headers, acceptance manifest, dependency exceptions | Prove their behavior on a tracked revision and deployed candidate |
 | Evidence outstanding | Manual/device/accessibility plan marked NOT RUN; restore/load/production-provider evidence absent | Execute checks and retain results; do not turn absence of evidence into a passing status |
@@ -34,6 +34,8 @@ Support all requested audiences through a shared product core and explicit profi
 | Other customers | A recorded requirement assessment: users, data, workflows, identity, integrations, jurisdictions, support and operating constraints | Profile requirements mapped to existing capabilities or explicit work items before a production commitment |
 
 Maintain a capability matrix with **implemented**, **simulated**, **planned**, **disabled**, and **verified for release** states. Institution activation currently simulates provisioning. The locale inventory does not establish full LMS translation. State platform/media/offline limitations explicitly.
+
+**Operating-model decision, 30 September:** customer-operated deployment is the default; the same product must support a publisher-operated service when negotiated. The [deployment profiles plan](./deployment-profiles.md) defines the shared architecture, responsibilities, portable release requirements and migration acceptance. Neither profile is implemented or production-verified yet.
 
 **Scope constraint in today's code:** production bootstrap requires AI, assets and durable learning state; the current production validator expects native identifiers, the full advertised capability set, 28 evidence checks, six approval functions, and the 41-case manual plan. A narrower web-only or AI-disabled offering requires a deliberate, versioned change to runtime capability gates, UI, validation, documentation and tests. Do not simply skip checks or mark missing functionality passed. Preserve universal controls such as identity, authorization, data integrity, privacy and recovery in every profile.
 
@@ -93,7 +95,8 @@ Ownership below describes responsibilities, not an assumption that a separate hi
 
 ### W04 — Real identity, backend and API contracts — B
 
-- [ ] Decide operator model: you host the product, customers host it, or both through supported deployment profiles. Document infrastructure, service and incident responsibilities.
+- [x] Choose the operator model: customer-operated by default, with publisher-operated service supported by the same product when negotiated. The [profile plan](./deployment-profiles.md) records this decision.
+- [ ] Assign named infrastructure, installation, patching, backup, incident and support owners for the actual deployment; implement and verify both supported profiles.
 - [ ] Implement a reference durable backend and connect it through the existing adapters before authenticated routes render. Managed services are acceptable; microservices are not a prerequisite.
 - [ ] Implement real authentication/session recovery/logout. Support the identity method promised for each profile; enterprise SSO is conditional on that offering, while authenticated authorization is universal.
 - [ ] Enforce tenant, principal, enrollment, role and object ownership server-side on reads, mutations, history, files and realtime subscriptions. Derive identity from the session.
@@ -292,6 +295,28 @@ The clean-checkout check found and fixed a preexisting SBOM reproducibility defe
 
 The expanded suite is a maintained starting point for rendered tests, not a complete browser E2E or real-provider suite. The documentation update after `cb5d5a3` does not change the verified application code, dependencies or tests.
 
-**Next engineering work:** D06/D07 regressions and repairs; then implement a real authenticate → assign → submit → grade → reload/recover journey in staging (W04–W07). Continue remaining browser/device/accessibility acceptance, migration/restore/load tests, deployment/monitoring/support, distribution and customer validation before a real-data pilot. W01–W12 remain the production backlog; completing this batch does not mark those packages complete.
+**Next engineering work at the end of batch one:** D06/D07 regressions and repairs (completed in section 9); then implement a real authenticate → assign → submit → grade → reload/recover journey in staging (W04–W07). Continue remaining browser/device/accessibility acceptance, migration/restore/load tests, deployment/monitoring/support, distribution and customer validation before a real-data pilot. W01–W12 remain the production backlog; completing this batch does not mark those packages complete.
 
-**Your next contribution:** provide a brief for each target audience containing its first essential workflow and success measure; expected pilot users/concurrency and supported platforms; a hosting/support owner and monthly budget; required identity/import integrations; and synthetic sample courses with usage rights. These inputs allow a bounded service implementation while preserving support for all three audiences and future profiles.
+**Your next contribution:** provide a brief for each target audience containing its first essential workflow and success measure; expected pilot users/concurrency and supported platforms; the customer's hosting constraints, named operational/support owners and budget; required identity/import integrations; and synthetic sample courses with usage rights. The operating-model preference is now recorded and does not need to be decided again.
+
+## 9. Startup and media-consent update — 30 September 2026
+
+Application changes and regressions are committed in `e838adc`. The subsequent roadmap/deployment-plan update changes documentation only.
+
+| Item | Implemented behavior | Evidence and limits |
+| --- | --- | --- |
+| D06 | A rejected optional font load no longer leaves startup on an indefinite spinner. Custom typography uses only successfully loaded faces and falls back to system fonts, preserving the user's preference | The original shell failed two new rendered cases. Four regressions now cover rejection, sign-in gating, pending/failed institution startup with retry, successful startup, and missing/partial/all font availability. Native font appearance is still a device check |
+| D07 | Image, inline-video and fullscreen-video state belongs to the resolved canonical URL. Changing the URL remounts consent/loading/playback state before a new source reaches a media adapter | Ten new rendered cases failed before the patch; all 12 media cases now pass. Coverage includes actual CardDisplay depth transitions, same-host path/query changes, canonical aliases, revisiting a prior URL, local/invalid URLs, Markdown images, playback errors and lazy audio |
+| Operating model | Customer-operated default with a publisher-operated profile using the same product and service contract | Decision and remaining packaging/migration work recorded in the deployment profiles plan; no production service or portability claim established |
+
+The media fix preserves explicit approval followed by explicit playback; approving media does not autoplay it. It uses synchronous React identity changes rather than an effect that could run after a new URL reached a native player. Independent pre-patch reproduction and post-patch review found the three affected renderers and no concrete bypass or compatibility regression in the candidate. Native cleanup is supported by installed Expo lifecycle code inspection, not proven on physical devices.
+
+Validation for this batch:
+
+- `npm run check:release` passed in the development checkout: lint, strict TypeScript, fixture/security/notices checks, **428 tests with zero failures**, **270 synthetic journeys / 1,620 steps**, Expo compatibility/dependency tree, SBOM, web export and artifact verification.
+- Added **16 automated regressions**, of which 15 render the actual shell or CardDisplay through React Native Web/JSDOM and one checks typography selection. Media tests run the actual Markdown parser and custom rules; adapters substitute native font/media/hardware services and record load inputs without external requests.
+- The first sandbox run could not bind the two existing loopback-server tests (`EPERM`); the permitted rerun passed the entire pipeline. No tests were skipped to obtain the result.
+- Web artifact verification passed for 29 files; the runtime SBOM remains current at 527 components. Dependencies were not changed in this batch. The earlier same-day audit and unresolved notices in section 8 retain their stated limits.
+- This batch was not reinstalled into another fresh clone. The clean installation evidence in section 8 applies to the earlier revision. Hosted CI, actual provider/deployment evidence, real browser/native playback, network redirects, screen readers and recovery/load acceptance remain outstanding.
+
+**Production decision remains NO GO for real learner data.** Next is the reference service and staging journey, packaged for customer operation and usable under publisher operation. The deployment plan states the concrete infrastructure, identity, workload and ownership inputs needed before committing to that implementation.
