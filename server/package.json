@@ -1,0 +1,27 @@
+{
+  "name": "lms-reference-auth",
+  "version": "0.1.0",
+  "private": true,
+  "type": "module",
+  "license": "UNLICENSED",
+  "engines": {
+    "node": ">=26.5.0 <27"
+  },
+  "scripts": {
+    "start": "node main.ts",
+    "provision": "node provision.ts",
+    "test": "node --test tests/*.test.ts",
+    "typecheck": "tsc --noEmit",
+    "metadata:generate": "node scripts/release-metadata.mjs",
+    "metadata:check": "node scripts/release-metadata.mjs --check",
+    "check": "npm run typecheck && npm test && npm run metadata:check",
+    "audit": "npm audit --omit=dev"
+  },
+  "dependencies": {
+    "openid-client": "6.8.8"
+  },
+  "devDependencies": {
+    "@types/node": "26.1.1",
+    "typescript": "6.0.3"
+  }
+}

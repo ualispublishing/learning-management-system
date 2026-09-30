@@ -2,6 +2,8 @@
 
 Decision recorded 30 September 2026: **customer-operated deployment is the default**. If negotiations require a hosted service, the publisher must be able to operate the same product. This is an implementation plan, not evidence that either production deployment exists today.
 
+Implementation progress: the [reference authentication service](../server/README.md) now supplies server-side OIDC and persistent application sessions for one dedicated installation. It is not connected to an actual provider or the institutional data gateway yet; the remaining deployment and acceptance requirements below still apply.
+
 Keep one application, one versioned service contract, and one migration/release process. Change deployment configuration and accountable operators between profiles. Avoid customer-specific application forks. The supported infrastructure matrix will be deliberately bounded; portability does not mean support for every database, cloud, operating system, or offline environment.
 
 ## 1. The two supported operating profiles

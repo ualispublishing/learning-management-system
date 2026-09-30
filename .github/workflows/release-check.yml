@@ -24,10 +24,17 @@ jobs:
         with:
           node-version: 26.5.0
           cache: npm
+          cache-dependency-path: |
+            package-lock.json
+            server/package-lock.json
       - name: Pin npm used for reproducible SBOM output
         run: npm install --global npm@11.17.0 --ignore-scripts
       - name: Install exact dependency graph
         run: npm ci
+      - name: Install exact authentication server dependency graph
+        run: npm ci --prefix server
+      - name: Audit authentication server dependencies
+        run: npm --prefix server run audit
       - name: Enforce current production dependency audit policy
         run: npm run audit:release
       - name: Run repository release checks

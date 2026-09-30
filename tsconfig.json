@@ -5,6 +5,7 @@
     "types": ["node"]
   },
   "exclude": [
+    "server",
     "node_modules",
     "src/**/__tests__/**",
     "generate_mocks.ts",

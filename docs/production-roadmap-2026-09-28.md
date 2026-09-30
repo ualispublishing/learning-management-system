@@ -8,7 +8,7 @@ This is a remaining-work plan. The original review records the 28 September base
 
 ## 1. Correct starting point
 
-**Automated tests already exist.** The baseline review observed all 391 tests passing across its runs. The first implementation batch passed **412 automated tests and 270 synthetic repository/store journeys from a clean checkout**. The second batch now passes **428 tests**, adding rendered startup/media regressions. Strict TypeScript, lint, fixture checks, dependency/security checks, SBOM/notices and a CI workflow definition are also present. See sections 8–9 for the exact evidence and limits.
+**Automated tests already exist.** The baseline review observed all 391 tests passing across its runs. The first implementation batch passed **412 automated tests and 270 synthetic repository/store journeys from a clean checkout**. The client now passes **428 tests**, and the reference authentication service adds **17 tests**. Strict TypeScript, lint, fixture checks, dependency/security checks, SBOM/notices and a CI workflow definition are also present. See sections 8–10 for the exact evidence and limits.
 
 The missing pieces are broader maintained rendered-component coverage and browser E2E tests, real-provider integration evidence, additional failure/concurrency coverage, supported-device/accessibility acceptance, and enforced production promotion. Static source checks and synthetic journeys remain useful; they do not establish those other forms of assurance.
 
@@ -16,7 +16,7 @@ The missing pieces are broader maintained rendered-component coverage and browse
 | --- | --- | --- |
 | Existing foundation | Domain rules, repository interfaces, role checks, principal scoping, bounded transports, tests and release scripts | Extend these; do not replace them merely to appear more professional |
 | Defect baseline | D01–D07 now have client repairs and regression coverage; D08 has a principal-generation guard | Verify actual providers, browser/device behavior and the remaining production work before a real-data pilot |
-| Missing production implementation in this repository | Connected durable institutional backend, real identity bootstrap and service operations | Implement one reference production deployment and its supported service contracts |
+| Missing production implementation in this repository | Reference OIDC/session service added; connected institutional backend, app identity bootstrap and service operations still missing | Implement and connect one reference production deployment and verify its supported service contracts |
 | Existing definition, deployment unverified | CI workflow, security headers, acceptance manifest, dependency exceptions | Prove their behavior on a tracked revision and deployed candidate |
 | Evidence outstanding | Manual/device/accessibility plan marked NOT RUN; restore/load/production-provider evidence absent | Execute checks and retain results; do not turn absence of evidence into a passing status |
 | Source tracking | Baseline preserved in `3ee8e3b`; reliability work in `19f0109`; reproducible SBOM fix in `cb5d5a3`; clean checkout verified | Configure the organization-owned remote and enforce required review/release checks |
@@ -99,6 +99,7 @@ Ownership below describes responsibilities, not an assumption that a separate hi
 - [ ] Assign named infrastructure, installation, patching, backup, incident and support owners for the actual deployment; implement and verify both supported profiles.
 - [ ] Implement a reference durable backend and connect it through the existing adapters before authenticated routes render. Managed services are acceptable; microservices are not a prerequisite.
 - [ ] Implement real authentication/session recovery/logout. Support the identity method promised for each profile; enterprise SSO is conditional on that offering, while authenticated authorization is universal.
+  - Server OIDC protocol handling and durable sessions are implemented as the [reference auth service](../server/README.md). Real provider/browser acceptance, app integration, native transport and operational evidence remain required before marking this item complete.
 - [ ] Enforce tenant, principal, enrollment, role and object ownership server-side on reads, mutations, history, files and realtime subscriptions. Derive identity from the session.
 - [ ] Make grade/timer/attempt state authoritative; use database transactions, revision conflict checks, stable idempotency across retries and canonical mutation responses. Test ambiguous timeouts after server commit.
 - [ ] Define versioned API contracts, validation/error formats, pagination, quotas, rate limits and bounded retry/backoff. Keep client/provider contract tests synchronized.
@@ -320,3 +321,24 @@ Validation for this batch:
 - This batch was not reinstalled into another fresh clone. The clean installation evidence in section 8 applies to the earlier revision. Hosted CI, actual provider/deployment evidence, real browser/native playback, network redirects, screen readers and recovery/load acceptance remain outstanding.
 
 **Production decision remains NO GO for real learner data.** Next is the reference service and staging journey, packaged for customer operation and usable under publisher operation. The deployment plan states the concrete infrastructure, identity, workload and ownership inputs needed before committing to that implementation.
+
+## 10. Authentication foundation — 30 September 2026
+
+The separately installed `server/` service adds real OIDC authorization-code handling using the maintained `openid-client` library, with PKCE/state/nonce and signature checks. A private SQLite database persists single-use login transactions, approved issuer/subject mappings and hashed application sessions. Login/logout origin checks, session expiry, operator account disablement and pending-exchange cancellation are implemented. Provider tokens and client secrets are not sent to the browser. The demo remains synthetic, and the production app's fail-closed bootstrap remains intact.
+
+This is a **dedicated-installation web authentication foundation**, not an implemented full backend or verified hosted product. The server README contains configuration, the operator provisioning commands, the functional SSO page, responsibilities and explicit limits. It can be operated by the customer or publisher under the agreed deployment model.
+
+| Evidence | Result and scope |
+| --- | --- |
+| Protocol, identity and session tests | **17 passed** using real OIDC processing and RSA signatures with synthetic provider HTTP responses; cases include issuer/audience/nonce/signature/expiry rejection, replay, wrong browser binding, unknown subjects, privilege-claim rejection, logout races and disablement |
+| Durable state | File-backed SQLite survives reopening; revoked sessions stay revoked; cookie credentials are hashed and database file permissions are restricted |
+| Independent install | Copied server source without node_modules to a separate temporary directory, ran `npm ci --offline --ignore-scripts` from the pinned lockfile, then passed server type checks, all 17 tests and metadata checks without the app's dependencies. Offline installation reused cached package downloads; it did not reuse an installed dependency tree |
+| HTTP boundary | Real loopback HTTP test passes; forged Host/forwarding headers do not select the callback, unsupported methods/bodies are rejected, and multiple Set-Cookie headers survive the bridge |
+| Combined release pipeline | **428 client tests + 17 server tests**, 270 synthetic journeys / 1,620 steps, both TypeScript configurations, lint, fixtures/security/notices, dependency checks, both SBOMs and web artifact verification pass locally |
+| Server dependencies | Independent pinned lockfile, three runtime dependencies, generated notices and SBOM; initial online audit reports zero known vulnerabilities for this server tree. Existing client dependency exceptions remain separate |
+| CI definition | Installs both lockfiles, checks both codebases and audits the server tree; hosted execution remains unverified because no remote is configured |
+| Not established | Actual provider registration, HTTPS proxy and browser flow; full app/gateway integration; native login; MFA/deprovisioning-policy enforcement beyond the provider flow and local account disablement; HA, operational monitoring, backup/restore acceptance |
+
+**Do not treat authentication as an easy final add-on.** A synthetic demo can defer a live provider, but real identity, account lifecycle and server permissions must shape the gateway from the start. The next implementation connects a chosen test issuer and the durable institutional gateway, supplies the explicit same-origin web transport, and verifies authenticate → assign → submit → grade → reload/recover. Existing bearer-token adapters cannot simply be given the HttpOnly cookie; the web transport and CSRF boundary need a deliberate integration. Native clients require their own supported transport and secure credential handling.
+
+**Input needed from you or the first customer's IT contact:** test identity-provider issuer/client registration through secure access controls, application HTTPS origin and hosting constraints, approved test accounts, pilot size and budget, and operational owners. No real password or client secret should be pasted into chat. Until those are available, local synthetic protocol tests can advance engineering but cannot establish live SSO readiness.

@@ -88,8 +88,9 @@
     "build:web": "node scripts/export-web.mjs",
     "verify:web-build": "node scripts/verify-web-build.mjs",
     "check": "npm run lint && npm run typecheck && npm run validate:fixtures && npm run validate:security && npm run notices:check && npm test && npm run test:journeys",
-    "check:release": "npm run check && npm run validate:dependencies && npm run sbom:check && npm run build:web && npm run verify:web-build",
-    "check:production": "npm run validate:production-config && npm run validate:provider && npm run audit:release && npm run check:release"
+    "check:server": "npm --prefix server run check",
+    "check:release": "npm run check && npm run check:server && npm run validate:dependencies && npm run sbom:check && npm run build:web && npm run verify:web-build",
+    "check:production": "npm run validate:production-config && npm run validate:provider && npm run audit:release && npm --prefix server run audit && npm run check:release"
   },
   "private": true,
   "overrides": {
