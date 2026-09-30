@@ -4,22 +4,22 @@ Planning baseline: 28 September 2026. Covers corporate training, schools/college
 
 Sources: the [code review](production-and-pitch-review-2026-09-28.md) and your supplied personal-project versus professional-product comparison table (not redistributed).
 
-This is a remaining-work plan, not a claim that the work is completed. The previous review's test results are historical evidence for that working tree; tests were not rerun for this planning document. Production readiness must be demonstrated for an exact release, supported customer profile, and deployment environment.
+This is a remaining-work plan. The original review records the 28 September baseline; the implementation update below records subsequent work. Production readiness must be demonstrated for an exact release, supported customer profile, and deployment environment.
 
 ## 1. Correct starting point
 
-**Automated tests already exist.** The review observed all 391 tests passing across the initial run and the rerun of two sandbox-blocked server tests. There are also 270 synthetic repository/store journeys, strict TypeScript, lint, fixture checks, dependency/security checks, SBOM/notices, and a CI workflow definition.
+**Automated tests already exist.** The baseline review observed all 391 tests passing across its runs. The implementation batch now passes **412 automated tests and 270 synthetic repository/store journeys from a clean checkout**, including two rendered assessment tests. Strict TypeScript, lint, fixture checks, dependency/security checks, SBOM/notices and a CI workflow definition are also present. See section 8 for current evidence and limits.
 
-The missing pieces are a maintained rendered-component/browser suite, real-provider integration evidence, broader failure/concurrency coverage, supported-device/accessibility acceptance, and enforced production promotion. Static source checks and synthetic journeys remain useful; they do not establish those other forms of assurance.
+The missing pieces are broader maintained rendered-component coverage and browser E2E tests, real-provider integration evidence, additional failure/concurrency coverage, supported-device/accessibility acceptance, and enforced production promotion. Static source checks and synthetic journeys remain useful; they do not establish those other forms of assurance.
 
 | Status | Current evidence | Consequence for this plan |
 | --- | --- | --- |
 | Existing foundation | Domain rules, repository interfaces, role checks, principal scoping, bounded transports, tests and release scripts | Extend these; do not replace them merely to appear more professional |
-| Confirmed defects | Four data integrity failures; conditional logout defect; font failure handling; media consent state | Repair with regression evidence before a real-data pilot |
+| Defect baseline | D01–D05 now have client repairs and regression coverage; D06 font recovery and D07 destination-bound media consent remain | Complete remaining repairs and verify the deployed provider and supported devices before a real-data pilot |
 | Missing production implementation in this repository | Connected durable institutional backend, real identity bootstrap and service operations | Implement one reference production deployment and its supported service contracts |
 | Existing definition, deployment unverified | CI workflow, security headers, acceptance manifest, dependency exceptions | Prove their behavior on a tracked revision and deployed candidate |
 | Evidence outstanding | Manual/device/accessibility plan marked NOT RUN; restore/load/production-provider evidence absent | Execute checks and retain results; do not turn absence of evidence into a passing status |
-| Release hygiene gap | Source, tests, scripts and CI remain untracked in the inspected Git checkout | Preserve and commit reviewed work, then verify a clean checkout |
+| Source tracking | Baseline preserved in `3ee8e3b`; reliability work in `19f0109`; reproducible SBOM fix in `cb5d5a3`; clean checkout verified | Configure the organization-owned remote and enforce required review/release checks |
 
 ## 2. Product scope: shared core and customer profiles
 
@@ -68,8 +68,8 @@ Ownership below describes responsibilities, not an assumption that a separate hi
 
 ### W02 — Version control, maintainability and reproducibility — A
 
-- [ ] Preserve all existing work; review what should be tracked and exclude secrets, learner data and generated/private artifacts. Commit source, tests, configuration and CI without discarding current changes.
-- [ ] Prove dependency installation, checks and build from a clean checkout with the pinned runtime and lockfile. Document setup and supported commands.
+- [x] Preserve existing work and commit source, tests, configuration and CI with private/generated artifacts excluded. Baseline: `3ee8e3b`; first reliability batch: `19f0109`.
+- [x] Prove dependency installation, checks and web build from a clean checkout with the pinned runtime and lockfile. Revision `cb5d5a3` passed on Node 26.5.0 / npm 11.17.0; commands and limits are recorded in section 8. Hosted CI and other platform evidence remain outstanding.
 - [ ] Establish protected main/release branches, required checks, systematic review, release tags, and an emergency-change procedure suitable for the team's size.
 - [ ] Extract assessment persistence into a focused controller/state machine; isolate snapshot concurrency behavior; split large components when doing so makes responsibilities clearer. Use narrow store selectors.
 - [ ] Maintain architecture decisions, API ownership, coding conventions and a short onboarding guide. Have another qualified person reproduce setup and a routine change.
@@ -134,7 +134,7 @@ Extend the existing suite rather than starting from zero. Require traceability t
 | Layer | Remaining work | Where evidence belongs |
 | --- | --- | --- |
 | Unit/domain | Regression cases for D01–D08; permissions, grading, dates, schema edges, SRS and recovery invariants | Fast change checks; failures block affected releases |
-| Rendered components | Mount actual assessment/editor/chat/session UI; exercise clicks, keyboard, async errors, dirty-state retention, dialogs and accessible state | Required checks for affected UI; rename source-only contract tests accurately |
+| Rendered components | Assessment save/failure/exit/reopen tests now render the real component with React Native Web and a simulated DOM. Extend to editor/chat/session UI, keyboard/focus, dialogs and accessible state | Required checks for affected UI; rename source-only contract tests accurately |
 | Real-service integration | Real test database/provider endpoints, transactions, migrations, token lifecycle, authorization, canonical responses and idempotency | Disposable test environment with synthetic identities and cleanup |
 | Browser E2E | Actual built app with learner/staff/admin identities; publish → enroll → answer → submit → grade/release → reload; chat/study if included | Maintained CI smoke suite plus fuller staging acceptance, screenshots/traces on failure |
 | Independent clients/faults | Two tabs/devices/tenants; server commit then timeout; offline/expiry; stale cache; restart; storage quota; duplicate/reordered messages | Deterministic fault tests and production-like staging scenarios |
@@ -258,3 +258,40 @@ A real-data release is **NO GO** if it has unresolved silent data-loss behavior,
 A release is **GO for the named profile and limits only** when the exact source and artifacts are reproducible, required journeys and failure cases pass, deployed services and recovery are verified, relevant manual evidence is complete, and accountable owners approve remaining bounded risks. Follow with a controlled pilot, monitored outcomes and an explicit expansion decision.
 
 **First implementation batch:** preserve/track the source; convert D01–D04 into permanent regressions; repair those defects plus logout; add rendered assessment-save coverage; reproduce a clean CI build. In parallel, supply the W01 briefs and service/operating decisions. This batch improves every target audience without prematurely selecting a large infrastructure stack.
+
+
+## 8. Implementation update — 30 September 2026
+
+The first implementation batch is committed in `19f0109ecbac9ae7458ac5e35df29b9f8efe15be`, followed by the SBOM reproducibility repair in **`cb5d5a34e02735374c0886435bc31b22985bbab6`**, the clean-checkout verification revision. It improves the shared client used by every requested customer profile. It does not implement the production backend or certify a production deployment.
+
+| Item | Implemented behavior | Evidence and limits |
+| --- | --- | --- |
+| D01 | A focused draft saver retains failed and newer pending answers until acknowledgement; exit retries and waits for saving | Controller tests plus two rendered AssessmentPlayer tests cover failure after settlement, retry, slow writes, latest-answer coalescing and reopening. Browser/tab closure and native interruption remain separate acceptance work |
+| D02 | Every web write acquires an origin-wide Web Lock and reloads durable storage before changing it; reads refresh too | Independent module runtimes sharing storage preserve inserts and other principals' records; concurrent reviews accept one valid revision. Browsers without Web Locks reject writes while retaining reads/export. Real-browser matrix testing remains |
+| D03 | Snapshot reads and mutation commits use one ordered client queue | A delayed write and overlapping read retain the committed server state |
+| D04 | Production configuration requires a complete canonical snapshot after a mutation; cursor/ETag metadata alone is not treated as data; stores and record-returning APIs consume committed values | Tests cover server normalization, later 304 responses, malformed readback and metadata-free production acknowledgements. The gateway must provide read-your-writes consistency; a readback failure can follow an already committed write. Legacy low-level factories have an explicitly documented compatibility mode |
+| D05 | App-session revocation, provider callback coordination, stale-result rejection, subscription cleanup and ordered cache erasure | Tests cover fresh-factory reload, missing/ineffective logout, pending same-user operations, sign-in overlapping logout, delayed cache save/restore and legitimate new sign-in. Actual SSO cookies/tokens and multi-device revocation still require provider evidence |
+| D08 lead | Content-grouping changes now check principal generations and reload canonical data before updating the store | This closes the observed missing-guard pattern; the original review did not establish an exploitable vulnerability |
+| Dependencies | Compatible Expo patches, patched Markdown parser and compatible brace-expansion updates; lockfile, notices and SBOM refreshed | Existing audit policy retained. Dependency exceptions and unresolved notice provenance still need the release owner's review |
+
+The clean-checkout check found and fixed a preexisting SBOM reproducibility defect: npm labeled the root component with the checkout folder name. The generator now uses the declared package name; a permanent test generates and checks SBOMs in two differently named directories.
+
+| Validation on 30 September 2026 | Result |
+| --- | --- |
+| Exact lockfile installation in a fresh local clone | `npm ci --fetch-timeout=20000 --fetch-retries=0` passed, without reusing the development checkout's node_modules |
+| Full release pipeline on `cb5d5a3` | `npm run check:release` passed: lint, strict TypeScript, four fixture validations, security configuration checks, notices, tests, journeys, online Expo compatibility, dependency tree, SBOM, web export and artifact verification |
+| Automated behavior checks | **412 passed, zero failed**; includes two rendered AssessmentPlayer tests. The remaining tests cover a mixture of actual domain/store/repository behavior and source/AST contracts |
+| Synthetic journeys | **270 journeys / 1,620 steps passed**; these are repository/store journeys, not rendered browser journeys |
+| Web artifact | Build and verification passed: 29 files, no source maps or detected high-confidence secret markers |
+| Live dependency audit | `npm run audit:release` passed the existing policy; one affected package entry and two documented allowed advisory roots remain. This is not a zero-vulnerability claim |
+| Distribution metadata | Notices and SBOM current for 527 runtime components; 16 unresolved notice entries still require release-owner provenance review |
+| Production identifiers | `npm run validate:production-config` **failed as expected**: institution-owned iOS/Android identifiers and build values are absent |
+| Production provider evidence | `npm run validate:provider` **failed as expected**: no protected acceptance manifest with actual provider evidence supplied |
+| Hosted CI / deployment | Not executed: no remote repository configured. The local pipeline passed; branch protection, remote checks and production promotion remain work |
+| Actual provider, native devices, accessibility and load/recovery acceptance | Not established by this batch; these remain required for their offered scope |
+
+The expanded suite is a maintained starting point for rendered tests, not a complete browser E2E or real-provider suite. The documentation update after `cb5d5a3` does not change the verified application code, dependencies or tests.
+
+**Next engineering work:** D06/D07 regressions and repairs; then implement a real authenticate → assign → submit → grade → reload/recover journey in staging (W04–W07). Continue remaining browser/device/accessibility acceptance, migration/restore/load tests, deployment/monitoring/support, distribution and customer validation before a real-data pilot. W01–W12 remain the production backlog; completing this batch does not mark those packages complete.
+
+**Your next contribution:** provide a brief for each target audience containing its first essential workflow and success measure; expected pilot users/concurrency and supported platforms; a hosting/support owner and monthly budget; required identity/import integrations; and synthetic sample courses with usage rights. These inputs allow a bounded service implementation while preserving support for all three audiences and future profiles.
