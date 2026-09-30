@@ -2,7 +2,7 @@
   "$schema": "http://cyclonedx.org/schema/bom-1.5.schema.json",
   "bomFormat": "CycloneDX",
   "specVersion": "1.5",
-  "serialNumber": "urn:uuid:be6ca32f-8485-569f-85b3-8b1eeb04c5b6",
+  "serialNumber": "urn:uuid:a2548a29-1f82-55de-9aba-3c212df0fca2",
   "version": 1,
   "metadata": {
     "lifecycles": [
@@ -39,7 +39,7 @@
       },
       {
         "name": "lms:package-lock:sha256",
-        "value": "be6ca32f8485f69fc5b38b1eeb04c5b623a6bfa409f465a2b88b8f1dc2e7b248"
+        "value": "a2548a291f82f5de1aba3c212df0fca29539f9db0f2be74d9707d40690a2649b"
       }
     ]
   },
@@ -2083,44 +2083,6 @@
       ]
     },
     {
-      "bom-ref": "@babel/runtime@7.29.7",
-      "type": "library",
-      "name": "@babel/runtime",
-      "version": "7.29.7",
-      "scope": "required",
-      "author": "The Babel Team (https://babel.dev/team)",
-      "description": "babel's modular runtime helpers",
-      "purl": "pkg:npm/%40babel/runtime@7.29.7",
-      "properties": [],
-      "externalReferences": [
-        {
-          "type": "distribution",
-          "url": "https://registry.npmjs.org/@babel/runtime/-/runtime-7.29.7.tgz"
-        },
-        {
-          "type": "vcs",
-          "url": "https://github.com/babel/babel.git"
-        },
-        {
-          "type": "website",
-          "url": "https://babel.dev/docs/en/next/babel-runtime"
-        }
-      ],
-      "hashes": [
-        {
-          "alg": "SHA-512",
-          "content": "36af0e8465a264864657a84b1e8c8028b2dc26284fff115e04c189a14af14d7da9b08f1d0a27f32e16484856fe5564b7c053110e6086c3947e74ec920aa3cb87"
-        }
-      ],
-      "licenses": [
-        {
-          "license": {
-            "id": "MIT"
-          }
-        }
-      ]
-    },
-    {
       "bom-ref": "@egjs/hammerjs@2.0.17",
       "type": "library",
       "name": "@egjs/hammerjs",
@@ -2234,19 +2196,19 @@
       ]
     },
     {
-      "bom-ref": "@expo/cli@57.0.25",
+      "bom-ref": "@expo/cli@57.0.27",
       "type": "library",
       "name": "@expo/cli",
-      "version": "57.0.25",
+      "version": "57.0.27",
       "scope": "required",
       "author": "Expo",
       "description": "The Expo CLI",
-      "purl": "pkg:npm/%40expo/cli@57.0.25",
+      "purl": "pkg:npm/%40expo/cli@57.0.27",
       "properties": [],
       "externalReferences": [
         {
           "type": "distribution",
-          "url": "https://registry.npmjs.org/@expo/cli/-/cli-57.0.25.tgz"
+          "url": "https://registry.npmjs.org/@expo/cli/-/cli-57.0.27.tgz"
         },
         {
           "type": "vcs",
@@ -2264,7 +2226,7 @@
       "hashes": [
         {
           "alg": "SHA-512",
-          "content": "1b61497f00a520f34f847dac2652050248502d868a346cd26ab210525eac540f2819dae6067851bdbb53cf10f38d2e96cced9a0d7f0363bcb568d6c21482e876"
+          "content": "25aba4e1c8719a9546e4496b30b4c2c2314fdb48db614ecf0789772d857c8fee1eff71d4e63765eea4d0e1e572d40683504f486b634243903d91aaf657581a2e"
         }
       ],
       "licenses": [
@@ -2964,19 +2926,19 @@
       ]
     },
     {
-      "bom-ref": "@expo/metro-runtime@57.0.15",
+      "bom-ref": "@expo/metro-runtime@57.0.16",
       "type": "library",
       "name": "@expo/metro-runtime",
-      "version": "57.0.15",
+      "version": "57.0.16",
       "scope": "required",
       "author": "650 Industries, Inc.",
       "description": "Tools for making advanced Metro bundler features work",
-      "purl": "pkg:npm/%40expo/metro-runtime@57.0.15",
+      "purl": "pkg:npm/%40expo/metro-runtime@57.0.16",
       "properties": [],
       "externalReferences": [
         {
           "type": "distribution",
-          "url": "https://registry.npmjs.org/@expo/metro-runtime/-/metro-runtime-57.0.15.tgz"
+          "url": "https://registry.npmjs.org/@expo/metro-runtime/-/metro-runtime-57.0.16.tgz"
         },
         {
           "type": "vcs",
@@ -2990,7 +2952,7 @@
       "hashes": [
         {
           "alg": "SHA-512",
-          "content": "f5168592a23346e77aa25f5f73964a1e034361e0e341505d0100beae3490e9188a574a58f928c3a8698a6396b833d4da574a8b30234dae9e51f3c06a0b6c5bb9"
+          "content": "c78dd6819a080a9a77ec184357bbe2c5ed1b3716d53cf19a04b1d873df1927c314f940b6764dfd6365ef91f60c4516c0512224088262c1d1119e9b653e0d0293"
         }
       ],
       "licenses": [
@@ -3245,19 +3207,19 @@
       ]
     },
     {
-      "bom-ref": "@expo/router-server@57.0.10",
+      "bom-ref": "@expo/router-server@57.0.11",
       "type": "library",
       "name": "@expo/router-server",
-      "version": "57.0.10",
+      "version": "57.0.11",
       "scope": "required",
       "author": "650 Industries, Inc.",
       "description": "Expo Router is a file-based router for React Native and web applications.",
-      "purl": "pkg:npm/%40expo/router-server@57.0.10",
+      "purl": "pkg:npm/%40expo/router-server@57.0.11",
       "properties": [],
       "externalReferences": [
         {
           "type": "distribution",
-          "url": "https://registry.npmjs.org/@expo/router-server/-/router-server-57.0.10.tgz"
+          "url": "https://registry.npmjs.org/@expo/router-server/-/router-server-57.0.11.tgz"
         },
         {
           "type": "vcs",
@@ -3275,7 +3237,7 @@
       "hashes": [
         {
           "alg": "SHA-512",
-          "content": "f2b1a1e8de5d8bb8f3bbb502d52b880354d699577ebc1c0e1f00bbff5c30f8503a09cc5c5b242570f977f61dbe2699ee97bf025735a922339c74ab19b29db35f"
+          "content": "d10c5ba8491c79bd560debb956a35d9d33d51e59b7535f3717b635b792cca2198644090754bd0f078b421c1bc4a8aa4bccecc754e6f0deb786909d6d5f8f21f1"
         }
       ],
       "licenses": [
@@ -3442,19 +3404,19 @@
       ]
     },
     {
-      "bom-ref": "@expo/ui@57.0.18",
+      "bom-ref": "@expo/ui@57.0.21",
       "type": "library",
       "name": "@expo/ui",
-      "version": "57.0.18",
+      "version": "57.0.21",
       "scope": "required",
       "author": "650 Industries, Inc.",
       "description": "A collection of UI components",
-      "purl": "pkg:npm/%40expo/ui@57.0.18",
+      "purl": "pkg:npm/%40expo/ui@57.0.21",
       "properties": [],
       "externalReferences": [
         {
           "type": "distribution",
-          "url": "https://registry.npmjs.org/@expo/ui/-/ui-57.0.18.tgz"
+          "url": "https://registry.npmjs.org/@expo/ui/-/ui-57.0.21.tgz"
         },
         {
           "type": "vcs",
@@ -3468,7 +3430,7 @@
       "hashes": [
         {
           "alg": "SHA-512",
-          "content": "f51900dbabf4152c87964402c9abd9ad3f04cec00b7e43472053b9b82f88b00c735b322d74e59dcba6ac8e9835c9a0af04418c6243f5ec5519c65ba155b7a578"
+          "content": "e2cd72a4637126126fdabd5f8f7c19a3802e6daa34cc69c26a30ae89a4e9f294cdad3fb5bd1f0abf2a05130a7e73b8292a6d83e7c9c60a21815e112798a1ed0d"
         }
       ],
       "licenses": [
@@ -3724,46 +3686,6 @@
       ]
     },
     {
-      "bom-ref": "@radix-ui/primitive@1.1.5",
-      "type": "library",
-      "name": "@radix-ui/primitive",
-      "version": "1.1.5",
-      "scope": "required",
-      "purl": "pkg:npm/%40radix-ui/primitive@1.1.5",
-      "properties": [],
-      "externalReferences": [
-        {
-          "type": "distribution",
-          "url": "https://registry.npmjs.org/@radix-ui/primitive/-/primitive-1.1.5.tgz"
-        },
-        {
-          "type": "vcs",
-          "url": "git+https://github.com/radix-ui/primitives.git"
-        },
-        {
-          "type": "website",
-          "url": "https://radix-ui.com/primitives"
-        },
-        {
-          "type": "issue-tracker",
-          "url": "https://github.com/radix-ui/primitives/issues"
-        }
-      ],
-      "hashes": [
-        {
-          "alg": "SHA-512",
-          "content": "77ce9621615836d180d07fddf1ec6cb6b4d14e9ede5896256096ed3687f1affde58eea59627e841431bf420bbfd0a73cbfbc8c531c926a0a89b0bd7e3dd6235a"
-        }
-      ],
-      "licenses": [
-        {
-          "license": {
-            "id": "MIT"
-          }
-        }
-      ]
-    },
-    {
       "bom-ref": "@radix-ui/primitive@1.1.7",
       "type": "library",
       "name": "@radix-ui/primitive",
@@ -3804,17 +3726,17 @@
       ]
     },
     {
-      "bom-ref": "@radix-ui/react-collection@1.1.12",
+      "bom-ref": "@radix-ui/react-collection@1.1.15",
       "type": "library",
       "name": "@radix-ui/react-collection",
-      "version": "1.1.12",
+      "version": "1.1.15",
       "scope": "required",
-      "purl": "pkg:npm/%40radix-ui/react-collection@1.1.12",
+      "purl": "pkg:npm/%40radix-ui/react-collection@1.1.15",
       "properties": [],
       "externalReferences": [
         {
           "type": "distribution",
-          "url": "https://registry.npmjs.org/@radix-ui/react-collection/-/react-collection-1.1.12.tgz"
+          "url": "https://registry.npmjs.org/@radix-ui/react-collection/-/react-collection-1.1.15.tgz"
         },
         {
           "type": "vcs",
@@ -3832,47 +3754,7 @@
       "hashes": [
         {
           "alg": "SHA-512",
-          "content": "9dbebb20da44d086a124a37b1183e9f66f581b061e2a59f3c53dccc17564802b246922626bdee41b84f4cb0a633544929e8264feebe4d7657cbdbac41c48fefd"
-        }
-      ],
-      "licenses": [
-        {
-          "license": {
-            "id": "MIT"
-          }
-        }
-      ]
-    },
-    {
-      "bom-ref": "@radix-ui/react-compose-refs@1.1.3",
-      "type": "library",
-      "name": "@radix-ui/react-compose-refs",
-      "version": "1.1.3",
-      "scope": "required",
-      "purl": "pkg:npm/%40radix-ui/react-compose-refs@1.1.3",
-      "properties": [],
-      "externalReferences": [
-        {
-          "type": "distribution",
-          "url": "https://registry.npmjs.org/@radix-ui/react-compose-refs/-/react-compose-refs-1.1.3.tgz"
-        },
-        {
-          "type": "vcs",
-          "url": "git+https://github.com/radix-ui/primitives.git"
-        },
-        {
-          "type": "website",
-          "url": "https://radix-ui.com/primitives"
-        },
-        {
-          "type": "issue-tracker",
-          "url": "https://github.com/radix-ui/primitives/issues"
-        }
-      ],
-      "hashes": [
-        {
-          "alg": "SHA-512",
-          "content": "ad838ff0e327bae3cc405d6e84f56518d7020e592890aa86144dc97311558889005cfec4bc5594962240b2dadaa72a5a04b24d1db64bea31a16d50c64f099584"
+          "content": "f56f81f4d3c5d0d69a3e1ff5349777f8aaac9e52ea53d1fb4f6aefc30f9fa7e4ff7af55774d03261c9df4506453a3911d5a8d0a77c8e465aa723cb286b02ef34"
         }
       ],
       "licenses": [
@@ -3913,46 +3795,6 @@
         {
           "alg": "SHA-512",
           "content": "fb8f0f6c001bab77627632716be39a598d99c2000ab0d8911b27872accdb959310fa472977da40693d7570c9061227b4bec3a2dd075e4c4e9de457b71a7eb590"
-        }
-      ],
-      "licenses": [
-        {
-          "license": {
-            "id": "MIT"
-          }
-        }
-      ]
-    },
-    {
-      "bom-ref": "@radix-ui/react-context@1.2.0",
-      "type": "library",
-      "name": "@radix-ui/react-context",
-      "version": "1.2.0",
-      "scope": "required",
-      "purl": "pkg:npm/%40radix-ui/react-context@1.2.0",
-      "properties": [],
-      "externalReferences": [
-        {
-          "type": "distribution",
-          "url": "https://registry.npmjs.org/@radix-ui/react-context/-/react-context-1.2.0.tgz"
-        },
-        {
-          "type": "vcs",
-          "url": "git+https://github.com/radix-ui/primitives.git"
-        },
-        {
-          "type": "website",
-          "url": "https://radix-ui.com/primitives"
-        },
-        {
-          "type": "issue-tracker",
-          "url": "https://github.com/radix-ui/primitives/issues"
-        }
-      ],
-      "hashes": [
-        {
-          "alg": "SHA-512",
-          "content": "7ce13e26d37daf280d6640a71d10443f44c0bcb95d961c8ec4cb1bc05bd33f89c0b3e9c199f9e76bea3f66c922db092663560cac50b4692cec1e82d8e3b88bae"
         }
       ],
       "licenses": [
@@ -4044,17 +3886,17 @@
       ]
     },
     {
-      "bom-ref": "@radix-ui/react-direction@1.1.2",
+      "bom-ref": "@radix-ui/react-direction@1.1.4",
       "type": "library",
       "name": "@radix-ui/react-direction",
-      "version": "1.1.2",
+      "version": "1.1.4",
       "scope": "required",
-      "purl": "pkg:npm/%40radix-ui/react-direction@1.1.2",
+      "purl": "pkg:npm/%40radix-ui/react-direction@1.1.4",
       "properties": [],
       "externalReferences": [
         {
           "type": "distribution",
-          "url": "https://registry.npmjs.org/@radix-ui/react-direction/-/react-direction-1.1.2.tgz"
+          "url": "https://registry.npmjs.org/@radix-ui/react-direction/-/react-direction-1.1.4.tgz"
         },
         {
           "type": "vcs",
@@ -4072,7 +3914,7 @@
       "hashes": [
         {
           "alg": "SHA-512",
-          "content": "0b7bc585bca2e125b73e66c08ba030a6ee0ecc9b5dd0cc46babbd2b18b6bee9ee733c44d0775401770949a7a768f9d249e992b45c07bfb27155f380b805eb234"
+          "content": "e69ce0e05190369131867853db396b3f5c1915a6027752b49d85a814075c62860af3af0812282a317dc1ddff3222846502101e0d67222c8e9974228717d3f856"
         }
       ],
       "licenses": [
@@ -4204,46 +4046,6 @@
       ]
     },
     {
-      "bom-ref": "@radix-ui/react-id@1.1.2",
-      "type": "library",
-      "name": "@radix-ui/react-id",
-      "version": "1.1.2",
-      "scope": "required",
-      "purl": "pkg:npm/%40radix-ui/react-id@1.1.2",
-      "properties": [],
-      "externalReferences": [
-        {
-          "type": "distribution",
-          "url": "https://registry.npmjs.org/@radix-ui/react-id/-/react-id-1.1.2.tgz"
-        },
-        {
-          "type": "vcs",
-          "url": "git+https://github.com/radix-ui/primitives.git"
-        },
-        {
-          "type": "website",
-          "url": "https://radix-ui.com/primitives"
-        },
-        {
-          "type": "issue-tracker",
-          "url": "https://github.com/radix-ui/primitives/issues"
-        }
-      ],
-      "hashes": [
-        {
-          "alg": "SHA-512",
-          "content": "a2b042f3c7eeb55a6a0a6857d69e1cbeab8d1ec10b43ec3ebc1267ba3ddfb444c8e5b25bd1b667dd3aaedd258dd8839c3f27139cc1a7870a1eae6bc84adef6b0"
-        }
-      ],
-      "licenses": [
-        {
-          "license": {
-            "id": "MIT"
-          }
-        }
-      ]
-    },
-    {
       "bom-ref": "@radix-ui/react-id@1.1.4",
       "type": "library",
       "name": "@radix-ui/react-id",
@@ -4364,46 +4166,6 @@
       ]
     },
     {
-      "bom-ref": "@radix-ui/react-presence@1.1.7",
-      "type": "library",
-      "name": "@radix-ui/react-presence",
-      "version": "1.1.7",
-      "scope": "required",
-      "purl": "pkg:npm/%40radix-ui/react-presence@1.1.7",
-      "properties": [],
-      "externalReferences": [
-        {
-          "type": "distribution",
-          "url": "https://registry.npmjs.org/@radix-ui/react-presence/-/react-presence-1.1.7.tgz"
-        },
-        {
-          "type": "vcs",
-          "url": "git+https://github.com/radix-ui/primitives.git"
-        },
-        {
-          "type": "website",
-          "url": "https://radix-ui.com/primitives"
-        },
-        {
-          "type": "issue-tracker",
-          "url": "https://github.com/radix-ui/primitives/issues"
-        }
-      ],
-      "hashes": [
-        {
-          "alg": "SHA-512",
-          "content": "cc167840ce571b72516a70e6a9761fdcc0fab61e00157166814e8a34c17351a57a177bb0f48e7fce3314bc5ae24849f97b0a359f1ba26efcb125d98b94372c94"
-        }
-      ],
-      "licenses": [
-        {
-          "license": {
-            "id": "MIT"
-          }
-        }
-      ]
-    },
-    {
       "bom-ref": "@radix-ui/react-primitive@2.1.10",
       "type": "library",
       "name": "@radix-ui/react-primitive",
@@ -4444,57 +4206,17 @@
       ]
     },
     {
-      "bom-ref": "@radix-ui/react-primitive@2.1.7",
-      "type": "library",
-      "name": "@radix-ui/react-primitive",
-      "version": "2.1.7",
-      "scope": "required",
-      "purl": "pkg:npm/%40radix-ui/react-primitive@2.1.7",
-      "properties": [],
-      "externalReferences": [
-        {
-          "type": "distribution",
-          "url": "https://registry.npmjs.org/@radix-ui/react-primitive/-/react-primitive-2.1.7.tgz"
-        },
-        {
-          "type": "vcs",
-          "url": "git+https://github.com/radix-ui/primitives.git"
-        },
-        {
-          "type": "website",
-          "url": "https://radix-ui.com/primitives"
-        },
-        {
-          "type": "issue-tracker",
-          "url": "https://github.com/radix-ui/primitives/issues"
-        }
-      ],
-      "hashes": [
-        {
-          "alg": "SHA-512",
-          "content": "6c2dcd8b0b29adbc4a8eea27f65ed7e81513c3b14f57311868bf7630f118e5209dffd8544cf5d516d570462c7befbf30b51b156a8fb3134eb680befd15995e79"
-        }
-      ],
-      "licenses": [
-        {
-          "license": {
-            "id": "MIT"
-          }
-        }
-      ]
-    },
-    {
-      "bom-ref": "@radix-ui/react-roving-focus@1.1.15",
+      "bom-ref": "@radix-ui/react-roving-focus@1.1.19",
       "type": "library",
       "name": "@radix-ui/react-roving-focus",
-      "version": "1.1.15",
+      "version": "1.1.19",
       "scope": "required",
-      "purl": "pkg:npm/%40radix-ui/react-roving-focus@1.1.15",
+      "purl": "pkg:npm/%40radix-ui/react-roving-focus@1.1.19",
       "properties": [],
       "externalReferences": [
         {
           "type": "distribution",
-          "url": "https://registry.npmjs.org/@radix-ui/react-roving-focus/-/react-roving-focus-1.1.15.tgz"
+          "url": "https://registry.npmjs.org/@radix-ui/react-roving-focus/-/react-roving-focus-1.1.19.tgz"
         },
         {
           "type": "vcs",
@@ -4512,47 +4234,7 @@
       "hashes": [
         {
           "alg": "SHA-512",
-          "content": "e34b2f9a6ba07ccde650ded5503195135b5018e8728bc7a79460f408d24470c337e82d5fef53ca336d4316034751f7a6d179c0f9df07f2837767d6692634ac96"
-        }
-      ],
-      "licenses": [
-        {
-          "license": {
-            "id": "MIT"
-          }
-        }
-      ]
-    },
-    {
-      "bom-ref": "@radix-ui/react-slot@1.3.0",
-      "type": "library",
-      "name": "@radix-ui/react-slot",
-      "version": "1.3.0",
-      "scope": "required",
-      "purl": "pkg:npm/%40radix-ui/react-slot@1.3.0",
-      "properties": [],
-      "externalReferences": [
-        {
-          "type": "distribution",
-          "url": "https://registry.npmjs.org/@radix-ui/react-slot/-/react-slot-1.3.0.tgz"
-        },
-        {
-          "type": "vcs",
-          "url": "git+https://github.com/radix-ui/primitives.git"
-        },
-        {
-          "type": "website",
-          "url": "https://radix-ui.com/primitives"
-        },
-        {
-          "type": "issue-tracker",
-          "url": "https://github.com/radix-ui/primitives/issues"
-        }
-      ],
-      "hashes": [
-        {
-          "alg": "SHA-512",
-          "content": "3288ca92ee14fe688ef00bf80e46fe72d300431ec9998f7a2e6b4342501aac246d77bacde764024b3045f9702faf94ba7284958fd1c43c180700728425593f58"
+          "content": "57d8c8ea10e34fb9778ec0900fd6cb36f0cb337b47fe075b393a7b4de7e9de16db802190a0aeed52fad689195ca011c867cd3d1255f0350c15a3407df0bb935d"
         }
       ],
       "licenses": [
@@ -4604,17 +4286,17 @@
       ]
     },
     {
-      "bom-ref": "@radix-ui/react-tabs@1.1.17",
+      "bom-ref": "@radix-ui/react-tabs@1.1.21",
       "type": "library",
       "name": "@radix-ui/react-tabs",
-      "version": "1.1.17",
+      "version": "1.1.21",
       "scope": "required",
-      "purl": "pkg:npm/%40radix-ui/react-tabs@1.1.17",
+      "purl": "pkg:npm/%40radix-ui/react-tabs@1.1.21",
       "properties": [],
       "externalReferences": [
         {
           "type": "distribution",
-          "url": "https://registry.npmjs.org/@radix-ui/react-tabs/-/react-tabs-1.1.17.tgz"
+          "url": "https://registry.npmjs.org/@radix-ui/react-tabs/-/react-tabs-1.1.21.tgz"
         },
         {
           "type": "vcs",
@@ -4632,47 +4314,7 @@
       "hashes": [
         {
           "alg": "SHA-512",
-          "content": "9d1c979eb0150b08de5dc1dbbc46cb4ba9dd6d378a1c6d51a823f803c1b0e4be1c7a60f33d7743f2b026afac1eb74bf9ed1ebdc06bee208b058c749591988ccd"
-        }
-      ],
-      "licenses": [
-        {
-          "license": {
-            "id": "MIT"
-          }
-        }
-      ]
-    },
-    {
-      "bom-ref": "@radix-ui/react-use-callback-ref@1.1.2",
-      "type": "library",
-      "name": "@radix-ui/react-use-callback-ref",
-      "version": "1.1.2",
-      "scope": "required",
-      "purl": "pkg:npm/%40radix-ui/react-use-callback-ref@1.1.2",
-      "properties": [],
-      "externalReferences": [
-        {
-          "type": "distribution",
-          "url": "https://registry.npmjs.org/@radix-ui/react-use-callback-ref/-/react-use-callback-ref-1.1.2.tgz"
-        },
-        {
-          "type": "vcs",
-          "url": "git+https://github.com/radix-ui/primitives.git"
-        },
-        {
-          "type": "website",
-          "url": "https://radix-ui.com/primitives"
-        },
-        {
-          "type": "issue-tracker",
-          "url": "https://github.com/radix-ui/primitives/issues"
-        }
-      ],
-      "hashes": [
-        {
-          "alg": "SHA-512",
-          "content": "c42b28f63d7fbbcb0480fd513478c5ad724b0292fc2e2a8e908d51e32c2e374d2bc56758838a105eec0a2d2de2d23e4d58bae89940f6effe279718f650556f23"
+          "content": "50ac4995989dec556db24fd64f18f88b8b921208f602ef8a05b4bb490c93973321867fbce82cf7b484997536bcedb7c47dcbaf65ecdfd99b310f8c6e10ab64a2"
         }
       ],
       "licenses": [
@@ -4724,46 +4366,6 @@
       ]
     },
     {
-      "bom-ref": "@radix-ui/react-use-controllable-state@1.2.3",
-      "type": "library",
-      "name": "@radix-ui/react-use-controllable-state",
-      "version": "1.2.3",
-      "scope": "required",
-      "purl": "pkg:npm/%40radix-ui/react-use-controllable-state@1.2.3",
-      "properties": [],
-      "externalReferences": [
-        {
-          "type": "distribution",
-          "url": "https://registry.npmjs.org/@radix-ui/react-use-controllable-state/-/react-use-controllable-state-1.2.3.tgz"
-        },
-        {
-          "type": "vcs",
-          "url": "git+https://github.com/radix-ui/primitives.git"
-        },
-        {
-          "type": "website",
-          "url": "https://radix-ui.com/primitives"
-        },
-        {
-          "type": "issue-tracker",
-          "url": "https://github.com/radix-ui/primitives/issues"
-        }
-      ],
-      "hashes": [
-        {
-          "alg": "SHA-512",
-          "content": "3cbcc2f74312f917a8a2d9a30b9f7b76fa29a1e96967c43ad472640d76521318ad22aecf2f9e6f1cd9deb001f082e1cad1a3df067a5d37342dbf5ba589aa90ac"
-        }
-      ],
-      "licenses": [
-        {
-          "license": {
-            "id": "MIT"
-          }
-        }
-      ]
-    },
-    {
       "bom-ref": "@radix-ui/react-use-controllable-state@1.2.6",
       "type": "library",
       "name": "@radix-ui/react-use-controllable-state",
@@ -4793,46 +4395,6 @@
         {
           "alg": "SHA-512",
           "content": "b84409193f7b640fd380ffc7c9dc38ee51eefbfbd08facffd2303e59e4db2b5a3d471e391889a3a43d2d7375b969ddc3e974d247a7b5c843b416f1aae9641f55"
-        }
-      ],
-      "licenses": [
-        {
-          "license": {
-            "id": "MIT"
-          }
-        }
-      ]
-    },
-    {
-      "bom-ref": "@radix-ui/react-use-effect-event@0.0.3",
-      "type": "library",
-      "name": "@radix-ui/react-use-effect-event",
-      "version": "0.0.3",
-      "scope": "required",
-      "purl": "pkg:npm/%40radix-ui/react-use-effect-event@0.0.3",
-      "properties": [],
-      "externalReferences": [
-        {
-          "type": "distribution",
-          "url": "https://registry.npmjs.org/@radix-ui/react-use-effect-event/-/react-use-effect-event-0.0.3.tgz"
-        },
-        {
-          "type": "vcs",
-          "url": "git+https://github.com/radix-ui/primitives.git"
-        },
-        {
-          "type": "website",
-          "url": "https://radix-ui.com/primitives"
-        },
-        {
-          "type": "issue-tracker",
-          "url": "https://github.com/radix-ui/primitives/issues"
-        }
-      ],
-      "hashes": [
-        {
-          "alg": "SHA-512",
-          "content": "e9cf19aaf3d35882c42a7c9590fe771064427299c988a4c2db5b12ffa475185e712b21c92564043df92a95c81491d4508af77ab5bdb769b5307b89e05a663424"
         }
       ],
       "licenses": [
@@ -4884,17 +4446,17 @@
       ]
     },
     {
-      "bom-ref": "@radix-ui/react-use-is-hydrated@0.1.1",
+      "bom-ref": "@radix-ui/react-use-is-hydrated@0.1.3",
       "type": "library",
       "name": "@radix-ui/react-use-is-hydrated",
-      "version": "0.1.1",
+      "version": "0.1.3",
       "scope": "required",
-      "purl": "pkg:npm/%40radix-ui/react-use-is-hydrated@0.1.1",
+      "purl": "pkg:npm/%40radix-ui/react-use-is-hydrated@0.1.3",
       "properties": [],
       "externalReferences": [
         {
           "type": "distribution",
-          "url": "https://registry.npmjs.org/@radix-ui/react-use-is-hydrated/-/react-use-is-hydrated-0.1.1.tgz"
+          "url": "https://registry.npmjs.org/@radix-ui/react-use-is-hydrated/-/react-use-is-hydrated-0.1.3.tgz"
         },
         {
           "type": "vcs",
@@ -4912,47 +4474,7 @@
       "hashes": [
         {
           "alg": "SHA-512",
-          "content": "ab03a2cf84e3a3c08d9eb38b01850c5de6700f35e05e9bcae132903e658b10233d5e85af03afb4676ffb020dc0e22be34b8a2f6cb24f6ec924c62a05c8186bf0"
-        }
-      ],
-      "licenses": [
-        {
-          "license": {
-            "id": "MIT"
-          }
-        }
-      ]
-    },
-    {
-      "bom-ref": "@radix-ui/react-use-layout-effect@1.1.2",
-      "type": "library",
-      "name": "@radix-ui/react-use-layout-effect",
-      "version": "1.1.2",
-      "scope": "required",
-      "purl": "pkg:npm/%40radix-ui/react-use-layout-effect@1.1.2",
-      "properties": [],
-      "externalReferences": [
-        {
-          "type": "distribution",
-          "url": "https://registry.npmjs.org/@radix-ui/react-use-layout-effect/-/react-use-layout-effect-1.1.2.tgz"
-        },
-        {
-          "type": "vcs",
-          "url": "git+https://github.com/radix-ui/primitives.git"
-        },
-        {
-          "type": "website",
-          "url": "https://radix-ui.com/primitives"
-        },
-        {
-          "type": "issue-tracker",
-          "url": "https://github.com/radix-ui/primitives/issues"
-        }
-      ],
-      "hashes": [
-        {
-          "alg": "SHA-512",
-          "content": "8eb0563b16484ee19c9e3442336b7653964f9022f10fe626e838dfb2c4b985a4e3da289a93f0ce6fae0978de8e74b7cb829b5bebf7b690a47e66e4eb1a86533c"
+          "content": "ba63bf689fbcd82a4e9e10d95136c82c241fee453f8348affa81acfd0f23c3b2248560736843f8b00dbaf0f8450094c57ad6f0a7720273a92da48e13aadc5c23"
         }
       ],
       "licenses": [
@@ -6325,36 +5847,6 @@
       ]
     },
     {
-      "bom-ref": "ansi-regex@5.0.1",
-      "type": "library",
-      "name": "ansi-regex",
-      "version": "5.0.1",
-      "scope": "required",
-      "author": "Sindre Sorhus",
-      "description": "Regular expression for matching ANSI escape codes",
-      "purl": "pkg:npm/ansi-regex@5.0.1",
-      "properties": [],
-      "externalReferences": [
-        {
-          "type": "distribution",
-          "url": "https://registry.npmjs.org/ansi-regex/-/ansi-regex-5.0.1.tgz"
-        }
-      ],
-      "hashes": [
-        {
-          "alg": "SHA-512",
-          "content": "aae2505e54d25062f62c7f52517a3c570b18e2ca1a9e1828e8b3529bce04d4b05c13cb373b4c29762473c91f73fd9649325316bf7eea38e6fda5d26531410a15"
-        }
-      ],
-      "licenses": [
-        {
-          "license": {
-            "id": "MIT"
-          }
-        }
-      ]
-    },
-    {
       "bom-ref": "ansi-styles@3.2.1",
       "type": "library",
       "name": "ansi-styles",
@@ -6690,29 +6182,29 @@
       ]
     },
     {
-      "bom-ref": "babel-plugin-react-native-web@0.21.2",
+      "bom-ref": "babel-plugin-react-native-web@0.21.3",
       "type": "library",
       "name": "babel-plugin-react-native-web",
-      "version": "0.21.2",
+      "version": "0.21.3",
       "scope": "required",
       "author": "Nicolas Gallagher",
       "description": "Babel plugin for React Native for Web",
-      "purl": "pkg:npm/babel-plugin-react-native-web@0.21.2",
+      "purl": "pkg:npm/babel-plugin-react-native-web@0.21.3",
       "properties": [],
       "externalReferences": [
         {
           "type": "distribution",
-          "url": "https://registry.npmjs.org/babel-plugin-react-native-web/-/babel-plugin-react-native-web-0.21.2.tgz"
+          "url": "https://registry.npmjs.org/babel-plugin-react-native-web/-/babel-plugin-react-native-web-0.21.3.tgz"
         },
         {
           "type": "vcs",
-          "url": "git://github.com/necolas/react-native-web.git"
+          "url": "git+https://github.com/necolas/react-native-web.git"
         }
       ],
       "hashes": [
         {
           "alg": "SHA-512",
-          "content": "48f0f427aaa3267f36df58b41d98650061fa34e45ef90bd14903369b0404cc9d856f7138aee5938a289c3e51e399e5928435cb72fa28ace0978de47b93f97258"
+          "content": "7b87c6f0d6f246f9391b053fec6d94f56c733d8b690b8210376f00c910f3284d24bf2c20a21abcbd3db1d3fc417e0f1ad117d29172e51c0b54006952cb756103"
         }
       ],
       "licenses": [
@@ -6790,19 +6282,19 @@
       ]
     },
     {
-      "bom-ref": "babel-preset-expo@57.0.12",
+      "bom-ref": "babel-preset-expo@57.0.13",
       "type": "library",
       "name": "babel-preset-expo",
-      "version": "57.0.12",
+      "version": "57.0.13",
       "scope": "required",
       "author": "Expo <support@expo.dev>",
       "description": "The Babel preset for Expo projects",
-      "purl": "pkg:npm/babel-preset-expo@57.0.12",
+      "purl": "pkg:npm/babel-preset-expo@57.0.13",
       "properties": [],
       "externalReferences": [
         {
           "type": "distribution",
-          "url": "https://registry.npmjs.org/babel-preset-expo/-/babel-preset-expo-57.0.12.tgz"
+          "url": "https://registry.npmjs.org/babel-preset-expo/-/babel-preset-expo-57.0.13.tgz"
         },
         {
           "type": "vcs",
@@ -6820,7 +6312,7 @@
       "hashes": [
         {
           "alg": "SHA-512",
-          "content": "aeb66a24f61b55ebf2eebaa26c965015ddc0b25786b2527adef981dd0b3c6f9a6838ee401da7a15066d91e36f41e83993b9f5df3a04489f61bab4fe772833651"
+          "content": "38e97796a350e086a025fb0d82dc6e9dad30a535add41b3077292d193389e4424281d41493f076bda8ff8ec974dfe90ccae22fa712a2a15b5b4f3c61de676fbd"
         }
       ],
       "licenses": [
@@ -9079,19 +8571,19 @@
       ]
     },
     {
-      "bom-ref": "expo-asset@57.0.17",
+      "bom-ref": "expo-asset@57.0.18",
       "type": "library",
       "name": "expo-asset",
-      "version": "57.0.17",
+      "version": "57.0.18",
       "scope": "required",
       "author": "650 Industries, Inc.",
       "description": "An Expo universal module to download assets and pass them into other APIs",
-      "purl": "pkg:npm/expo-asset@57.0.17",
+      "purl": "pkg:npm/expo-asset@57.0.18",
       "properties": [],
       "externalReferences": [
         {
           "type": "distribution",
-          "url": "https://registry.npmjs.org/expo-asset/-/expo-asset-57.0.17.tgz"
+          "url": "https://registry.npmjs.org/expo-asset/-/expo-asset-57.0.18.tgz"
         },
         {
           "type": "vcs",
@@ -9109,7 +8601,7 @@
       "hashes": [
         {
           "alg": "SHA-512",
-          "content": "a9275664149f120d3aa37189330723dfab70d2f5e407a7988ea9108acb569b22641f185438a9ec2899debfa3ab697c4b76823e28e775faa829fc4371f2072a60"
+          "content": "cc3210914af434cd92ed8463f7c66885ffce06e335ab4a3872dc4bcf50b5a1ee3fdf794734b8e9fb6bf7a94b41595c27d332a46bc506003992f0cfbcdd68baa7"
         }
       ],
       "licenses": [
@@ -9201,19 +8693,19 @@
       ]
     },
     {
-      "bom-ref": "expo-constants@57.0.18",
+      "bom-ref": "expo-constants@57.0.20",
       "type": "library",
       "name": "expo-constants",
-      "version": "57.0.18",
+      "version": "57.0.20",
       "scope": "required",
       "author": "650 Industries, Inc.",
       "description": "Provides system information that remains constant throughout the lifetime of your app.",
-      "purl": "pkg:npm/expo-constants@57.0.18",
+      "purl": "pkg:npm/expo-constants@57.0.20",
       "properties": [],
       "externalReferences": [
         {
           "type": "distribution",
-          "url": "https://registry.npmjs.org/expo-constants/-/expo-constants-57.0.18.tgz"
+          "url": "https://registry.npmjs.org/expo-constants/-/expo-constants-57.0.20.tgz"
         },
         {
           "type": "vcs",
@@ -9231,7 +8723,7 @@
       "hashes": [
         {
           "alg": "SHA-512",
-          "content": "70b0f00ce9e23dfb8264f1cd63ef9c018d9990af7bbb96a86db06f8a53cad8b2e6696c51e19a43df52d6508cd40cbaf030fc4b8e6875b944676de6047f4322bf"
+          "content": "5b270f56f0606e5b926bac8087a0ca9d7eb8e991eb69ed2057664bba6e5f8a836447e0e25b2ba5ab5f947d2fbe25ceb27c087f979e4d3a2aefea6b797274214b"
         }
       ],
       "licenses": [
@@ -9243,19 +8735,19 @@
       ]
     },
     {
-      "bom-ref": "expo-document-picker@57.0.2",
+      "bom-ref": "expo-document-picker@57.0.3",
       "type": "library",
       "name": "expo-document-picker",
-      "version": "57.0.2",
+      "version": "57.0.3",
       "scope": "required",
       "author": "650 Industries, Inc.",
       "description": "Provides access to the system's UI for selecting documents from the available providers on the user's device.",
-      "purl": "pkg:npm/expo-document-picker@57.0.2",
+      "purl": "pkg:npm/expo-document-picker@57.0.3",
       "properties": [],
       "externalReferences": [
         {
           "type": "distribution",
-          "url": "https://registry.npmjs.org/expo-document-picker/-/expo-document-picker-57.0.2.tgz"
+          "url": "https://registry.npmjs.org/expo-document-picker/-/expo-document-picker-57.0.3.tgz"
         },
         {
           "type": "vcs",
@@ -9273,7 +8765,7 @@
       "hashes": [
         {
           "alg": "SHA-512",
-          "content": "bd505b04d834a62309508c6307e0d1e8969966971297dd19528cb02c0fc480d1d37d19195bef5ac4ff7b5313366b4666d16e967c7ddc2f3cc60047cff4e286c2"
+          "content": "5e5c5d674cf3bf8e09443f0ed790c84a020ef054da679f35a1ce24429e8c26847bbdd6a18dc63edaa0ae0ede64d49f3f95cd1847e6d7a27feff359e8adc8aec7"
         }
       ],
       "licenses": [
@@ -9369,19 +8861,19 @@
       ]
     },
     {
-      "bom-ref": "expo-glass-effect@57.0.3",
+      "bom-ref": "expo-glass-effect@57.0.4",
       "type": "library",
       "name": "expo-glass-effect",
-      "version": "57.0.3",
+      "version": "57.0.4",
       "scope": "required",
       "author": "650 Industries, Inc.",
       "description": "A component that renders a native glass effect view on iOS.",
-      "purl": "pkg:npm/expo-glass-effect@57.0.3",
+      "purl": "pkg:npm/expo-glass-effect@57.0.4",
       "properties": [],
       "externalReferences": [
         {
           "type": "distribution",
-          "url": "https://registry.npmjs.org/expo-glass-effect/-/expo-glass-effect-57.0.3.tgz"
+          "url": "https://registry.npmjs.org/expo-glass-effect/-/expo-glass-effect-57.0.4.tgz"
         },
         {
           "type": "vcs",
@@ -9399,7 +8891,7 @@
       "hashes": [
         {
           "alg": "SHA-512",
-          "content": "693876279782c5ffab4913012539cff086f9fe4f03605543b845f5c6a7ac37d17d6aa4d7a1cc0cbff69045504d52cfe2a200d6847209cf6a4df7b22caeb4dca0"
+          "content": "fc01b62a58dba9f831bbe19c848d981486f1885f5c3ec2290b2e22343ce5462664f6bbd1e81c117c1ea07d056edd5d84c5aa067f687922c127a9523931834102"
         }
       ],
       "licenses": [
@@ -9495,19 +8987,19 @@
       ]
     },
     {
-      "bom-ref": "expo-image-picker@57.0.18",
+      "bom-ref": "expo-image-picker@57.0.20",
       "type": "library",
       "name": "expo-image-picker",
-      "version": "57.0.18",
+      "version": "57.0.20",
       "scope": "required",
       "author": "650 Industries, Inc.",
       "description": "Provides access to the system's UI for selecting images and videos from the phone's library or taking a photo with the camera.",
-      "purl": "pkg:npm/expo-image-picker@57.0.18",
+      "purl": "pkg:npm/expo-image-picker@57.0.20",
       "properties": [],
       "externalReferences": [
         {
           "type": "distribution",
-          "url": "https://registry.npmjs.org/expo-image-picker/-/expo-image-picker-57.0.18.tgz"
+          "url": "https://registry.npmjs.org/expo-image-picker/-/expo-image-picker-57.0.20.tgz"
         },
         {
           "type": "vcs",
@@ -9525,7 +9017,7 @@
       "hashes": [
         {
           "alg": "SHA-512",
-          "content": "dee8401c16c79edc1aaf249e8598a94901283e8ea7369c8fe35b74663ce79111cdfaf0eadfa1af79c4fe9c81790b48e0385374b2b6d7afb11f8e0234918b20b8"
+          "content": "a6581c1ae319316a837218d7416e92fd67a960b0792aa7db64ecf00bac5ed3e8f92216388a9bd5b9165c5de3ffd0d80a814d098aefd7a132b8062f1caed67eb1"
         }
       ],
       "licenses": [
@@ -9659,19 +9151,19 @@
       ]
     },
     {
-      "bom-ref": "expo-linking@57.0.10",
+      "bom-ref": "expo-linking@57.0.11",
       "type": "library",
       "name": "expo-linking",
-      "version": "57.0.10",
+      "version": "57.0.11",
       "scope": "required",
       "author": "650 Industries, Inc.",
       "description": "Create and open deep links universally",
-      "purl": "pkg:npm/expo-linking@57.0.10",
+      "purl": "pkg:npm/expo-linking@57.0.11",
       "properties": [],
       "externalReferences": [
         {
           "type": "distribution",
-          "url": "https://registry.npmjs.org/expo-linking/-/expo-linking-57.0.10.tgz"
+          "url": "https://registry.npmjs.org/expo-linking/-/expo-linking-57.0.11.tgz"
         },
         {
           "type": "vcs",
@@ -9689,7 +9181,7 @@
       "hashes": [
         {
           "alg": "SHA-512",
-          "content": "473462e25e29218ce38280892a7aa43be95423e336617eaa81c30842421b2c05dd716af2901a0a6301c69660247451d09bcf4669872adf6f727f11be73586ff3"
+          "content": "6df4f288f6fcb3369cb3c5e41a8c17b79b2c1ffbdb176eaf146f1651641aafc09c46941c2335d8f7cd1990fee92bb3dc772e4c6adb7015dba3ad63b1c2fe6cdd"
         }
       ],
       "licenses": [
@@ -9785,19 +9277,19 @@
       ]
     },
     {
-      "bom-ref": "expo-modules-core@57.0.18",
+      "bom-ref": "expo-modules-core@57.0.20",
       "type": "library",
       "name": "expo-modules-core",
-      "version": "57.0.18",
+      "version": "57.0.20",
       "scope": "required",
       "author": "650 Industries, Inc.",
       "description": "The core of Expo Modules architecture",
-      "purl": "pkg:npm/expo-modules-core@57.0.18",
+      "purl": "pkg:npm/expo-modules-core@57.0.20",
       "properties": [],
       "externalReferences": [
         {
           "type": "distribution",
-          "url": "https://registry.npmjs.org/expo-modules-core/-/expo-modules-core-57.0.18.tgz"
+          "url": "https://registry.npmjs.org/expo-modules-core/-/expo-modules-core-57.0.20.tgz"
         },
         {
           "type": "vcs",
@@ -9815,7 +9307,7 @@
       "hashes": [
         {
           "alg": "SHA-512",
-          "content": "a2f07b0be19541394a00e22c3881c95555cdf4c9f49637f6498052f9a7eb45a1aaabe1d9127d43de8f8745e215787d4d8c29ffc4305bec8e078e5747b3a96e64"
+          "content": "bc42f769e8a1df6cae0fbb101c1dd8dcb297453f26320a15416148707b57f35d419744ad9cd6541b6bd3e637b87def8e59855f9236fa80da9f31cd389a844480"
         }
       ],
       "licenses": [
@@ -9827,19 +9319,19 @@
       ]
     },
     {
-      "bom-ref": "expo-modules-jsi@57.1.0",
+      "bom-ref": "expo-modules-jsi@57.1.1",
       "type": "library",
       "name": "expo-modules-jsi",
-      "version": "57.1.0",
+      "version": "57.1.1",
       "scope": "required",
       "author": "650 Industries, Inc.",
       "description": "The JavaScript Interface for Expo Modules",
-      "purl": "pkg:npm/expo-modules-jsi@57.1.0",
+      "purl": "pkg:npm/expo-modules-jsi@57.1.1",
       "properties": [],
       "externalReferences": [
         {
           "type": "distribution",
-          "url": "https://registry.npmjs.org/expo-modules-jsi/-/expo-modules-jsi-57.1.0.tgz"
+          "url": "https://registry.npmjs.org/expo-modules-jsi/-/expo-modules-jsi-57.1.1.tgz"
         },
         {
           "type": "vcs",
@@ -9857,7 +9349,7 @@
       "hashes": [
         {
           "alg": "SHA-512",
-          "content": "6b97247877e76d87e89e17071a4334114fdad0a7a1fbf3ae7d7cbf1f2152faca6be486f43783a1d59b12605421a79c5d3941645687ca4617c7f9599c71c208a4"
+          "content": "b2c9f0cf766e22009b663e40dc9e8d96142b5d9a2383e06391e5ab396a95261c8c1e557f03f7114fbb3df3a7212a4bbdec116deae7260eeebf042ceb578e5673"
         }
       ],
       "licenses": [
@@ -9869,19 +9361,19 @@
       ]
     },
     {
-      "bom-ref": "expo-notifications@57.0.19",
+      "bom-ref": "expo-notifications@57.0.21",
       "type": "library",
       "name": "expo-notifications",
-      "version": "57.0.19",
+      "version": "57.0.21",
       "scope": "required",
       "author": "650 Industries, Inc.",
       "description": "Provides an API to fetch push notification tokens and to present, schedule, receive, and respond to notifications.",
-      "purl": "pkg:npm/expo-notifications@57.0.19",
+      "purl": "pkg:npm/expo-notifications@57.0.21",
       "properties": [],
       "externalReferences": [
         {
           "type": "distribution",
-          "url": "https://registry.npmjs.org/expo-notifications/-/expo-notifications-57.0.19.tgz"
+          "url": "https://registry.npmjs.org/expo-notifications/-/expo-notifications-57.0.21.tgz"
         },
         {
           "type": "vcs",
@@ -9899,7 +9391,7 @@
       "hashes": [
         {
           "alg": "SHA-512",
-          "content": "256feeb061303b15b337cb342fbfa3dc5028077f46b5a66da541b27b694fbdca984a4bdec2965892b0b5e8fd496823f4f58471d10faa5cfc79354a1453c36c04"
+          "content": "096056e83c6a449d8c698656e7efd67c45b02306e2564e5400fab1d2413aefa078475f8f9405c0464fe4b8d79005c56b703355ea2f62844f41d1d6fc09dd915d"
         }
       ],
       "licenses": [
@@ -9911,19 +9403,19 @@
       ]
     },
     {
-      "bom-ref": "expo-router@57.0.21",
+      "bom-ref": "expo-router@57.0.24",
       "type": "library",
       "name": "expo-router",
-      "version": "57.0.21",
+      "version": "57.0.24",
       "scope": "required",
       "author": "650 Industries, Inc.",
       "description": "Expo Router is a file-based router for React Native and web applications.",
-      "purl": "pkg:npm/expo-router@57.0.21",
+      "purl": "pkg:npm/expo-router@57.0.24",
       "properties": [],
       "externalReferences": [
         {
           "type": "distribution",
-          "url": "https://registry.npmjs.org/expo-router/-/expo-router-57.0.21.tgz"
+          "url": "https://registry.npmjs.org/expo-router/-/expo-router-57.0.24.tgz"
         },
         {
           "type": "vcs",
@@ -9941,7 +9433,7 @@
       "hashes": [
         {
           "alg": "SHA-512",
-          "content": "afb5032d953482d566f055b89efda9c5297d4c384a95fdac85c05b7e9d53f524d7277c5897d9652c7ef4d6a424202b97aaab77bc6a4e679ec65c2d62a155a0e2"
+          "content": "5e9a84e0e878cab99cfac55fb0340f2c4ac196eb3fffce6e94b460855665b5871dbc59bdc8dcc4ae668aad7b8154c50be83ded9e90ed9088311121bd85805def"
         }
       ],
       "licenses": [
@@ -9994,19 +9486,19 @@
       ]
     },
     {
-      "bom-ref": "expo-sharing@57.0.20",
+      "bom-ref": "expo-sharing@57.0.22",
       "type": "library",
       "name": "expo-sharing",
-      "version": "57.0.20",
+      "version": "57.0.22",
       "scope": "required",
       "author": "650 Industries, Inc.",
       "description": "Provides a way to share files directly with other compatible applications.",
-      "purl": "pkg:npm/expo-sharing@57.0.20",
+      "purl": "pkg:npm/expo-sharing@57.0.22",
       "properties": [],
       "externalReferences": [
         {
           "type": "distribution",
-          "url": "https://registry.npmjs.org/expo-sharing/-/expo-sharing-57.0.20.tgz"
+          "url": "https://registry.npmjs.org/expo-sharing/-/expo-sharing-57.0.22.tgz"
         },
         {
           "type": "vcs",
@@ -10020,7 +9512,7 @@
       "hashes": [
         {
           "alg": "SHA-512",
-          "content": "73754cc6e888c79c10ad09d52fb717c6612f426e6ffdf72bb6e2e414c3176b51d52530faaa0f2a993f94a9fd6c4d47b8459773103c8830229a67916abd98ca1f"
+          "content": "2169a2cf40e78ddee27ec6761a0e57383c5be83428278fc7e85a1f5bd6d32fd8038df5f6faf6bc495d41615905bc9f2f290a0a4781e090c08a0c2665aeb6ca92"
         }
       ],
       "licenses": [
@@ -10242,19 +9734,19 @@
       ]
     },
     {
-      "bom-ref": "expo-video@57.0.4",
+      "bom-ref": "expo-video@57.0.5",
       "type": "library",
       "name": "expo-video",
-      "version": "57.0.4",
+      "version": "57.0.5",
       "scope": "required",
       "author": "650 Industries, Inc.",
       "description": "A cross-platform, performant video component for React Native and Expo with Web support",
-      "purl": "pkg:npm/expo-video@57.0.4",
+      "purl": "pkg:npm/expo-video@57.0.5",
       "properties": [],
       "externalReferences": [
         {
           "type": "distribution",
-          "url": "https://registry.npmjs.org/expo-video/-/expo-video-57.0.4.tgz"
+          "url": "https://registry.npmjs.org/expo-video/-/expo-video-57.0.5.tgz"
         },
         {
           "type": "vcs",
@@ -10268,7 +9760,7 @@
       "hashes": [
         {
           "alg": "SHA-512",
-          "content": "e180961b5209cd43692d7d31a2eb2c2b454e1b9db8aa052231bc09ceb8290ee3d4cce811dd9a97499c4ab32dc79582e2b96773210cf07e96ed48d8a6f45f43dd"
+          "content": "54ada8f9deab6feb5578bd8323a774179f29455f1df1b72d2e93ab309107458b4c20ae62c2f8e3ad1c7699c89837cfddd384a0582f13908fb0b99f126e9ff2b8"
         }
       ],
       "licenses": [
@@ -10280,19 +9772,19 @@
       ]
     },
     {
-      "bom-ref": "expo@57.0.23",
+      "bom-ref": "expo@57.0.26",
       "type": "library",
       "name": "expo",
-      "version": "57.0.23",
+      "version": "57.0.26",
       "scope": "required",
       "author": "Expo",
       "description": "The Expo SDK",
-      "purl": "pkg:npm/expo@57.0.23",
+      "purl": "pkg:npm/expo@57.0.26",
       "properties": [],
       "externalReferences": [
         {
           "type": "distribution",
-          "url": "https://registry.npmjs.org/expo/-/expo-57.0.23.tgz"
+          "url": "https://registry.npmjs.org/expo/-/expo-57.0.26.tgz"
         },
         {
           "type": "vcs",
@@ -10310,7 +9802,7 @@
       "hashes": [
         {
           "alg": "SHA-512",
-          "content": "fda04b6454c3efe04d1d657fab95db35116a3215bf0ab1ec61eabc09c4bf886cfa9491d8c04326e1715c76869e962b8c768e998cdaec4c790121d181f153074e"
+          "content": "535aec17072e64d9d4eb567f60b9e7542fd9a8fd30a7187fac229431f7f7a2dfeb84ba71158d73c44aaee2fc9a7b1caf0400759b0a65f6503f96d707068406ca"
         }
       ],
       "licenses": [
@@ -12331,24 +11823,24 @@
       ]
     },
     {
-      "bom-ref": "markdown-it@14.3.0",
+      "bom-ref": "markdown-it@14.3.2",
       "type": "library",
       "name": "markdown-it",
-      "version": "14.3.0",
+      "version": "14.3.2",
       "scope": "required",
       "description": "Markdown-it - modern pluggable markdown parser.",
-      "purl": "pkg:npm/markdown-it@14.3.0",
+      "purl": "pkg:npm/markdown-it@14.3.2",
       "properties": [],
       "externalReferences": [
         {
           "type": "distribution",
-          "url": "https://registry.npmjs.org/markdown-it/-/markdown-it-14.3.0.tgz"
+          "url": "https://registry.npmjs.org/markdown-it/-/markdown-it-14.3.2.tgz"
         }
       ],
       "hashes": [
         {
           "alg": "SHA-512",
-          "content": "44212c3e347eb2bd31f80b98a7ad35b4a4e48051b86043cb0b31d24f7710fdf865264a80933d4bdbf41ba758fdab0e52070407141a16f3e868379c6cb0e1744f"
+          "content": "b071e36797c92a582b1b8aa7b3663055c74d7a9df98797c446b7e40f660db1bf54164d142076ab6e24da1ca54c94fb960288a29722bc16ffe3026d75b25b18ed"
         }
       ],
       "licenses": [
@@ -13869,25 +13361,25 @@
       ]
     },
     {
-      "bom-ref": "nanoid@3.3.18",
+      "bom-ref": "nanoid@3.3.19",
       "type": "library",
       "name": "nanoid",
-      "version": "3.3.18",
+      "version": "3.3.19",
       "scope": "required",
       "author": "Andrey Sitnik <andrey@sitnik.ru>",
       "description": "A tiny (116 bytes), secure URL-friendly unique string ID generator",
-      "purl": "pkg:npm/nanoid@3.3.18",
+      "purl": "pkg:npm/nanoid@3.3.19",
       "properties": [],
       "externalReferences": [
         {
           "type": "distribution",
-          "url": "https://registry.npmjs.org/nanoid/-/nanoid-3.3.18.tgz"
+          "url": "https://registry.npmjs.org/nanoid/-/nanoid-3.3.19.tgz"
         }
       ],
       "hashes": [
         {
           "alg": "SHA-512",
-          "content": "0d38383096c631691f8ba55915d36ddbf71a31b432e0ebbe3a9fe1250bc611672755fa00d5003ec7344a033c3d8c3ebe19538e798aff98872e0d276e83a17afb"
+          "content": "636b54372e28bb0eadab9a0348a7906063b286450184d39c195ff4d8a0beea477d7831aa75977efa68cc8880e296b058be3127098bd5b6cb870ae3fea2449fba"
         }
       ],
       "licenses": [
@@ -15107,47 +14599,6 @@
       ]
     },
     {
-      "bom-ref": "react-dom@19.2.3",
-      "type": "library",
-      "name": "react-dom",
-      "version": "19.2.3",
-      "scope": "required",
-      "description": "React package for working with the DOM.",
-      "purl": "pkg:npm/react-dom@19.2.3",
-      "properties": [],
-      "externalReferences": [
-        {
-          "type": "distribution",
-          "url": "https://registry.npmjs.org/react-dom/-/react-dom-19.2.3.tgz"
-        },
-        {
-          "type": "vcs",
-          "url": "https://github.com/facebook/react.git"
-        },
-        {
-          "type": "website",
-          "url": "https://react.dev/"
-        },
-        {
-          "type": "issue-tracker",
-          "url": "https://github.com/facebook/react/issues"
-        }
-      ],
-      "hashes": [
-        {
-          "alg": "SHA-512",
-          "content": "c842eee1698b3f0e4caff966784a68c79af0dd111369c13ef89807a90cddd9d83e61b26e6adde31f88a781cf963d98716a817376ff72df71be17b365e4ed0606"
-        }
-      ],
-      "licenses": [
-        {
-          "license": {
-            "id": "MIT"
-          }
-        }
-      ]
-    },
-    {
       "bom-ref": "react-fast-compare@3.2.2",
       "type": "library",
       "name": "react-fast-compare",
@@ -15301,22 +14752,22 @@
       ]
     },
     {
-      "bom-ref": "react-is@19.2.7",
+      "bom-ref": "react-is@19.3.0",
       "type": "library",
       "name": "react-is",
-      "version": "19.2.7",
+      "version": "19.3.0",
       "scope": "required",
       "description": "Brand checking of React Elements.",
-      "purl": "pkg:npm/react-is@19.2.7",
+      "purl": "pkg:npm/react-is@19.3.0",
       "properties": [],
       "externalReferences": [
         {
           "type": "distribution",
-          "url": "https://registry.npmjs.org/react-is/-/react-is-19.2.7.tgz"
+          "url": "https://registry.npmjs.org/react-is/-/react-is-19.3.0.tgz"
         },
         {
           "type": "vcs",
-          "url": "https://github.com/facebook/react.git"
+          "url": "https://github.com/react/react.git"
         },
         {
           "type": "website",
@@ -15324,13 +14775,13 @@
         },
         {
           "type": "issue-tracker",
-          "url": "https://github.com/facebook/react/issues"
+          "url": "https://github.com/react/react/issues"
         }
       ],
       "hashes": [
         {
           "alg": "SHA-512",
-          "content": "919167a2ec95bfb78ffcf866ae5a3d14afb370076b89926fcf15c71754a5d4fdfbed64867b61bf2715689614eb07f8de578ee52889a1354b228e31c001b725fc"
+          "content": "5293187b3338bf9ff5f05dbc682eba004b235c8804d3693210c1fac8b7602d7bbf5137dad4db70724fe734badba89b045d6ee03dbd1ca0d3bd150b1ef564e8bc"
         }
       ],
       "licenses": [
@@ -15384,18 +14835,18 @@
       ]
     },
     {
-      "bom-ref": "react-native-drawer-layout@4.2.8",
+      "bom-ref": "react-native-drawer-layout@4.2.11",
       "type": "library",
       "name": "react-native-drawer-layout",
-      "version": "4.2.8",
+      "version": "4.2.11",
       "scope": "required",
       "description": "Drawer component for React Native",
-      "purl": "pkg:npm/react-native-drawer-layout@4.2.8",
+      "purl": "pkg:npm/react-native-drawer-layout@4.2.11",
       "properties": [],
       "externalReferences": [
         {
           "type": "distribution",
-          "url": "https://registry.npmjs.org/react-native-drawer-layout/-/react-native-drawer-layout-4.2.8.tgz"
+          "url": "https://registry.npmjs.org/react-native-drawer-layout/-/react-native-drawer-layout-4.2.11.tgz"
         },
         {
           "type": "vcs",
@@ -15413,7 +14864,7 @@
       "hashes": [
         {
           "alg": "SHA-512",
-          "content": "22cc17a1711a4009f3506a3bb49c8c3c73f4ab251cffbcee7e91be929892b587a01e92900419e542845d5e42f51db09ada8d513960e109227c5d2d15e0b35c8d"
+          "content": "02e6be2c0649e8bdefec4487b0db71376b0efa11502ac4b3dc40ca38b2295a78ba3dd404246153d0c73652712cbc575f57be376877ce0d301a1f1b09d83d2e17"
         }
       ],
       "licenses": [
@@ -16037,43 +15488,6 @@
       ]
     },
     {
-      "bom-ref": "react@19.2.3",
-      "type": "library",
-      "name": "react",
-      "version": "19.2.3",
-      "scope": "required",
-      "description": "React is a JavaScript library for building user interfaces.",
-      "purl": "pkg:npm/react@19.2.3",
-      "properties": [],
-      "externalReferences": [
-        {
-          "type": "distribution",
-          "url": "https://registry.npmjs.org/react/-/react-19.2.3.tgz"
-        },
-        {
-          "type": "vcs",
-          "url": "https://github.com/facebook/react.git"
-        },
-        {
-          "type": "website",
-          "url": "https://react.dev/"
-        }
-      ],
-      "hashes": [
-        {
-          "alg": "SHA-512",
-          "content": "2aefe18586d58ce4275c3645bf6f9189b98b146c0575e78a1c570e4e5aedef1a65067c9ae4e1a7fe12110eca8389251c7ce46c0c2ecc3f1c28ae4f23070b0858"
-        }
-      ],
-      "licenses": [
-        {
-          "license": {
-            "id": "MIT"
-          }
-        }
-      ]
-    },
-    {
       "bom-ref": "regenerate-unicode-properties@10.2.2",
       "type": "library",
       "name": "regenerate-unicode-properties",
@@ -16627,47 +16041,6 @@
       ]
     },
     {
-      "bom-ref": "scheduler@0.27.0",
-      "type": "library",
-      "name": "scheduler",
-      "version": "0.27.0",
-      "scope": "required",
-      "description": "Cooperative scheduler for the browser environment.",
-      "purl": "pkg:npm/scheduler@0.27.0",
-      "properties": [],
-      "externalReferences": [
-        {
-          "type": "distribution",
-          "url": "https://registry.npmjs.org/scheduler/-/scheduler-0.27.0.tgz"
-        },
-        {
-          "type": "vcs",
-          "url": "https://github.com/facebook/react.git"
-        },
-        {
-          "type": "website",
-          "url": "https://react.dev/"
-        },
-        {
-          "type": "issue-tracker",
-          "url": "https://github.com/facebook/react/issues"
-        }
-      ],
-      "hashes": [
-        {
-          "alg": "SHA-512",
-          "content": "78dbfe5ab55b2aed5fdef6d8253ff1b62179b320391cf20cb5ff48818fe72a0d2c5aacc0504bea63fc66ece71973fa9a7cbc7f88ef4580e99e480a78bf9b62fd"
-        }
-      ],
-      "licenses": [
-        {
-          "license": {
-            "id": "MIT"
-          }
-        }
-      ]
-    },
-    {
       "bom-ref": "semver@6.3.1",
       "type": "library",
       "name": "semver",
@@ -17175,40 +16548,6 @@
         {
           "license": {
             "id": "MIT"
-          }
-        }
-      ]
-    },
-    {
-      "bom-ref": "source-map-js@1.2.1",
-      "type": "library",
-      "name": "source-map-js",
-      "version": "1.2.1",
-      "scope": "required",
-      "author": "Valentin 7rulnik Semirulnik <v7rulnik@gmail.com>",
-      "description": "Generates and consumes source maps",
-      "purl": "pkg:npm/source-map-js@1.2.1",
-      "properties": [],
-      "externalReferences": [
-        {
-          "type": "distribution",
-          "url": "https://registry.npmjs.org/source-map-js/-/source-map-js-1.2.1.tgz"
-        },
-        {
-          "type": "website",
-          "url": "https://github.com/7rulnik/source-map-js"
-        }
-      ],
-      "hashes": [
-        {
-          "alg": "SHA-512",
-          "content": "51758c2a12cec1529bef6f0852d40f5f17d853ebac7726ed52b2bff2e184f0240cbeb84ea70bf30c1c23d108522fb31073bbc8b084811bc550f3e203431a5f40"
-        }
-      ],
-      "licenses": [
-        {
-          "license": {
-            "id": "BSD-3-Clause"
           }
         }
       ]
@@ -19169,19 +18508,19 @@
       ]
     },
     {
-      "bom-ref": "ws@8.21.3",
+      "bom-ref": "ws@8.22.0",
       "type": "library",
       "name": "ws",
-      "version": "8.21.3",
+      "version": "8.22.0",
       "scope": "required",
       "author": "Einar Otto Stangvik <einaros@gmail.com> (http://2x.io)",
       "description": "Simple to use, blazing fast and thoroughly tested websocket client and server for Node.js",
-      "purl": "pkg:npm/ws@8.21.3",
+      "purl": "pkg:npm/ws@8.22.0",
       "properties": [],
       "externalReferences": [
         {
           "type": "distribution",
-          "url": "https://registry.npmjs.org/ws/-/ws-8.21.3.tgz"
+          "url": "https://registry.npmjs.org/ws/-/ws-8.22.0.tgz"
         },
         {
           "type": "vcs",
@@ -19195,7 +18534,7 @@
       "hashes": [
         {
           "alg": "SHA-512",
-          "content": "db4d5367f90f5b1a0faff38a5a3aae651d5258a5dcbf1747f9ed71af1f3d6f761b9b32cc1422df9da1b51c52205b324e11667b32fa4afbea1d66e7e0611e7447"
+          "content": "61d82073df3bf913b40275ad67fed6abd16d36f72b2f56ff44ed2e77d9968d43e00ebb00030412179d6c9b6866d57a1f6d4ff88e4a4612c2c5b1967153ed433a"
         }
       ],
       "licenses": [
@@ -19907,10 +19246,6 @@
       ]
     },
     {
-      "ref": "@babel/runtime@7.29.7",
-      "dependsOn": []
-    },
-    {
       "ref": "@egjs/hammerjs@2.0.17",
       "dependsOn": [
         "@types/hammerjs@2.0.46"
@@ -19925,7 +19260,7 @@
       "dependsOn": []
     },
     {
-      "ref": "@expo/cli@57.0.25",
+      "ref": "@expo/cli@57.0.27",
       "dependsOn": [
         "@expo/code-signing-certificates@0.0.6",
         "@expo/config-plugins@57.0.9",
@@ -19944,7 +19279,7 @@
         "@expo/plist@0.8.1",
         "@expo/prebuild-config@57.0.16",
         "@expo/require-utils@57.0.5",
-        "@expo/router-server@57.0.10",
+        "@expo/router-server@57.0.11",
         "@expo/schema-utils@57.0.2",
         "@expo/spawn-async@1.8.0",
         "@expo/ws-tunnel@2.0.0",
@@ -19959,9 +19294,9 @@
         "compression@1.8.2",
         "connect@3.7.0",
         "dnssd-advertise@1.1.6",
-        "expo-router@57.0.21",
+        "expo-router@57.0.24",
         "expo-server@57.0.3",
-        "expo@57.0.23",
+        "expo@57.0.26",
         "fetch-nodeshim@0.4.10",
         "getenv@2.0.0",
         "glob@13.0.6",
@@ -19983,7 +19318,7 @@
         "terminal-link@2.1.1",
         "toqr@0.1.1",
         "wrap-ansi@7.0.0",
-        "ws@8.21.3"
+        "ws@8.22.0"
       ]
     },
     {
@@ -20035,16 +19370,14 @@
     {
       "ref": "@expo/devtools@57.0.1",
       "dependsOn": [
-        "react-native@0.86.3",
-        "react@19.2.3"
+        "react-native@0.86.3"
       ]
     },
     {
       "ref": "@expo/dom-webview@57.0.1",
       "dependsOn": [
-        "expo@57.0.23",
-        "react-native@0.86.3",
-        "react@19.2.3"
+        "expo@57.0.26",
+        "react-native@0.86.3"
       ]
     },
     {
@@ -20099,9 +19432,8 @@
       "dependsOn": [
         "@expo/dom-webview@57.0.1",
         "anser@1.4.10",
-        "expo@57.0.23",
+        "expo@57.0.26",
         "react-native@0.86.3",
-        "react@19.2.3",
         "stacktrace-parser@0.1.11"
       ]
     },
@@ -20114,7 +19446,7 @@
         "@expo/metro@56.0.2",
         "@expo/require-utils@57.0.5",
         "@expo/spawn-async@1.8.0",
-        "expo@57.0.23",
+        "expo@57.0.26",
         "getenv@2.0.0",
         "glob@13.0.6",
         "hermes-parser@0.36.0",
@@ -20135,15 +19467,13 @@
       ]
     },
     {
-      "ref": "@expo/metro-runtime@57.0.15",
+      "ref": "@expo/metro-runtime@57.0.16",
       "dependsOn": [
         "@expo/log-box@57.0.4",
         "anser@1.4.10",
-        "expo@57.0.23",
+        "expo@57.0.26",
         "pretty-format@29.7.0",
-        "react-dom@19.2.3",
         "react-native@0.86.3",
-        "react@19.2.3",
         "stacktrace-parser@0.1.11",
         "whatwg-fetch@3.6.20"
       ]
@@ -20211,16 +19541,14 @@
       ]
     },
     {
-      "ref": "@expo/router-server@57.0.10",
+      "ref": "@expo/router-server@57.0.11",
       "dependsOn": [
-        "@expo/metro-runtime@57.0.15",
-        "expo-constants@57.0.18",
+        "@expo/metro-runtime@57.0.16",
+        "expo-constants@57.0.20",
         "expo-font@57.0.4",
-        "expo-router@57.0.21",
+        "expo-router@57.0.24",
         "expo-server@57.0.3",
-        "expo@57.0.23",
-        "react-dom@19.2.3",
-        "react@19.2.3"
+        "expo@57.0.26"
       ]
     },
     {
@@ -20240,13 +19568,11 @@
       "dependsOn": []
     },
     {
-      "ref": "@expo/ui@57.0.18",
+      "ref": "@expo/ui@57.0.21",
       "dependsOn": [
-        "expo@57.0.23",
-        "react-dom@19.2.3",
+        "expo@57.0.26",
         "react-native-worklets@0.10.1",
         "react-native@0.86.3",
-        "react@19.2.3",
         "sf-symbols-typescript@2.2.0",
         "vaul@1.1.2"
       ]
@@ -20255,14 +19581,13 @@
       "ref": "@expo/vector-icons@15.1.1",
       "dependsOn": [
         "expo-font@57.0.4",
-        "react-native@0.86.3",
-        "react@19.2.3"
+        "react-native@0.86.3"
       ]
     },
     {
       "ref": "@expo/ws-tunnel@2.0.0",
       "dependsOn": [
-        "ws@8.21.3"
+        "ws@8.22.0"
       ]
     },
     {
@@ -20293,47 +19618,25 @@
       "dependsOn": []
     },
     {
-      "ref": "@radix-ui/primitive@1.1.5",
-      "dependsOn": []
-    },
-    {
       "ref": "@radix-ui/primitive@1.1.7",
       "dependsOn": []
     },
     {
-      "ref": "@radix-ui/react-collection@1.1.12",
+      "ref": "@radix-ui/react-collection@1.1.15",
       "dependsOn": [
-        "@radix-ui/react-compose-refs@1.1.3",
-        "@radix-ui/react-context@1.2.0",
-        "@radix-ui/react-primitive@2.1.7",
-        "@radix-ui/react-slot@1.3.0",
-        "react-dom@19.2.3",
-        "react@19.2.3"
-      ]
-    },
-    {
-      "ref": "@radix-ui/react-compose-refs@1.1.3",
-      "dependsOn": [
-        "react@19.2.3"
+        "@radix-ui/react-compose-refs@1.1.5",
+        "@radix-ui/react-context@1.2.2",
+        "@radix-ui/react-primitive@2.1.10",
+        "@radix-ui/react-slot@1.3.3"
       ]
     },
     {
       "ref": "@radix-ui/react-compose-refs@1.1.5",
-      "dependsOn": [
-        "react@19.2.3"
-      ]
-    },
-    {
-      "ref": "@radix-ui/react-context@1.2.0",
-      "dependsOn": [
-        "react@19.2.3"
-      ]
+      "dependsOn": []
     },
     {
       "ref": "@radix-ui/react-context@1.2.2",
-      "dependsOn": [
-        "react@19.2.3"
-      ]
+      "dependsOn": []
     },
     {
       "ref": "@radix-ui/react-dialog@1.1.23",
@@ -20352,16 +19655,12 @@
         "@radix-ui/react-use-controllable-state@1.2.6",
         "@radix-ui/react-use-layout-effect@1.1.4",
         "aria-hidden@1.2.6",
-        "react-dom@19.2.3",
-        "react-remove-scroll@2.7.2",
-        "react@19.2.3"
+        "react-remove-scroll@2.7.2"
       ]
     },
     {
-      "ref": "@radix-ui/react-direction@1.1.2",
-      "dependsOn": [
-        "react@19.2.3"
-      ]
+      "ref": "@radix-ui/react-direction@1.1.4",
+      "dependsOn": []
     },
     {
       "ref": "@radix-ui/react-dismissable-layer@1.1.19",
@@ -20370,189 +19669,106 @@
         "@radix-ui/react-compose-refs@1.1.5",
         "@radix-ui/react-primitive@2.1.10",
         "@radix-ui/react-use-callback-ref@1.1.4",
-        "@radix-ui/react-use-effect-event@0.0.5",
-        "react-dom@19.2.3",
-        "react@19.2.3"
+        "@radix-ui/react-use-effect-event@0.0.5"
       ]
     },
     {
       "ref": "@radix-ui/react-focus-guards@1.1.6",
-      "dependsOn": [
-        "react@19.2.3"
-      ]
+      "dependsOn": []
     },
     {
       "ref": "@radix-ui/react-focus-scope@1.1.16",
       "dependsOn": [
         "@radix-ui/react-compose-refs@1.1.5",
         "@radix-ui/react-primitive@2.1.10",
-        "@radix-ui/react-use-callback-ref@1.1.4",
-        "react-dom@19.2.3",
-        "react@19.2.3"
-      ]
-    },
-    {
-      "ref": "@radix-ui/react-id@1.1.2",
-      "dependsOn": [
-        "@radix-ui/react-use-layout-effect@1.1.2",
-        "react@19.2.3"
+        "@radix-ui/react-use-callback-ref@1.1.4"
       ]
     },
     {
       "ref": "@radix-ui/react-id@1.1.4",
       "dependsOn": [
-        "@radix-ui/react-use-layout-effect@1.1.4",
-        "react@19.2.3"
+        "@radix-ui/react-use-layout-effect@1.1.4"
       ]
     },
     {
       "ref": "@radix-ui/react-portal@1.1.17",
       "dependsOn": [
         "@radix-ui/react-primitive@2.1.10",
-        "@radix-ui/react-use-layout-effect@1.1.4",
-        "react-dom@19.2.3",
-        "react@19.2.3"
+        "@radix-ui/react-use-layout-effect@1.1.4"
       ]
     },
     {
       "ref": "@radix-ui/react-presence@1.1.10",
       "dependsOn": [
-        "@radix-ui/react-use-layout-effect@1.1.4",
-        "react-dom@19.2.3",
-        "react@19.2.3"
-      ]
-    },
-    {
-      "ref": "@radix-ui/react-presence@1.1.7",
-      "dependsOn": [
-        "@radix-ui/react-use-layout-effect@1.1.2",
-        "react-dom@19.2.3",
-        "react@19.2.3"
+        "@radix-ui/react-use-layout-effect@1.1.4"
       ]
     },
     {
       "ref": "@radix-ui/react-primitive@2.1.10",
       "dependsOn": [
-        "@radix-ui/react-slot@1.3.3",
-        "react-dom@19.2.3",
-        "react@19.2.3"
+        "@radix-ui/react-slot@1.3.3"
       ]
     },
     {
-      "ref": "@radix-ui/react-primitive@2.1.7",
+      "ref": "@radix-ui/react-roving-focus@1.1.19",
       "dependsOn": [
-        "@radix-ui/react-slot@1.3.0",
-        "react-dom@19.2.3",
-        "react@19.2.3"
-      ]
-    },
-    {
-      "ref": "@radix-ui/react-roving-focus@1.1.15",
-      "dependsOn": [
-        "@radix-ui/primitive@1.1.5",
-        "@radix-ui/react-collection@1.1.12",
-        "@radix-ui/react-compose-refs@1.1.3",
-        "@radix-ui/react-context@1.2.0",
-        "@radix-ui/react-direction@1.1.2",
-        "@radix-ui/react-id@1.1.2",
-        "@radix-ui/react-primitive@2.1.7",
-        "@radix-ui/react-use-callback-ref@1.1.2",
-        "@radix-ui/react-use-controllable-state@1.2.3",
-        "@radix-ui/react-use-is-hydrated@0.1.1",
-        "@radix-ui/react-use-layout-effect@1.1.2",
-        "react-dom@19.2.3",
-        "react@19.2.3"
-      ]
-    },
-    {
-      "ref": "@radix-ui/react-slot@1.3.0",
-      "dependsOn": [
-        "@radix-ui/react-compose-refs@1.1.3",
-        "react@19.2.3"
+        "@radix-ui/primitive@1.1.7",
+        "@radix-ui/react-collection@1.1.15",
+        "@radix-ui/react-compose-refs@1.1.5",
+        "@radix-ui/react-context@1.2.2",
+        "@radix-ui/react-direction@1.1.4",
+        "@radix-ui/react-id@1.1.4",
+        "@radix-ui/react-primitive@2.1.10",
+        "@radix-ui/react-use-callback-ref@1.1.4",
+        "@radix-ui/react-use-controllable-state@1.2.6",
+        "@radix-ui/react-use-is-hydrated@0.1.3",
+        "@radix-ui/react-use-layout-effect@1.1.4"
       ]
     },
     {
       "ref": "@radix-ui/react-slot@1.3.3",
       "dependsOn": [
-        "@radix-ui/react-compose-refs@1.1.5",
-        "react@19.2.3"
+        "@radix-ui/react-compose-refs@1.1.5"
       ]
     },
     {
-      "ref": "@radix-ui/react-tabs@1.1.17",
+      "ref": "@radix-ui/react-tabs@1.1.21",
       "dependsOn": [
-        "@radix-ui/primitive@1.1.5",
-        "@radix-ui/react-context@1.2.0",
-        "@radix-ui/react-direction@1.1.2",
-        "@radix-ui/react-id@1.1.2",
-        "@radix-ui/react-presence@1.1.7",
-        "@radix-ui/react-primitive@2.1.7",
-        "@radix-ui/react-roving-focus@1.1.15",
-        "@radix-ui/react-use-controllable-state@1.2.3",
-        "react-dom@19.2.3",
-        "react@19.2.3"
-      ]
-    },
-    {
-      "ref": "@radix-ui/react-use-callback-ref@1.1.2",
-      "dependsOn": [
-        "react@19.2.3"
+        "@radix-ui/primitive@1.1.7",
+        "@radix-ui/react-context@1.2.2",
+        "@radix-ui/react-direction@1.1.4",
+        "@radix-ui/react-id@1.1.4",
+        "@radix-ui/react-presence@1.1.10",
+        "@radix-ui/react-primitive@2.1.10",
+        "@radix-ui/react-roving-focus@1.1.19",
+        "@radix-ui/react-use-controllable-state@1.2.6"
       ]
     },
     {
       "ref": "@radix-ui/react-use-callback-ref@1.1.4",
-      "dependsOn": [
-        "react@19.2.3"
-      ]
-    },
-    {
-      "ref": "@radix-ui/react-use-controllable-state@1.2.3",
-      "dependsOn": [
-        "@radix-ui/react-use-effect-event@0.0.3",
-        "@radix-ui/react-use-layout-effect@1.1.2",
-        "react@19.2.3"
-      ]
+      "dependsOn": []
     },
     {
       "ref": "@radix-ui/react-use-controllable-state@1.2.6",
       "dependsOn": [
         "@radix-ui/primitive@1.1.7",
         "@radix-ui/react-use-effect-event@0.0.5",
-        "@radix-ui/react-use-layout-effect@1.1.4",
-        "react@19.2.3"
-      ]
-    },
-    {
-      "ref": "@radix-ui/react-use-effect-event@0.0.3",
-      "dependsOn": [
-        "@radix-ui/react-use-layout-effect@1.1.2",
-        "react@19.2.3"
+        "@radix-ui/react-use-layout-effect@1.1.4"
       ]
     },
     {
       "ref": "@radix-ui/react-use-effect-event@0.0.5",
       "dependsOn": [
-        "@radix-ui/react-use-layout-effect@1.1.4",
-        "react@19.2.3"
+        "@radix-ui/react-use-layout-effect@1.1.4"
       ]
     },
     {
-      "ref": "@radix-ui/react-use-is-hydrated@0.1.1",
-      "dependsOn": [
-        "react@19.2.3"
-      ]
-    },
-    {
-      "ref": "@radix-ui/react-use-layout-effect@1.1.2",
-      "dependsOn": [
-        "react@19.2.3"
-      ]
+      "ref": "@radix-ui/react-use-is-hydrated@0.1.3",
+      "dependsOn": []
     },
     {
       "ref": "@radix-ui/react-use-layout-effect@1.1.4",
-      "dependsOn": [
-        "react@19.2.3"
-      ]
+      "dependsOn": []
     },
     {
       "ref": "@react-native-async-storage/async-storage@2.2.0",
@@ -20564,8 +19780,7 @@
     {
       "ref": "@react-native-masked-view/masked-view@0.3.2",
       "dependsOn": [
-        "react-native@0.86.3",
-        "react@19.2.3"
+        "react-native@0.86.3"
       ]
     },
     {
@@ -20699,8 +19914,7 @@
       "dependsOn": [
         "invariant@2.2.4",
         "nullthrows@1.1.1",
-        "react-native@0.86.3",
-        "react@19.2.3"
+        "react-native@0.86.3"
       ]
     },
     {
@@ -20796,10 +20010,6 @@
       "dependsOn": []
     },
     {
-      "ref": "ansi-regex@5.0.1",
-      "dependsOn": []
-    },
-    {
       "ref": "ansi-styles@3.2.1",
       "dependsOn": [
         "color-convert@1.9.3"
@@ -20852,7 +20062,7 @@
       "dependsOn": []
     },
     {
-      "ref": "babel-plugin-react-native-web@0.21.2",
+      "ref": "babel-plugin-react-native-web@0.21.3",
       "dependsOn": []
     },
     {
@@ -20868,7 +20078,7 @@
       ]
     },
     {
-      "ref": "babel-preset-expo@57.0.12",
+      "ref": "babel-preset-expo@57.0.13",
       "dependsOn": [
         "@babel/plugin-proposal-decorators@7.29.7",
         "@babel/plugin-proposal-export-default-from@7.29.7",
@@ -20904,13 +20114,12 @@
         "@babel/plugin-transform-typescript@7.29.7",
         "@babel/plugin-transform-unicode-regex@7.29.7",
         "@babel/preset-typescript@7.29.7",
-        "@babel/runtime@7.29.7",
         "@react-native/babel-plugin-codegen@0.86.3",
         "babel-plugin-react-compiler@1.0.0",
-        "babel-plugin-react-native-web@0.21.2",
+        "babel-plugin-react-native-web@0.21.3",
         "babel-plugin-syntax-hermes-parser@0.36.0",
         "babel-plugin-transform-flow-enums@0.0.2",
-        "expo@57.0.23",
+        "expo@57.0.26",
         "react-refresh@0.14.2"
       ]
     },
@@ -21257,132 +20466,122 @@
     {
       "ref": "expo-application@57.0.3",
       "dependsOn": [
-        "expo@57.0.23"
+        "expo@57.0.26"
       ]
     },
     {
-      "ref": "expo-asset@57.0.17",
+      "ref": "expo-asset@57.0.18",
       "dependsOn": [
         "@expo/image-utils@0.11.5",
-        "expo-constants@57.0.18",
-        "expo@57.0.23",
-        "react-native@0.86.3",
-        "react@19.2.3"
+        "expo-constants@57.0.20",
+        "expo@57.0.26",
+        "react-native@0.86.3"
       ]
     },
     {
       "ref": "expo-audio@57.0.5",
       "dependsOn": [
-        "expo-asset@57.0.17",
-        "expo@57.0.23",
-        "react-native@0.86.3",
-        "react@19.2.3"
+        "expo-asset@57.0.18",
+        "expo@57.0.26",
+        "react-native@0.86.3"
       ]
     },
     {
       "ref": "expo-blur@57.0.3",
       "dependsOn": [
-        "expo@57.0.23",
-        "react-native@0.86.3",
-        "react@19.2.3"
-      ]
-    },
-    {
-      "ref": "expo-constants@57.0.18",
-      "dependsOn": [
-        "@expo/env@2.4.3",
-        "expo@57.0.23",
+        "expo@57.0.26",
         "react-native@0.86.3"
       ]
     },
     {
-      "ref": "expo-document-picker@57.0.2",
+      "ref": "expo-constants@57.0.20",
       "dependsOn": [
-        "expo@57.0.23"
+        "@expo/env@2.4.3",
+        "expo@57.0.26",
+        "react-native@0.86.3"
+      ]
+    },
+    {
+      "ref": "expo-document-picker@57.0.3",
+      "dependsOn": [
+        "expo@57.0.26"
       ]
     },
     {
       "ref": "expo-file-system@57.0.7",
       "dependsOn": [
-        "expo@57.0.23",
+        "expo@57.0.26",
         "react-native@0.86.3"
       ]
     },
     {
       "ref": "expo-font@57.0.4",
       "dependsOn": [
-        "expo@57.0.23",
+        "expo@57.0.26",
         "fontfaceobserver@2.3.0",
-        "react-native@0.86.3",
-        "react@19.2.3"
+        "react-native@0.86.3"
       ]
     },
     {
-      "ref": "expo-glass-effect@57.0.3",
+      "ref": "expo-glass-effect@57.0.4",
       "dependsOn": [
-        "expo@57.0.23",
-        "react-native@0.86.3",
-        "react@19.2.3"
+        "expo@57.0.26",
+        "react-native@0.86.3"
       ]
     },
     {
       "ref": "expo-haptics@57.0.3",
       "dependsOn": [
-        "expo@57.0.23"
+        "expo@57.0.26"
       ]
     },
     {
       "ref": "expo-image-loader@57.0.1",
       "dependsOn": [
-        "expo@57.0.23"
+        "expo@57.0.26"
       ]
     },
     {
-      "ref": "expo-image-picker@57.0.18",
+      "ref": "expo-image-picker@57.0.20",
       "dependsOn": [
         "expo-image-loader@57.0.1",
-        "expo@57.0.23"
+        "expo@57.0.26"
       ]
     },
     {
       "ref": "expo-image@57.0.5",
       "dependsOn": [
-        "expo@57.0.23",
+        "expo@57.0.26",
         "react-native-web@0.21.2",
         "react-native@0.86.3",
-        "react@19.2.3",
         "sf-symbols-typescript@2.2.0"
       ]
     },
     {
       "ref": "expo-keep-awake@57.0.2",
       "dependsOn": [
-        "expo@57.0.23",
-        "react@19.2.3"
+        "expo@57.0.26"
       ]
     },
     {
       "ref": "expo-linear-gradient@57.0.2",
       "dependsOn": [
-        "expo@57.0.23",
-        "react-native@0.86.3",
-        "react@19.2.3"
+        "expo@57.0.26",
+        "react-native@0.86.3"
       ]
     },
     {
-      "ref": "expo-linking@57.0.10",
+      "ref": "expo-linking@57.0.11",
       "dependsOn": [
-        "expo-constants@57.0.18",
+        "expo-constants@57.0.20",
         "invariant@2.2.4",
-        "react-native@0.86.3",
-        "react@19.2.3"
+        "react-native@0.86.3"
       ]
     },
     {
       "ref": "expo-localization@57.0.2",
       "dependsOn": [
-        "expo@57.0.23",
-        "react@19.2.3",
+        "expo@57.0.26",
         "rtl-detect@1.1.2"
       ]
     },
@@ -21395,67 +20594,63 @@
       ]
     },
     {
-      "ref": "expo-modules-core@57.0.18",
+      "ref": "expo-modules-core@57.0.20",
       "dependsOn": [
         "@expo/expo-modules-macros-plugin@0.6.1",
-        "expo-modules-jsi@57.1.0",
+        "expo-modules-jsi@57.1.1",
         "invariant@2.2.4",
         "react-native-worklets@0.10.1",
-        "react-native@0.86.3",
-        "react@19.2.3"
+        "react-native@0.86.3"
       ]
     },
     {
-      "ref": "expo-modules-jsi@57.1.0",
+      "ref": "expo-modules-jsi@57.1.1",
       "dependsOn": [
         "react-native@0.86.3"
       ]
     },
     {
-      "ref": "expo-notifications@57.0.19",
+      "ref": "expo-notifications@57.0.21",
       "dependsOn": [
         "@expo/image-utils@0.11.5",
         "abort-controller@3.0.0",
         "badgin@1.2.3",
         "expo-application@57.0.3",
-        "expo-constants@57.0.18",
-        "expo@57.0.23",
-        "react-native@0.86.3",
-        "react@19.2.3"
+        "expo-constants@57.0.20",
+        "expo@57.0.26",
+        "react-native@0.86.3"
       ]
     },
     {
-      "ref": "expo-router@57.0.21",
+      "ref": "expo-router@57.0.24",
       "dependsOn": [
         "@expo/log-box@57.0.4",
-        "@expo/metro-runtime@57.0.15",
+        "@expo/metro-runtime@57.0.16",
         "@expo/schema-utils@57.0.2",
-        "@expo/ui@57.0.18",
-        "@radix-ui/react-slot@1.3.0",
-        "@radix-ui/react-tabs@1.1.17",
+        "@expo/ui@57.0.21",
+        "@radix-ui/react-slot@1.3.3",
+        "@radix-ui/react-tabs@1.1.21",
         "@react-native-masked-view/masked-view@0.3.2",
         "client-only@0.0.1",
         "color@4.2.3",
-        "expo-constants@57.0.18",
-        "expo-glass-effect@57.0.3",
-        "expo-linking@57.0.10",
+        "expo-constants@57.0.20",
+        "expo-glass-effect@57.0.4",
+        "expo-linking@57.0.11",
         "expo-server@57.0.3",
         "expo-symbols@57.0.3",
-        "expo@57.0.23",
+        "expo@57.0.26",
         "invariant@2.2.4",
-        "nanoid@3.3.18",
+        "nanoid@3.3.19",
         "query-string@7.1.3",
-        "react-dom@19.2.3",
         "react-fast-compare@3.2.2",
-        "react-is@19.2.7",
-        "react-native-drawer-layout@4.2.8",
+        "react-is@19.3.0",
+        "react-native-drawer-layout@4.2.11",
         "react-native-gesture-handler@2.32.0",
         "react-native-reanimated@4.5.1",
         "react-native-safe-area-context@5.7.0",
         "react-native-screens@4.26.2",
         "react-native-web@0.21.2",
         "react-native@0.86.3",
-        "react@19.2.3",
         "server-only@0.0.1",
         "sf-symbols-typescript@2.2.0",
         "shallowequal@1.1.0",
@@ -21468,20 +20663,19 @@
       "dependsOn": []
     },
     {
-      "ref": "expo-sharing@57.0.20",
+      "ref": "expo-sharing@57.0.22",
       "dependsOn": [
         "@expo/config-plugins@57.0.9",
         "@expo/config-types@57.0.2",
         "@expo/plist@0.8.1",
-        "expo@57.0.23",
-        "react-native@0.86.3",
-        "react@19.2.3"
+        "expo@57.0.26",
+        "react-native@0.86.3"
       ]
     },
     {
       "ref": "expo-speech@57.0.3",
       "dependsOn": [
-        "expo@57.0.23"
+        "expo@57.0.26"
       ]
     },
     {
@@ -21489,7 +20683,7 @@
       "dependsOn": [
         "@expo/config-plugins@57.0.9",
         "@expo/image-utils@0.11.5",
-        "expo@57.0.23",
+        "expo@57.0.26",
         "xml2js@0.6.0"
       ]
     },
@@ -21497,17 +20691,15 @@
       "ref": "expo-sqlite@57.0.3",
       "dependsOn": [
         "await-lock@2.2.2",
-        "expo@57.0.23",
-        "react-native@0.86.3",
-        "react@19.2.3"
+        "expo@57.0.26",
+        "react-native@0.86.3"
       ]
     },
     {
       "ref": "expo-status-bar@57.0.1",
       "dependsOn": [
-        "expo@57.0.23",
-        "react-native@0.86.3",
-        "react@19.2.3"
+        "expo@57.0.26",
+        "react-native@0.86.3"
       ]
     },
     {
@@ -21515,25 +20707,22 @@
       "dependsOn": [
         "@expo-google-fonts/material-symbols@0.4.48",
         "expo-font@57.0.4",
-        "expo@57.0.23",
+        "expo@57.0.26",
         "react-native@0.86.3",
-        "react@19.2.3",
         "sf-symbols-typescript@2.2.0"
       ]
     },
     {
-      "ref": "expo-video@57.0.4",
+      "ref": "expo-video@57.0.5",
       "dependsOn": [
-        "expo@57.0.23",
-        "react-native@0.86.3",
-        "react@19.2.3"
+        "expo@57.0.26",
+        "react-native@0.86.3"
       ]
     },
     {
-      "ref": "expo@57.0.23",
+      "ref": "expo@57.0.26",
       "dependsOn": [
-        "@babel/runtime@7.29.7",
-        "@expo/cli@57.0.25",
+        "@expo/cli@57.0.27",
         "@expo/config-plugins@57.0.9",
         "@expo/config@57.0.9",
         "@expo/devtools@57.0.1",
@@ -21542,23 +20731,21 @@
         "@expo/local-build-cache-provider@57.0.8",
         "@expo/log-box@57.0.4",
         "@expo/metro-config@57.0.12",
-        "@expo/metro-runtime@57.0.15",
+        "@expo/metro-runtime@57.0.16",
         "@expo/metro@56.0.2",
         "@ungap/structured-clone@1.3.3",
-        "babel-preset-expo@57.0.12",
-        "expo-asset@57.0.17",
-        "expo-constants@57.0.18",
+        "babel-preset-expo@57.0.13",
+        "expo-asset@57.0.18",
+        "expo-constants@57.0.20",
         "expo-file-system@57.0.7",
         "expo-font@57.0.4",
         "expo-keep-awake@57.0.2",
         "expo-modules-autolinking@57.0.13",
-        "expo-modules-core@57.0.18",
+        "expo-modules-core@57.0.20",
         "pretty-format@29.7.0",
-        "react-dom@19.2.3",
         "react-native-web@0.21.2",
         "react-native@0.86.3",
         "react-refresh@0.14.2",
-        "react@19.2.3",
         "whatwg-url-minimum@0.1.2"
       ]
     },
@@ -21844,35 +21031,34 @@
       "ref": "lms-app@1.0.0",
       "dependsOn": [
         "@expo-google-fonts/inter@0.4.2",
-        "@expo/metro-runtime@57.0.15",
+        "@expo/metro-runtime@57.0.16",
         "@expo/vector-icons@15.1.1",
         "@react-native-async-storage/async-storage@2.2.0",
-        "expo-asset@57.0.17",
+        "expo-asset@57.0.18",
         "expo-audio@57.0.5",
         "expo-blur@57.0.3",
-        "expo-constants@57.0.18",
-        "expo-document-picker@57.0.2",
+        "expo-constants@57.0.20",
+        "expo-document-picker@57.0.3",
         "expo-file-system@57.0.7",
         "expo-font@57.0.4",
         "expo-haptics@57.0.3",
-        "expo-image-picker@57.0.18",
+        "expo-image-picker@57.0.20",
         "expo-image@57.0.5",
         "expo-linear-gradient@57.0.2",
-        "expo-linking@57.0.10",
+        "expo-linking@57.0.11",
         "expo-localization@57.0.2",
-        "expo-notifications@57.0.19",
-        "expo-router@57.0.21",
-        "expo-sharing@57.0.20",
+        "expo-notifications@57.0.21",
+        "expo-router@57.0.24",
+        "expo-sharing@57.0.22",
         "expo-speech@57.0.3",
         "expo-splash-screen@57.0.9",
         "expo-sqlite@57.0.3",
         "expo-status-bar@57.0.1",
-        "expo-video@57.0.4",
-        "expo@57.0.23",
+        "expo-video@57.0.5",
+        "expo@57.0.26",
         "i18n-js@4.5.3",
         "linkify-it@5.0.2",
-        "markdown-it@14.3.0",
-        "react-dom@19.2.3",
+        "markdown-it@14.3.2",
         "react-native-draggable-flatlist@4.0.3",
         "react-native-gesture-handler@2.32.0",
         "react-native-markdown-display@7.0.2",
@@ -21884,7 +21070,6 @@
         "react-native-worklets-core@1.6.3",
         "react-native-worklets@0.10.1",
         "react-native@0.86.3",
-        "react@19.2.3",
         "ts-fsrs@5.4.1",
         "uuid@14.0.1",
         "zustand@5.0.14"
@@ -21927,7 +21112,7 @@
       ]
     },
     {
-      "ref": "markdown-it@14.3.0",
+      "ref": "markdown-it@14.3.2",
       "dependsOn": [
         "entities@4.5.0",
         "linkify-it@5.0.2",
@@ -22111,14 +21296,12 @@
     {
       "ref": "metro-runtime@0.84.4",
       "dependsOn": [
-        "@babel/runtime@7.29.7",
         "flow-enums-runtime@0.0.6"
       ]
     },
     {
       "ref": "metro-runtime@0.84.5",
       "dependsOn": [
-        "@babel/runtime@7.29.7",
         "flow-enums-runtime@0.0.6"
       ]
     },
@@ -22333,7 +21516,7 @@
       "dependsOn": []
     },
     {
-      "ref": "nanoid@3.3.18",
+      "ref": "nanoid@3.3.19",
       "dependsOn": []
     },
     {
@@ -22472,8 +21655,7 @@
     {
       "ref": "postcss@8.5.28",
       "dependsOn": [
-        "nanoid@3.3.18",
-        "source-map-js@1.2.1"
+        "nanoid@3.3.19"
       ]
     },
     {
@@ -22542,21 +21724,12 @@
       ]
     },
     {
-      "ref": "react-dom@19.2.3",
-      "dependsOn": [
-        "react@19.2.3",
-        "scheduler@0.27.0"
-      ]
-    },
-    {
       "ref": "react-fast-compare@3.2.2",
       "dependsOn": []
     },
     {
       "ref": "react-freeze@1.0.4",
-      "dependsOn": [
-        "react@19.2.3"
-      ]
+      "dependsOn": []
     },
     {
       "ref": "react-is@16.13.1",
@@ -22567,7 +21740,7 @@
       "dependsOn": []
     },
     {
-      "ref": "react-is@19.2.7",
+      "ref": "react-is@19.3.0",
       "dependsOn": []
     },
     {
@@ -22580,13 +21753,12 @@
       ]
     },
     {
-      "ref": "react-native-drawer-layout@4.2.8",
+      "ref": "react-native-drawer-layout@4.2.11",
       "dependsOn": [
         "color@4.2.3",
         "react-native-gesture-handler@2.32.0",
         "react-native-reanimated@4.5.1",
         "react-native@0.86.3",
-        "react@19.2.3",
         "use-latest-callback@0.2.6"
       ]
     },
@@ -22601,25 +21773,22 @@
         "@types/react-test-renderer@19.1.0",
         "hoist-non-react-statics@3.3.2",
         "invariant@2.2.4",
-        "react-native@0.86.3",
-        "react@19.2.3"
+        "react-native@0.86.3"
       ]
     },
     {
       "ref": "react-native-is-edge-to-edge@1.3.1",
       "dependsOn": [
-        "react-native@0.86.3",
-        "react@19.2.3"
+        "react-native@0.86.3"
       ]
     },
     {
       "ref": "react-native-markdown-display@7.0.2",
       "dependsOn": [
         "css-to-react-native@3.2.0",
-        "markdown-it@14.3.0",
+        "markdown-it@14.3.2",
         "react-native-fit-image@1.5.5",
-        "react-native@0.86.3",
-        "react@19.2.3"
+        "react-native@0.86.3"
       ]
     },
     {
@@ -22627,15 +21796,13 @@
       "dependsOn": [
         "react-native-is-edge-to-edge@1.3.1",
         "react-native-worklets@0.10.1",
-        "react-native@0.86.3",
-        "react@19.2.3"
+        "react-native@0.86.3"
       ]
     },
     {
       "ref": "react-native-safe-area-context@5.7.0",
       "dependsOn": [
-        "react-native@0.86.3",
-        "react@19.2.3"
+        "react-native@0.86.3"
       ]
     },
     {
@@ -22643,7 +21810,6 @@
       "dependsOn": [
         "react-freeze@1.0.4",
         "react-native@0.86.3",
-        "react@19.2.3",
         "warn-once@0.1.1"
       ]
     },
@@ -22653,22 +21819,18 @@
         "css-select@5.2.2",
         "css-tree@1.1.3",
         "react-native@0.86.3",
-        "react@19.2.3",
         "warn-once@0.1.1"
       ]
     },
     {
       "ref": "react-native-web@0.21.2",
       "dependsOn": [
-        "@babel/runtime@7.29.7",
         "@react-native/normalize-colors@0.74.89",
         "fbjs@3.0.5",
         "inline-style-prefixer@7.0.1",
         "memoize-one@6.0.0",
         "nullthrows@1.1.1",
         "postcss-value-parser@4.2.0",
-        "react-dom@19.2.3",
-        "react@19.2.3",
         "styleq@0.1.3"
       ]
     },
@@ -22676,7 +21838,6 @@
       "ref": "react-native-worklets-core@1.6.3",
       "dependsOn": [
         "react-native@0.86.3",
-        "react@19.2.3",
         "string-hash-64@1.0.3"
       ]
     },
@@ -22693,8 +21854,7 @@
         "@babel/plugin-transform-unicode-regex@7.29.7",
         "@babel/preset-typescript@7.29.7",
         "@react-native/metro-config@0.86.3",
-        "react-native@0.86.3",
-        "react@19.2.3"
+        "react-native@0.86.3"
       ]
     },
     {
@@ -22709,7 +21869,6 @@
         "@react-native/virtualized-lists@0.86.3",
         "abort-controller@3.0.0",
         "anser@1.4.10",
-        "ansi-regex@5.0.1",
         "babel-plugin-syntax-hermes-parser@0.36.0",
         "base64-js@1.5.1",
         "commander@12.1.0",
@@ -22724,9 +21883,7 @@
         "promise@8.3.0",
         "react-devtools-core@6.1.5",
         "react-refresh@0.14.2",
-        "react@19.2.3",
         "regenerator-runtime@0.13.11",
-        "scheduler@0.27.0",
         "stacktrace-parser@0.1.11",
         "whatwg-fetch@3.6.20",
         "ws@7.5.11",
@@ -22741,7 +21898,6 @@
       "ref": "react-remove-scroll-bar@2.3.8",
       "dependsOn": [
         "react-style-singleton@2.2.3",
-        "react@19.2.3",
         "tslib@2.8.1"
       ]
     },
@@ -22750,7 +21906,6 @@
       "dependsOn": [
         "react-remove-scroll-bar@2.3.8",
         "react-style-singleton@2.2.3",
-        "react@19.2.3",
         "tslib@2.8.1",
         "use-callback-ref@1.3.3",
         "use-sidecar@1.1.3"
@@ -22760,13 +21915,8 @@
       "ref": "react-style-singleton@2.2.3",
       "dependsOn": [
         "get-nonce@1.0.1",
-        "react@19.2.3",
         "tslib@2.8.1"
       ]
-    },
-    {
-      "ref": "react@19.2.3",
-      "dependsOn": []
     },
     {
       "ref": "regenerate-unicode-properties@10.2.2",
@@ -22838,10 +21988,6 @@
     },
     {
       "ref": "sax@1.6.0",
-      "dependsOn": []
-    },
-    {
-      "ref": "scheduler@0.27.0",
       "dependsOn": []
     },
     {
@@ -22929,10 +22075,6 @@
       "dependsOn": []
     },
     {
-      "ref": "source-map-js@1.2.1",
-      "dependsOn": []
-    },
-    {
       "ref": "source-map-support@0.5.21",
       "dependsOn": [
         "buffer-from@1.1.2",
@@ -23001,9 +22143,7 @@
     },
     {
       "ref": "strip-ansi@6.0.1",
-      "dependsOn": [
-        "ansi-regex@5.0.1"
-      ]
+      "dependsOn": []
     },
     {
       "ref": "structured-headers@0.4.1",
@@ -23118,21 +22258,17 @@
     {
       "ref": "use-callback-ref@1.3.3",
       "dependsOn": [
-        "react@19.2.3",
         "tslib@2.8.1"
       ]
     },
     {
       "ref": "use-latest-callback@0.2.6",
-      "dependsOn": [
-        "react@19.2.3"
-      ]
+      "dependsOn": []
     },
     {
       "ref": "use-sidecar@1.1.3",
       "dependsOn": [
         "detect-node-es@1.1.0",
-        "react@19.2.3",
         "tslib@2.8.1"
       ]
     },
@@ -23155,9 +22291,7 @@
     {
       "ref": "vaul@1.1.2",
       "dependsOn": [
-        "@radix-ui/react-dialog@1.1.23",
-        "react-dom@19.2.3",
-        "react@19.2.3"
+        "@radix-ui/react-dialog@1.1.23"
       ]
     },
     {
@@ -23211,7 +22345,7 @@
       "dependsOn": []
     },
     {
-      "ref": "ws@8.21.3",
+      "ref": "ws@8.22.0",
       "dependsOn": []
     },
     {
@@ -23261,9 +22395,7 @@
     },
     {
       "ref": "zustand@5.0.14",
-      "dependsOn": [
-        "react@19.2.3"
-      ]
+      "dependsOn": []
     }
   ]
 }

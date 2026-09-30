@@ -37,7 +37,6 @@ const webData = {
 
 const WEB_DATA_KEY = 'flashcards:web-data:v1';
 const MAX_WEB_DATA_BYTES = 4 * 1024 * 1024;
-let webDataLoadPromise: Promise<void> | null = null;
 let webDataWriteQueue: Promise<void> = Promise.resolve();
 let webDataMutationQueue: Promise<void> = Promise.resolve();
 let lastDurableWebSnapshot = JSON.stringify({ version: 1, data: webData });
@@ -173,19 +172,28 @@ const hydrateWebData = (serialized: string) => {
   webData.review_logs = data.review_logs as ReviewLog[];
 };
 
+// All runtimes for this origin use the same lock. A module-local queue alone
+// cannot protect the shared blob from another browser tab.
+const withWebStorageLock = async <T>(operation: () => Promise<T>, writing = false): Promise<T> => {
+  const locks = typeof navigator !== 'undefined' ? navigator.locks : undefined;
+  if (locks) return locks.request(`${WEB_DATA_KEY}:transaction`, operation);
+  if (writing) throw new Error('Safe browser storage requires Web Locks. Open this app over HTTPS in a supported browser. You can still export existing decks.');
+  return operation();
+};
+
+const reloadWebData = async () => {
+  const serialized = await AsyncStorage.getItem(WEB_DATA_KEY);
+  const snapshot = serialized ?? JSON.stringify({ version: 1, data: {
+    decks: [], cards: [], notes: [], depth_layers: [], review_logs: [],
+  } });
+  hydrateWebData(snapshot);
+  lastDurableWebSnapshot = snapshot;
+};
+
 const ensureWebDataLoaded = async () => {
-  if (!webDataLoadPromise) {
-    webDataLoadPromise = AsyncStorage.getItem(WEB_DATA_KEY).then(serialized => {
-      if (serialized) {
-        hydrateWebData(serialized);
-        lastDurableWebSnapshot = serialized;
-      }
-    });
-  }
-  await webDataLoadPromise;
-  // Reads observe either the state before a mutation or its durable result,
-  // never an in-memory change that is still waiting on browser storage.
-  await webDataMutationQueue;
+  const operation = webDataMutationQueue.then(() => withWebStorageLock(reloadWebData));
+  webDataMutationQueue = operation.then(() => undefined, () => undefined);
+  await operation;
 };
 
 const persistWebData = async () => {
@@ -430,8 +438,8 @@ const withWebDataMutation = async <T>(
   principal: ReturnType<typeof captureFlashcardPrincipal>,
   mutation: () => Promise<T> | T,
 ): Promise<T> => {
-  await ensureWebDataLoaded();
-  const operation = webDataMutationQueue.catch(() => {}).then(async () => {
+  const operation = webDataMutationQueue.then(() => withWebStorageLock(async () => {
+    await reloadWebData();
     requireCurrentFlashcardPrincipal(principal);
     const before = JSON.stringify({ version: 1, data: webData });
     try {
@@ -442,7 +450,7 @@ const withWebDataMutation = async <T>(
       hydrateWebData(before);
       throw error;
     }
-  });
+  }, true));
   webDataMutationQueue = operation.then(() => undefined, () => undefined);
   return operation;
 };

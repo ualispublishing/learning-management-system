@@ -45,6 +45,14 @@ export interface ContentSlice {
 }
 
 const messageFrom = (error: unknown, fallback: string) => error instanceof Error ? error.message : fallback;
+const readCommittedItems = async (items: ContentItem[], ids: Set<string>): Promise<Map<string, ContentItem>> => {
+  const courseIds = [...new Set(items.filter(item => ids.has(item.id)).map(item => item.courseId))];
+  const committed = (await Promise.all(courseIds.map(id => repoFactory.content.getContentItems(id)))).flat();
+  const byId = new Map(committed.map(item => [item.id, item]));
+  if ([...ids].some(id => !byId.has(id))) throw new Error('Committed content could not be loaded. Refresh the course before retrying.');
+  return byId;
+};
+
 const pendingLiveAnswers = new Map<string, Promise<void>>();
 
 export const createContentSlice: StateCreator<ContentSlice, [], [], ContentSlice> = (set, get) => ({
@@ -63,8 +71,8 @@ export const createContentSlice: StateCreator<ContentSlice, [], [], ContentSlice
       throw new Error(`Content item "${item.id}" already exists.`);
     }
     try {
-      await repoFactory.content.createContentItem(item);
-      if (isPrincipalGenerationCurrent(generation)) set(state => ({ contentItems: [...state.contentItems.filter(existing => existing.id !== item.id), item], contentMutationError: null }));
+      const committed = await repoFactory.content.createContentItem(item);
+      if (isPrincipalGenerationCurrent(generation)) set(state => ({ contentItems: [...state.contentItems.filter(existing => existing.id !== item.id), committed], contentMutationError: null }));
     } catch (error) {
       if (isPrincipalGenerationCurrent(generation)) set({ contentMutationError: messageFrom(error, 'Content could not be created.') });
       throw error;
@@ -85,9 +93,9 @@ export const createContentSlice: StateCreator<ContentSlice, [], [], ContentSlice
       incomingIds.add(item.id);
     }
     try {
-      await repoFactory.content.createContentItems(items);
+      const committed = await repoFactory.content.createContentItems(items);
       const ids = new Set(items.map(item => item.id));
-      if (isPrincipalGenerationCurrent(generation)) set(state => ({ contentItems: [...state.contentItems.filter(item => !ids.has(item.id)), ...items], contentMutationError: null }));
+      if (isPrincipalGenerationCurrent(generation)) set(state => ({ contentItems: [...state.contentItems.filter(item => !ids.has(item.id)), ...committed], contentMutationError: null }));
     } catch (error) {
       if (isPrincipalGenerationCurrent(generation)) set({ contentMutationError: messageFrom(error, 'The content bundle could not be created atomically.') });
       throw error;
@@ -102,8 +110,10 @@ export const createContentSlice: StateCreator<ContentSlice, [], [], ContentSlice
     }
     try {
       await repoFactory.content.updateContentItem(id, updates);
+      if (!isPrincipalGenerationCurrent(generation)) return;
+      const committed = await readCommittedItems(get().contentItems, new Set([id]));
       if (isPrincipalGenerationCurrent(generation)) set(state => ({
-        contentItems: state.contentItems.map(item => item.id === id ? { ...item, ...updates, id } : item),
+        contentItems: state.contentItems.map(item => item.id === id ? committed.get(id)! : item),
         contentMutationError: null,
       }));
     } catch (error) {
@@ -132,11 +142,11 @@ export const createContentSlice: StateCreator<ContentSlice, [], [], ContentSlice
     }
     try {
       await repoFactory.content.updateContentItems(changes);
-      const updatesById = new Map(changes.map(change => [change.itemId, change.updates]));
+      if (!isPrincipalGenerationCurrent(generation)) return;
+      const committed = await readCommittedItems(get().contentItems, requestedIds);
       if (isPrincipalGenerationCurrent(generation)) set(state => ({
         contentItems: state.contentItems.map(item => {
-          const updates = updatesById.get(item.id);
-          return updates ? { ...item, ...updates, id: item.id } : item;
+          return requestedIds.has(item.id) ? committed.get(item.id)! : item;
         }),
         contentMutationError: null,
       }));
@@ -151,7 +161,9 @@ export const createContentSlice: StateCreator<ContentSlice, [], [], ContentSlice
     const deletedAt = Date.now();
     try {
       await repoFactory.content.deleteContentItem(id, deletedAt);
-      if (isPrincipalGenerationCurrent(generation)) set(state => ({ contentItems: state.contentItems.map(item => item.id === id ? { ...item, deletedAt } : item), contentMutationError: null }));
+      if (!isPrincipalGenerationCurrent(generation)) return;
+      const committed = await readCommittedItems(get().contentItems, new Set([id]));
+      if (isPrincipalGenerationCurrent(generation)) set(state => ({ contentItems: state.contentItems.map(item => item.id === id ? committed.get(id)! : item), contentMutationError: null }));
     } catch (error) {
       if (isPrincipalGenerationCurrent(generation)) set({ contentMutationError: messageFrom(error, 'Content could not be deleted.') });
       throw error;
@@ -162,7 +174,9 @@ export const createContentSlice: StateCreator<ContentSlice, [], [], ContentSlice
     const generation = capturePrincipalGeneration();
     try {
       await repoFactory.content.restoreContentItem(id);
-      if (isPrincipalGenerationCurrent(generation)) set(state => ({ contentItems: state.contentItems.map(item => item.id === id ? { ...item, deletedAt: undefined } : item), contentMutationError: null }));
+      if (!isPrincipalGenerationCurrent(generation)) return;
+      const committed = await readCommittedItems(get().contentItems, new Set([id]));
+      if (isPrincipalGenerationCurrent(generation)) set(state => ({ contentItems: state.contentItems.map(item => item.id === id ? committed.get(id)! : item), contentMutationError: null }));
     } catch (error) {
       if (isPrincipalGenerationCurrent(generation)) set({ contentMutationError: messageFrom(error, 'Content could not be restored.') });
       throw error;
@@ -174,7 +188,9 @@ export const createContentSlice: StateCreator<ContentSlice, [], [], ContentSlice
     const ids = new Set(itemIds);
     try {
       await repoFactory.content.updateContentItems(itemIds.map(itemId => ({ itemId, updates })));
-      if (isPrincipalGenerationCurrent(generation)) set(state => ({ contentItems: state.contentItems.map(item => ids.has(item.id) ? { ...item, ...updates } : item), contentMutationError: null }));
+      if (!isPrincipalGenerationCurrent(generation)) return;
+      const committed = await readCommittedItems(get().contentItems, ids);
+      if (isPrincipalGenerationCurrent(generation)) set(state => ({ contentItems: state.contentItems.map(item => ids.has(item.id) ? committed.get(item.id)! : item), contentMutationError: null }));
     } catch (error) {
       if (isPrincipalGenerationCurrent(generation)) set({ contentMutationError: messageFrom(error, 'Grouped content changes could not be saved.') });
       throw error;
@@ -186,9 +202,11 @@ export const createContentSlice: StateCreator<ContentSlice, [], [], ContentSlice
     const reordered = newItems.map((item, orderIndex) => ({ ...item, orderIndex }));
     try {
       await repoFactory.content.updateContentItems(reordered.map(item => ({ itemId: item.id, updates: { orderIndex: item.orderIndex } })));
-      const orderById = new Map(reordered.map(item => [item.id, item.orderIndex]));
+      if (!isPrincipalGenerationCurrent(generation)) return;
+      const ids = new Set(reordered.map(item => item.id));
+      const committed = await readCommittedItems(get().contentItems, ids);
       if (isPrincipalGenerationCurrent(generation)) set(state => ({
-        contentItems: state.contentItems.map(item => orderById.has(item.id) ? { ...item, orderIndex: orderById.get(item.id) } : item),
+        contentItems: state.contentItems.map(item => ids.has(item.id) ? committed.get(item.id)! : item),
         contentMutationError: null,
       }));
     } catch (error) {

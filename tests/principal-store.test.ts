@@ -232,3 +232,71 @@ test('a delayed login response cannot restore identity after logout starts', asy
     configureRepositoryFactory(originalFactory);
   }
 });
+
+test('course and content stores display server canonical values instead of client proposals', async () => {
+  const canonicalCourse = course('canonical-course', 'Server course title');
+  const canonicalItem = {
+    id: 'canonical-item', courseId: canonicalCourse.id, category: 'material' as const,
+    title: 'Server content title', presentationSlot: 'current' as const, createdAt: 1,
+  };
+  configureRepositoryFactory({
+    ...repoFactory,
+    courses: { ...repoFactory.courses, async updateCourse() {}, async getCourseDetails() { return canonicalCourse; } },
+    content: {
+      ...repoFactory.content,
+      async createContentItem() { return canonicalItem; },
+      async updateContentItem() {},
+      async getContentItems() { return [canonicalItem]; },
+    },
+  });
+  let courses = {} as CourseSlice;
+  const setCourses = (update: Partial<CourseSlice> | ((state: CourseSlice) => Partial<CourseSlice>)) => {
+    courses = { ...courses, ...(typeof update === 'function' ? update(courses) : update) };
+  };
+  courses = { ...(createCourseSlice as any)(setCourses, () => courses, {}), courses: [course(canonicalCourse.id, 'Old')] };
+  await courses.updateCourse(canonicalCourse.id, { title: 'Client proposal' });
+  assert.equal(courses.courses[0].title, 'Server course title');
+  let content = {} as ContentSlice;
+  const setContent = (update: Partial<ContentSlice> | ((state: ContentSlice) => Partial<ContentSlice>)) => {
+    content = { ...content, ...(typeof update === 'function' ? update(content) : update) };
+  };
+  content = (createContentSlice as any)(setContent, () => content, {});
+  await content.addContentItem({ ...canonicalItem, title: 'Client creation proposal' });
+  assert.equal(content.contentItems[0].title, 'Server content title');
+  await content.updateContentItem(canonicalItem.id, { title: 'Client update proposal' });
+  assert.equal(content.contentItems[0].title, 'Server content title');
+});
+
+test('store initialization cannot recache an offline snapshot after logout erases it', async () => {
+  const { readFile } = await import('node:fs/promises');
+  const { configureInstitutionSnapshotCache } = await import('../src/lib/integration/institutionSync');
+  const { useLMSStore } = await import('../src/lib/store/useLMSStore');
+  const snapshot = JSON.parse(await readFile(new URL('../docs/institution-sync.example.json', import.meta.url), 'utf8'));
+  let user: { id: string; name: string; globalRole: 'admin' } | null = { id: 'teacher-100', name: 'Teacher', globalRole: 'admin' };
+  const started = Promise.withResolvers<void>();
+  const release = Promise.withResolvers<void>();
+  const operations: string[] = [];
+  configureInstitutionSnapshotCache({
+    async load() { started.resolve(); await release.promise; return snapshot; },
+    async save() { operations.push('save'); },
+    async clear() { operations.push('clear'); },
+  });
+  configureRepositoryFactory({
+    ...repoFactory,
+    auth: {
+      async login() { throw new Error('Unexpected sign-in'); },
+      async logout() { user = null; },
+      async getCurrentUser() { return user; },
+    },
+  });
+  useLMSStore.setState({ currentUserId: 'teacher-100', initializedPrincipalId: 'teacher-100' });
+  try {
+    const initialization = useLMSStore.getState().initializeMocks();
+    await started.promise;
+    await useLMSStore.getState().logout();
+    release.resolve();
+    await initialization;
+    assert.deepEqual(operations, ['clear']);
+    assert.equal(useLMSStore.getState().currentUserId, null);
+  } finally { configureInstitutionSnapshotCache(null); }
+});

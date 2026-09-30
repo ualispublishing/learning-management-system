@@ -106,24 +106,25 @@ export const useLMSStore = create<LMSState>()((...a) => ({
   clearInstitutionDataWarning: () => a[0]({ institutionDataWarning: null }),
 
   updateContentGrouping: async (courseId, labels, changes) => {
+    const generation = capturePrincipalGeneration();
     try {
       const normalizedLabels = normalizeContentGroupLabels(labels);
       await repoFactory.content.updateContentGrouping(courseId, normalizedLabels, changes);
-      const changesById = new Map(changes.map(change => [change.itemId, change.updates]));
+      if (!isPrincipalGenerationCurrent(generation)) return;
+      const [committedCourse, committedItems] = await Promise.all([
+        repoFactory.courses.getCourseDetails(courseId),
+        repoFactory.content.getContentItems(courseId),
+      ]);
+      if (!committedCourse) throw new Error('The committed course grouping could not be loaded.');
+      if (!isPrincipalGenerationCurrent(generation)) return;
       a[0](state => ({
-        courses: state.courses.map(course => course.id === courseId ? {
-          ...course,
-          metadata: { ...(course.metadata || {}), lmsGroupLabels: normalizedLabels },
-        } : course),
-        contentItems: state.contentItems.map(item => {
-          const updates = changesById.get(item.id);
-          return updates ? { ...item, ...updates, id: item.id } : item;
-        }),
+        courses: state.courses.map(course => course.id === courseId ? committedCourse : course),
+        contentItems: [...state.contentItems.filter(item => item.courseId !== courseId), ...committedItems],
         contentMutationError: null,
         courseMutationError: null,
       }));
     } catch (error) {
-      a[0]({ contentMutationError: error instanceof Error ? error.message : 'Content grouping could not be saved atomically.' });
+      if (isPrincipalGenerationCurrent(generation)) a[0]({ contentMutationError: error instanceof Error ? error.message : 'Content grouping could not be saved atomically.' });
       throw error;
     }
   },
@@ -215,6 +216,7 @@ export const useLMSStore = create<LMSState>()((...a) => ({
   initializeMocks: async () => {
     const requestEpoch = ++initializationEpoch;
     const sessionUser = await repoFactory.auth.getCurrentUser();
+    if (requestEpoch !== initializationEpoch) return;
     const activeUserId = sessionUser?.id || (isDevelopmentBuild && !isSharedDemoMode ? a[1]().currentUserId : null);
     if (!activeUserId) {
       selectFlashcardPrincipal(null);
@@ -248,12 +250,14 @@ export const useLMSStore = create<LMSState>()((...a) => ({
       });
     }
     let restored = await restoreInstitutionJSON(activeUserId);
+    if (requestEpoch !== initializationEpoch) return;
     let restoreWarning = consumeInstitutionSnapshotWarning(activeUserId);
     if (restored) {
       try {
         assertPrincipalScopedSnapshot(restored, { id: activeUserId });
         restored = projectPrincipalScopedSnapshot(restored, { id: activeUserId });
         await cacheInstitutionJSON(activeUserId, restored);
+        if (requestEpoch !== initializationEpoch) return;
         restoreWarning = consumeInstitutionSnapshotWarning(activeUserId) ?? restoreWarning;
       } catch {
         await clearInstitutionJSON(activeUserId);

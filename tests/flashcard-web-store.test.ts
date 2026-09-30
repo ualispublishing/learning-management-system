@@ -524,6 +524,52 @@ test('web flashcard store executes durable CRUD, isolation, queues, CAS, and rol
   });
 });
 
+test('independent web runtimes coordinate writes and reload fresh durable data', async () => {
+  storage.values.clear();
+  setFlashcardPrincipal('qa-tabs');
+  const a = await loadFreshStore();
+  const b = await loadFreshStore();
+  await Promise.all([a.DeckStore.getAll(), b.DeckStore.getAll()]);
+  await Promise.all([
+    a.DeckStore.insert(makeDeck('tab-a', 'qa-tabs')),
+    b.DeckStore.insert(makeDeck('tab-b', 'qa-tabs')),
+  ]);
+  assert.deepEqual((await a.DeckStore.getAll()).map(deck => deck.id).sort(), ['tab-a', 'tab-b']);
+  const c = await loadFreshStore();
+  assert.equal((await c.DeckStore.getAll()).length, 2);
+  await a.EditorStore.createCardWithLayers('tab-a', 'Review from either tab', ['Answer']);
+  const card = (await b.CardStore.getAllCardsForDeckWithNotes('tab-a', 1))[0].card;
+  const reviewA = makeReview(card, 'tab-review-a', Date.now() + 1_000);
+  const reviewB = makeReview(card, 'tab-review-b', Date.now() + 2_000);
+  const reviews = await Promise.allSettled([
+    a.ReviewLogStore.recordReview(card.last_review, reviewA.updated, reviewA.log),
+    b.ReviewLogStore.recordReview(card.last_review, reviewB.updated, reviewB.log),
+  ]);
+  assert.equal(reviews.filter(result => result.status === 'fulfilled').length, 1);
+  assert.equal(reviews.filter(result => result.status === 'rejected').length, 1);
+  assert.equal((await c.CardStore.getAllCardsForDeckWithNotes('tab-a', 1))[0].card.reps, 1);
+  assert.equal((await c.ReviewLogStore.getStats()).totalReviews, 1);
+  setFlashcardPrincipal('qa-other');
+  await b.DeckStore.insert(makeDeck('other-principal', 'qa-other'));
+  setFlashcardPrincipal('qa-tabs');
+  await a.DeckStore.insert(makeDeck('tab-a-new', 'qa-tabs'));
+  setFlashcardPrincipal('qa-other');
+  assert.deepEqual((await c.DeckStore.getAll()).map(deck => deck.id), ['other-principal']);
+});
+
+test('web storage without origin locks permits export reads and rejects unsafe writes', async () => {
+  const descriptor = Object.getOwnPropertyDescriptor(navigator, 'locks');
+  Object.defineProperty(navigator, 'locks', { value: undefined, configurable: true });
+  try {
+    const stores = await loadFreshStore();
+    assert.equal((await stores.DeckStore.getAll()).length, 1);
+    await assert.rejects(stores.DeckStore.insert(makeDeck('unsafe', 'qa-other')), /Web Locks/);
+  } finally {
+    if (descriptor) Object.defineProperty(navigator, 'locks', descriptor);
+    else Reflect.deleteProperty(navigator, 'locks');
+  }
+});
+
 test.after(() => {
   moduleHooks.deregister();
   delete (globalThis as typeof globalThis & { __flashcardStoreTestStorage?: MemoryAsyncStorage })

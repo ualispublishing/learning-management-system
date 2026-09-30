@@ -29,6 +29,18 @@ export interface InstitutionSnapshotCache {
 
 let snapshotCache: InstitutionSnapshotCache | null = null;
 const snapshotWarnings = new Map<string, string>();
+const cacheOperations = new Map<string, Promise<void>>();
+const cacheGenerations = new Map<string, number>();
+
+// Erasure must follow any save already accepted for this principal.
+const serializeCacheOperation = (principalId: string, operation: () => Promise<void>): Promise<void> => {
+  const pending = (cacheOperations.get(principalId) ?? Promise.resolve()).then(operation);
+  const settled = pending.catch(() => undefined).finally(() => {
+    if (cacheOperations.get(principalId) === settled) cacheOperations.delete(principalId);
+  });
+  cacheOperations.set(principalId, settled);
+  return pending;
+};
 
 /**
  * Offline storage is opt-in because institution snapshots can contain PII and
@@ -124,19 +136,21 @@ export async function importInstitutionJSON(input: unknown): Promise<{
 }
 
 export async function restoreInstitutionJSON(principalId: string): Promise<NormalizedInstitutionSync | null> {
-  if (!snapshotCache) return null;
+  const cache = snapshotCache;
+  if (!cache) return null;
+  const generation = cacheGenerations.get(principalId) ?? 0;
   let input: unknown | null;
   try {
-    input = await snapshotCache.load(principalId);
+    input = await cache.load(principalId);
   } catch {
     rememberSnapshotWarning(principalId, 'The encrypted offline snapshot could not be read. The LMS will use the institution connection.');
     return null;
   }
-  if (!input) return null;
+  if (generation !== (cacheGenerations.get(principalId) ?? 0) || !input) return null;
   const result = validateInstitutionSync(input);
   if (!result.success) {
     try {
-      await snapshotCache.clear(principalId);
+      await serializeCacheOperation(principalId, () => cache.clear(principalId));
       rememberSnapshotWarning(principalId, 'An invalid offline snapshot was rejected and erased. The LMS will use the institution connection.');
     } catch {
       rememberSnapshotWarning(principalId, 'An invalid offline snapshot was rejected, but the encrypted cache could not be erased. Contact your institution administrator.');
@@ -155,7 +169,8 @@ export async function cacheInstitutionJSON(
   principalId: string,
   data: NormalizedInstitutionSync,
 ): Promise<void> {
-  if (!snapshotCache) return;
+  const cache = snapshotCache;
+  if (!cache) return;
   const snapshot = { ...data, mode: 'snapshot' as const };
   const result = validateInstitutionSync(snapshot);
   if (!result.success) {
@@ -163,7 +178,7 @@ export async function cacheInstitutionJSON(
     return;
   }
   try {
-    await snapshotCache.save(principalId, result.data);
+    await serializeCacheOperation(principalId, () => cache.save(principalId, result.data));
   } catch {
     rememberSnapshotWarning(principalId, 'The LMS loaded successfully, but its encrypted offline snapshot could not be updated.');
   }
@@ -171,9 +186,11 @@ export async function cacheInstitutionJSON(
 
 /** Clears principal-bound offline data without preventing local sign-out. */
 export async function clearInstitutionJSON(principalId: string): Promise<void> {
-  if (!snapshotCache) return;
+  cacheGenerations.set(principalId, (cacheGenerations.get(principalId) ?? 0) + 1);
+  const cache = snapshotCache;
+  if (!cache) return;
   try {
-    await snapshotCache.clear(principalId);
+    await serializeCacheOperation(principalId, () => cache.clear(principalId));
     snapshotWarnings.delete(principalId);
   } catch {
     rememberSnapshotWarning(principalId, 'Signed out, but the encrypted offline snapshot could not be erased. Contact your institution administrator.');

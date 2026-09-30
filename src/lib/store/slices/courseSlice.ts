@@ -38,8 +38,11 @@ export const createCourseSlice: StateCreator<CourseSlice, [], [], CourseSlice> =
     }
     try {
       await repoFactory.courses.updateCourse(id, updates);
+      if (!isPrincipalGenerationCurrent(generation)) return;
+      const committed = await repoFactory.courses.getCourseDetails(id);
+      if (!committed) throw new Error('The committed course could not be loaded.');
       if (isPrincipalGenerationCurrent(generation)) set(state => ({
-        courses: state.courses.map(course => course.id === id ? { ...course, ...updates, id } : course),
+        courses: state.courses.map(course => course.id === id ? committed : course),
         courseMutationError: null,
       }));
     } catch (error) {
@@ -52,11 +55,13 @@ export const createCourseSlice: StateCreator<CourseSlice, [], [], CourseSlice> =
     const generation = capturePrincipalGeneration();
     try {
       await repoFactory.courses.updateCourseUser(courseId, userId, updates);
+      if (!isPrincipalGenerationCurrent(generation)) return;
+      const committed = await repoFactory.courses.getCourseDetails(courseId);
+      if (!committed) throw new Error('The committed roster could not be loaded.');
       if (isPrincipalGenerationCurrent(generation)) set(state => ({
         courses: state.courses.map(course => {
           if (course.id !== courseId) return course;
-          const staff = course.staff.map(user => user.id === userId ? { ...user, ...updates, id: userId } : user);
-          return { ...course, staff, participantsCount: staff.filter(user => user.role === 'student').length };
+          return committed;
         }),
         courseMutationError: null,
       }));

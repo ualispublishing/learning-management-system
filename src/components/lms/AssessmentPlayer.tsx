@@ -22,6 +22,7 @@ import {
   isGradeReleasedToStudent,
 } from '../../lib/assessment/engine';
 import { createEntityId } from '../../lib/id';
+import { DraftSaver } from '../../lib/assessment/draftSaver';
 import { getAssetService } from '../../lib/integration/assetService';
 import { AIDocumentAsset } from '../../lib/ai';
 import { getGroupForUser } from '../../lib/groups/courseGroups';
@@ -121,8 +122,10 @@ export const AssessmentPlayer = ({ item, onClose, previewMode = false }: { item:
   const submitLockRef = useRef(false);
   const submitPromptRef = useRef(false);
   const attemptSubmittedRef = useRef(false);
-  const draftFlushPromiseRef = useRef<Promise<boolean> | null>(null);
-  const pendingDraftRef = useRef<{ id: string; updates: Partial<StudentSubmission> } | null>(null);
+  const draftSaverRef = useRef(new DraftSaver<{ id: string; updates: Partial<StudentSubmission> }>(
+    draft => updateSubmission(draft.id, draft.updates),
+    error => setSaveError(error === null ? null : error instanceof Error ? error.message : 'Draft could not be saved.'),
+  ));
   const activeSubmissionIdRef = useRef<string | null>(eligibility.resumableSubmission?.id || null);
   const draftCreationRef = useRef<Promise<boolean> | null>(null);
   const attemptBindingStartedRef = useRef(false);
@@ -183,31 +186,10 @@ export const AssessmentPlayer = ({ item, onClose, previewMode = false }: { item:
     return () => clearTimeout(timer);
   }, [currentPageIndex, currentUserId, isReadOnly, item.courseId, item.id, navigationStateReady, pages.length, previewMode]);
 
-  const flushPendingDraft = useCallback(async (): Promise<boolean> => {
-    let priorSaveSucceeded = true;
-    while (draftFlushPromiseRef.current) {
-      priorSaveSucceeded = await draftFlushPromiseRef.current;
-    }
-    const pending = pendingDraftRef.current;
-    pendingDraftRef.current = null;
-    if (!pending) return priorSaveSucceeded;
-    const operation = updateSubmission(pending.id, pending.updates).then(() => {
-      setSaveError(null);
-      return true;
-    }).catch(error => {
-      setSaveError(error instanceof Error ? error.message : 'Draft could not be saved.');
-      return false;
-    });
-    draftFlushPromiseRef.current = operation;
-    try {
-      return await operation;
-    } finally {
-      if (draftFlushPromiseRef.current === operation) draftFlushPromiseRef.current = null;
-    }
-  }, [updateSubmission]);
+  const flushPendingDraft = useCallback(() => draftSaverRef.current.flush(), []);
 
   const scheduleDraftUpdate = useCallback((id: string, updates: Partial<StudentSubmission>) => {
-    pendingDraftRef.current = { id, updates };
+    draftSaverRef.current.pending = { id, updates };
     // Persist immediately. Changes made while a request is in flight replace
     // the pending payload and are coalesced into the next serialized write.
     void flushPendingDraft();
@@ -218,7 +200,7 @@ export const AssessmentPlayer = ({ item, onClose, previewMode = false }: { item:
     const responses = buildAssessmentResponses(item, nextAnswers, nextAssets);
     if (activeSubmissionIdRef.current) {
       const id = activeSubmissionIdRef.current;
-      if (draftCreationRef.current) pendingDraftRef.current = { id, updates: { responses } };
+      if (draftCreationRef.current) draftSaverRef.current.pending = { id, updates: { responses } };
       else scheduleDraftUpdate(id, { responses });
       return id;
     }
@@ -240,12 +222,12 @@ export const AssessmentPlayer = ({ item, onClose, previewMode = false }: { item:
       totalScore: calculateSubmissionTotal(responses),
     }).then(() => {
       setSaveError(null);
-      const pending = pendingDraftRef.current;
+      const pending = draftSaverRef.current.pending;
       if (pending?.id === id) scheduleDraftUpdate(id, pending.updates);
       return true;
     }).catch(error => {
       activeSubmissionIdRef.current = null;
-      if (pendingDraftRef.current?.id === id) pendingDraftRef.current = null;
+      if (draftSaverRef.current.pending?.id === id) draftSaverRef.current.pending = null;
       setSaveError(error instanceof Error ? error.message : 'Draft could not be saved.');
       return false;
     }).finally(() => {

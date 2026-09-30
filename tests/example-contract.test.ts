@@ -386,6 +386,8 @@ test('institution repository advances snapshot ETags across serialized mutations
       async pushMutations(mutations, cursor) {
         receivedEtags.push(cursor?.etag);
         revision += 1;
+        Object.assign(source.courses[0].course, mutations[0].payload);
+        source.etag = `"snapshot-${revision}"`;
         return {
           acceptedIds: mutations.map(mutation => mutation.id),
           rejected: [],
@@ -800,7 +802,10 @@ test('institution snapshots are cached only after validation and refreshed after
       adapter: {
         async pullSnapshot() { return source; },
         async pushMutations(mutations) {
-          return { acceptedIds: mutations.map(mutation => mutation.id), rejected: [], nextCursor: 'cache-cursor-2', nextEtag: '"cache-snapshot-2"' };
+          Object.assign(source.courses[0].course, mutations[0].payload);
+          source.cursor = 'cache-cursor-2';
+          source.etag = '"cache-snapshot-2"';
+          return { acceptedIds: mutations.map(mutation => mutation.id), rejected: [], nextCursor: source.cursor, nextEtag: source.etag };
         },
       },
       getSessionUser: async () => ({ id: 'teacher-100', name: 'Ada Teacher', email: 'ada.teacher@example.edu', globalRole: 'admin' }),

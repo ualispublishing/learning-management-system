@@ -28,7 +28,8 @@ import {
   LAST_COURSE_MANAGER_ERROR,
   wouldRemoveLastCourseManager,
 } from '../authorization/courseRoleManagement';
-import { cacheInstitutionJSON } from './institutionSync';
+import { cacheInstitutionJSON, clearInstitutionJSON } from './institutionSync';
+import { InstitutionSession } from './InstitutionSession';
 import { normalizeChatMessagePageRequest, paginateChatMessages, validateChatMessagePageEnvelope } from '../chat/pagination';
 import { canRolePostToThread, messageMentionsAreAuthorized } from '../chat/threadPolicy';
 import { isSafeHttpsUrl } from '../safeUrl';
@@ -50,6 +51,8 @@ export interface InstitutionRepositoryOptions {
   logout?: () => Promise<void>;
   initialSnapshot?: unknown;
   snapshotTtlMs?: number;
+  /** Always enabled by production configuration; legacy direct factories can omit it. */
+  requireCanonicalMutationReadback?: boolean;
   /** Optional authenticated, principal-scoped history/search endpoint for conversations too large for a sync snapshot. */
   loadMessagePage?: (threadId: string, request: Required<Pick<ChatMessagePageRequest, 'limit'>> & Omit<ChatMessagePageRequest, 'limit'>) => Promise<unknown>;
   /** Authenticated exact lookup used for enrollment without downloading a tenant directory. */
@@ -110,18 +113,52 @@ class InstitutionDataClient {
   private cursor: SyncCursor = {};
   private principalId: string | null = null;
   private loadEpoch = 0;
+  private canonicalRefreshRequired = false;
+  private activeMutationEpoch: number | null = null;
 
   constructor(private readonly options: InstitutionRepositoryOptions) {}
 
-  /** Serializes validation, transport acknowledgement, and cache commit as one client transaction. */
-  async runExclusiveMutation<T>(operation: () => Promise<T>): Promise<T> {
+  /** Reads and mutations share one queue; mutation callbacks receive a non-queued read. */
+  async runExclusiveMutation<T>(operation: (readData: () => Promise<NormalizedInstitutionSync>) => Promise<T>, resolveCanonical?: (data: NormalizedInstitutionSync, proposed: T) => T): Promise<T> {
+    const epoch = this.loadEpoch;
     const queued = this.stateMutationQueue.then(async () => {
-      const result = await operation();
-      await this.persistSnapshot();
+      if (epoch !== this.loadEpoch) throw new Error('The authenticated session changed before this operation started.');
+      this.activeMutationEpoch = epoch;
+      const result = await operation(() => this.getDataUnlocked());
+      if (epoch !== this.loadEpoch) throw new Error('The authenticated session changed during this operation.');
+      if (this.canonicalRefreshRequired) {
+        // An acknowledgement is not a representation of the new snapshot.
+        // Fetch without its cursor/ETag so 304 cannot bless a local proposal.
+        const canonical = await this.getDataUnlocked();
+        if (resolveCanonical) return resolveCanonical(canonical, result);
+      } else {
+        await this.persistSnapshot();
+      }
       return result;
+    }).finally(() => { this.activeMutationEpoch = null; });
+    this.stateMutationQueue = queued.then(() => undefined, () => undefined);
+    return queued;
+  }
+
+  getData(): Promise<NormalizedInstitutionSync> {
+    const epoch = this.loadEpoch;
+    const queued = this.stateMutationQueue.then(() => {
+      if (epoch !== this.loadEpoch) throw new Error('The authenticated session changed before data could be loaded.');
+      return this.getDataUnlocked();
     });
     this.stateMutationQueue = queued.then(() => undefined, () => undefined);
     return queued;
+  }
+
+  invalidateSession(): void {
+    this.loadEpoch += 1;
+    this.data = null;
+    this.loadedAt = 0;
+    this.cursor = {};
+    this.principalId = null;
+    this.loadPromise = null;
+    this.initialSnapshotConsumed = true;
+    this.canonicalRefreshRequired = false;
   }
 
   private async persistSnapshot(): Promise<void> {
@@ -131,7 +168,7 @@ class InstitutionDataClient {
     await cacheInstitutionJSON(sessionUser.id, this.data);
   }
 
-  async getData(): Promise<NormalizedInstitutionSync> {
+  private async getDataUnlocked(): Promise<NormalizedInstitutionSync> {
     const sessionUser = await this.options.getSessionUser();
     if (!sessionUser) throw new Error('Institution SSO session is required before loading LMS data.');
     if (this.principalId && this.principalId !== sessionUser.id) {
@@ -143,7 +180,7 @@ class InstitutionDataClient {
     }
     this.principalId = sessionUser.id;
     const ttl = Math.max(0, this.options.snapshotTtlMs ?? 60_000);
-    if (this.data && Date.now() - this.loadedAt < ttl) return this.data;
+    if (!this.canonicalRefreshRequired && this.data && Date.now() - this.loadedAt < ttl) return this.data;
     if (!this.loadPromise) this.loadPromise = this.load(sessionUser, this.loadEpoch);
     const activeLoad = this.loadPromise;
     try {
@@ -160,7 +197,12 @@ class InstitutionDataClient {
 
   private async load(sessionUser: User, requestEpoch: number): Promise<NormalizedInstitutionSync> {
     const useInitial = !this.initialSnapshotConsumed && this.options.initialSnapshot !== undefined;
-    const payload = useInitial ? this.options.initialSnapshot : await this.options.adapter.pullSnapshot(this.cursor);
+    const needsCanonical = this.canonicalRefreshRequired;
+    const payload = useInitial ? this.options.initialSnapshot : await this.options.adapter.pullSnapshot(needsCanonical ? {} : { ...this.cursor });
+    if (needsCanonical && payload && typeof payload === 'object'
+      && (('notModified' in payload && payload.notModified) || ('mode' in payload && payload.mode === 'upsert'))) {
+      throw new Error('The accepted mutation requires a complete canonical snapshot. Reload before retrying the change.');
+    }
     this.initialSnapshotConsumed = true;
     if (requestEpoch !== this.loadEpoch || this.principalId !== sessionUser.id) {
       throw new Error('The authenticated session changed while institution data was loading.');
@@ -185,13 +227,15 @@ class InstitutionDataClient {
       throw new Error('The authenticated session changed while institution data was loading.');
     }
     this.data = principalData;
+    this.canonicalRefreshRequired = false;
     this.cursor = {
-      cursor: result.data.cursor ?? this.cursor.cursor,
-      etag: result.data.etag ?? this.cursor.etag,
+      cursor: result.data.cursor ?? (isUpsert ? this.cursor.cursor : undefined),
+      etag: result.data.etag ?? (isUpsert ? this.cursor.etag : undefined),
     };
     this.loadedAt = Date.now();
-    await cacheInstitutionJSON(sessionUser.id, this.data);
-    return this.data;
+    await cacheInstitutionJSON(sessionUser.id, principalData);
+    if (requestEpoch !== this.loadEpoch) throw new Error('The authenticated session changed while institution data was loading.');
+    return principalData;
   }
 
   private assertCapabilities(required: InstitutionIntegrationCapability | InstitutionIntegrationCapability[]): void {
@@ -225,6 +269,10 @@ class InstitutionDataClient {
     }));
     const operation = this.mutationQueue.then(async () => {
       const mutationPrincipalId = this.principalId;
+      const mutationEpoch = this.loadEpoch;
+      if (this.activeMutationEpoch !== null && this.activeMutationEpoch !== mutationEpoch) {
+        throw new Error('The authenticated session changed before the institution mutation was sent.');
+      }
       const requestSession = await this.options.getSessionUser();
       if (!mutationPrincipalId || requestSession?.id !== mutationPrincipalId) {
         throw new Error('The authenticated session changed before the institution mutation was sent.');
@@ -232,7 +280,7 @@ class InstitutionDataClient {
       const expectedEtag = this.cursor.etag;
       const result = await this.options.adapter.pushMutations(queuedMutations, this.cursor);
       const responseSession = await this.options.getSessionUser();
-      if (this.principalId !== mutationPrincipalId || responseSession?.id !== mutationPrincipalId) {
+      if (mutationEpoch !== this.loadEpoch || this.principalId !== mutationPrincipalId || responseSession?.id !== mutationPrincipalId) {
         throw new Error('The authenticated session changed while the institution mutation was in progress.');
       }
       if (!result || !Array.isArray(result.acceptedIds) || !Array.isArray(result.rejected)) {
@@ -274,19 +322,20 @@ class InstitutionDataClient {
       if (unacknowledged) {
         throw new Error(`Institution mutation endpoint did not acknowledge mutation "${unacknowledged.id}".`);
       }
-      if (result.nextCursor) {
-        this.cursor.cursor = result.nextCursor;
-        if (this.data) this.data.cursor = result.nextCursor;
-      }
-      if (result.nextEtag) {
-        this.cursor.etag = result.nextEtag;
-        if (this.data) this.data.etag = result.nextEtag;
+      if (this.options.requireCanonicalMutationReadback || result.nextCursor || result.nextEtag) {
+        this.canonicalRefreshRequired = true;
+        this.loadedAt = 0;
       }
     });
     this.mutationQueue = operation.then(() => undefined, () => undefined);
     return operation;
   }
 }
+
+const requireCanonicalRecord = <T>(record: T | undefined): T => {
+  if (record === undefined) throw new Error('The committed record is absent from the canonical snapshot. Reload before retrying.');
+  return clone(record);
+};
 
 const getCourse = (data: NormalizedInstitutionSync, courseId: string) =>
   data.courses.find(entry => entry.course.id === courseId);
@@ -487,7 +536,17 @@ export const projectPrincipalScopedSnapshot = (
  * of normal UI paths.
  */
 export const createInstitutionRepositoryFactory = (options: InstitutionRepositoryOptions): RepositoryFactory => {
+  const provider = options;
+  const session = new InstitutionSession(provider.getSessionUser);
+  options = { ...provider, getSessionUser: () => session.getUser() };
   const client = new InstitutionDataClient(options);
+  let pendingLogout: Promise<void> = Promise.resolve();
+  let providerAuthQueue: Promise<void> = Promise.resolve();
+  const runProviderAuth = (operation: () => Promise<void>): Promise<void> => {
+    const pending = providerAuthQueue.then(operation);
+    providerAuthQueue = pending.catch(() => undefined);
+    return pending;
+  };
   const loadMessagePage = options.loadMessagePage
     ?? (options.adapter.loadMessagePage ? options.adapter.loadMessagePage.bind(options.adapter) : undefined);
   const requireCourseAccess = async (
@@ -511,8 +570,8 @@ export const createInstitutionRepositoryFactory = (options: InstitutionRepositor
     }
   };
 
-  const resolveLiveCoursework = async (courseworkId: string, allowedRoles?: readonly CourseUser['role'][]) => {
-    const data = await client.getData();
+  const resolveLiveCoursework = async (courseworkId: string, allowedRoles?: readonly CourseUser['role'][], readData = () => client.getData()) => {
+    const data = await readData();
     const entry = data.courses.find(course => course.items.some(item => item.id === courseworkId));
     const item = entry?.items.find(candidate => candidate.id === courseworkId);
     if (!entry || !item) throw new Error('Live-session coursework was not found.');
@@ -545,6 +604,7 @@ export const createInstitutionRepositoryFactory = (options: InstitutionRepositor
       return scopeLiveStateAnswers(validated, requestUserId, latestContext.membership.role);
     },
     async publishSession(courseworkId, state) {
+      const generation = session.capture();
       if (!upstreamLiveSessions.finalizeSession) {
         throw new Error('The institution live-session adapter must implement durable, idempotent finalizeSession before a session can start.');
       }
@@ -578,12 +638,14 @@ export const createInstitutionRepositoryFactory = (options: InstitutionRepositor
         || validated.revision !== current.revision + 1) {
         throw new Error(`Live session revision conflict: expected revision ${current.revision + 1} for the current run.`);
       }
+      session.assertCurrent(generation);
       await upstreamLiveSessions.publishSession(courseworkId, {
         ...validated,
         answers: current ? clone(current.answers) : {},
       });
     },
     async submitAnswer(courseworkId, studentId, questionId, answer) {
+      const generation = session.capture();
       const context = await resolveLiveCoursework(courseworkId);
       if (context.user.id !== studentId || context.membership?.role !== 'student') {
         throw new Error('Live answer identity does not match an enrolled student session.');
@@ -619,15 +681,17 @@ export const createInstitutionRepositoryFactory = (options: InstitutionRepositor
       }
       // The institution transport must repeat the identity/deadline check in
       // the same atomic operation that writes the answer.
+      session.assertCurrent(generation);
       await upstreamLiveSessions.submitAnswer(courseworkId, studentId, questionId, answer);
     },
     async finalizeSession(courseworkId, sessionId) {
+      const generation = session.capture();
       const finalizeSession = upstreamLiveSessions.finalizeSession;
       if (!finalizeSession) {
         throw new Error('The institution live-session adapter cannot durably archive results.');
       }
-      return client.runExclusiveMutation(async () => {
-        const context = await resolveLiveCoursework(courseworkId, COURSE_PERMISSION_ROLES.hostLiveAssessment);
+      return client.runExclusiveMutation(async readData => {
+        const context = await resolveLiveCoursework(courseworkId, COURSE_PERMISSION_ROLES.hostLiveAssessment, readData);
         const current = validatePopQuizState(await upstreamLiveSessions.getSession(courseworkId), {
           expectedCourseworkId: courseworkId,
           questions: context.item.questions,
@@ -636,6 +700,7 @@ export const createInstitutionRepositoryFactory = (options: InstitutionRepositor
         if (current && current.sessionId !== sessionId) {
           throw new Error('The live session changed before it could be finalized.');
         }
+        session.assertCurrent(generation);
         const archived = await finalizeSession(courseworkId, sessionId);
         if (!Array.isArray(archived)) throw new Error('The institution live-session adapter returned an invalid archive result.');
         const remaining = validatePopQuizState(await upstreamLiveSessions.getSession(courseworkId), {
@@ -768,12 +833,29 @@ export const createInstitutionRepositoryFactory = (options: InstitutionRepositor
     },
   };
 
-  return {
+  const factory: RepositoryFactory = {
     auth: {
       async login(email) {
+        const requestedGeneration = session.capture();
+        await pendingLogout.catch(() => undefined);
+        if (requestedGeneration !== session.capture()) throw new Error('The authenticated session changed during sign-in.');
+        const generation = session.capture();
+        if (session.isRevoked) {
+          if (!provider.login) throw new Error('An explicit institution sign-in is required after logout.');
+          await runProviderAuth(async () => {
+            if (generation !== session.capture()) throw new Error('The authenticated session changed during sign-in.');
+            await provider.login!();
+          });
+          if (!await provider.getSessionUser()) throw new Error('Institution SSO session is required.');
+          session.activate(generation);
+        }
+        const loginGeneration = session.capture();
         let user = await options.getSessionUser();
         if (!user && options.login) {
-          await options.login();
+          await runProviderAuth(async () => {
+            session.assertCurrent(loginGeneration);
+            await provider.login!();
+          });
           user = await options.getSessionUser();
         }
         if (!user) throw new Error('Institution SSO session is required.');
@@ -781,13 +863,27 @@ export const createInstitutionRepositoryFactory = (options: InstitutionRepositor
           throw new Error('The requested account does not match the active institution SSO session.');
         }
         const data = await client.getData();
+        session.assertCurrent(loginGeneration);
         const defaultRole = data.courses
           .flatMap(entry => entry.course.staff)
           .find(member => member.id === user.id)?.role ?? 'student';
         return { user: clone(user), defaultRole };
       },
       async logout() {
-        await options.logout?.();
+        const principalId = session.principalId;
+        session.revoke();
+        client.invalidateSession();
+        const operation = runProviderAuth(async () => {
+          try {
+            if (!provider.logout) throw new Error('The institution must configure app-session logout before sign-out can complete.');
+            await provider.logout();
+            if (await provider.getSessionUser()) throw new Error('The institution logout did not invalidate the app session.');
+          } finally {
+            if (principalId) await clearInstitutionJSON(principalId);
+          }
+        });
+        pendingLogout = operation;
+        await operation;
       },
       async getCurrentUser() {
         const user = await options.getSessionUser();
@@ -820,8 +916,8 @@ export const createInstitutionRepositoryFactory = (options: InstitutionRepositor
         return membership.role;
       },
       async updateCourse(courseId, updates) {
-        return client.runExclusiveMutation(async () => {
-          const data = await client.getData();
+        return client.runExclusiveMutation(async readData => {
+          const data = await readData();
           const entry = getCourse(data, courseId);
           if (!entry) throw new Error(`Course "${courseId}" was not found.`);
           await requireCourseAccess(data, courseId, COURSE_PERMISSION_ROLES.manageCourse);
@@ -868,8 +964,8 @@ export const createInstitutionRepositoryFactory = (options: InstitutionRepositor
         });
       },
       async addStudentByIdentifier(courseId, identifier) {
-        return client.runExclusiveMutation(async () => {
-          const data = await client.getData();
+        return client.runExclusiveMutation(async readData => {
+          const data = await readData();
           const entry = getCourse(data, courseId);
           if (!entry) throw new Error(`Course "${courseId}" was not found.`);
           const { user: manager } = await requireCourseAccess(data, courseId, COURSE_PERMISSION_ROLES.manageCourse);
@@ -923,11 +1019,11 @@ export const createInstitutionRepositoryFactory = (options: InstitutionRepositor
           entry.enrollments.push({ userId: student.id, courseRole: 'student', secondaryRoles: undefined });
           refreshCourseCounts(entry);
           return clone(student);
-        });
+        }, (canonical, student) => requireCanonicalRecord(getCourse(canonical, courseId)?.course.staff.find(member => member.id === student.id)));
       },
       async updateCourseUser(courseId, userId, updates) {
-        return client.runExclusiveMutation(async () => {
-          const data = await client.getData();
+        return client.runExclusiveMutation(async readData => {
+          const data = await readData();
           const entry = getCourse(data, courseId);
           const membership = entry?.course.staff.find(member => member.id === userId);
           if (!entry || !membership) throw new Error('Course enrollment was not found.');
@@ -995,8 +1091,8 @@ export const createInstitutionRepositoryFactory = (options: InstitutionRepositor
         return clone(getCourse(data, courseId)?.items ?? []);
       },
       async createContentItem(item) {
-        return client.runExclusiveMutation(async () => {
-        const data = await client.getData();
+        return client.runExclusiveMutation(async readData => {
+        const data = await readData();
         const entry = getCourse(data, item.courseId);
         if (!entry) throw new Error(`Course "${item.courseId}" was not found.`);
         await requireCourseAccess(data, item.courseId, COURSE_PERMISSION_ROLES.manageContent);
@@ -1007,12 +1103,12 @@ export const createInstitutionRepositoryFactory = (options: InstitutionRepositor
         entry.items.push(clone(item));
         refreshCourseCounts(entry);
         return clone(item);
-        });
+        }, (canonical, item) => requireCanonicalRecord(getCourse(canonical, item.courseId)?.items.find(record => record.id === item.id)));
       },
       async createContentItems(items) {
-        return client.runExclusiveMutation(async () => {
+        return client.runExclusiveMutation(async readData => {
         if (!items.length) return [];
-        const data = await client.getData();
+        const data = await readData();
         const incomingIds = new Set<string>();
         const proposedItemsByCourse = new Map<string, typeof items>();
         for (const item of items) {
@@ -1044,11 +1140,11 @@ export const createInstitutionRepositoryFactory = (options: InstitutionRepositor
           if (entry) refreshCourseCounts(entry);
         });
         return clone(items);
-        });
+        }, (canonical, items) => items.map(item => requireCanonicalRecord(getCourse(canonical, item.courseId)?.items.find(record => record.id === item.id))));
       },
       async updateContentItem(itemId, updates) {
-        return client.runExclusiveMutation(async () => {
-        const data = await client.getData();
+        return client.runExclusiveMutation(async readData => {
+        const data = await readData();
         const item = data.courses.flatMap(entry => entry.items).find(candidate => candidate.id === itemId);
         if (!item) throw new Error(`Content item "${itemId}" was not found.`);
         await requireCourseAccess(data, item.courseId, COURSE_PERMISSION_ROLES.manageContent);
@@ -1067,9 +1163,9 @@ export const createInstitutionRepositoryFactory = (options: InstitutionRepositor
         });
       },
       async updateContentItems(changes) {
-        return client.runExclusiveMutation(async () => {
+        return client.runExclusiveMutation(async readData => {
         if (!changes.length) return;
-        const data = await client.getData();
+        const data = await readData();
         const items = data.courses.flatMap(entry => entry.items);
         const proposedById = new Map(items.map(item => [item.id, clone(item)]));
         const changedIds = new Set<string>();
@@ -1107,8 +1203,8 @@ export const createInstitutionRepositoryFactory = (options: InstitutionRepositor
         });
       },
       async updateContentGrouping(courseId, labels, changes) {
-        return client.runExclusiveMutation(async () => {
-          const data = await client.getData();
+        return client.runExclusiveMutation(async readData => {
+          const data = await readData();
           const entry = getCourse(data, courseId);
           if (!entry) throw new Error(`Course "${courseId}" was not found.`);
           await requireCourseAccess(data, courseId, COURSE_PERMISSION_ROLES.manageContent);
@@ -1153,8 +1249,8 @@ export const createInstitutionRepositoryFactory = (options: InstitutionRepositor
         });
       },
       async deleteContentItem(itemId, deletedAt) {
-        return client.runExclusiveMutation(async () => {
-        const data = await client.getData();
+        return client.runExclusiveMutation(async readData => {
+        const data = await readData();
         const item = data.courses.flatMap(entry => entry.items).find(candidate => candidate.id === itemId);
         if (!item) throw new Error(`Content item "${itemId}" was not found.`);
         await requireCourseAccess(data, item.courseId, COURSE_PERMISSION_ROLES.manageContent);
@@ -1164,8 +1260,8 @@ export const createInstitutionRepositoryFactory = (options: InstitutionRepositor
         });
       },
       async restoreContentItem(itemId) {
-        return client.runExclusiveMutation(async () => {
-        const data = await client.getData();
+        return client.runExclusiveMutation(async readData => {
+        const data = await readData();
         const item = data.courses.flatMap(entry => entry.items).find(candidate => candidate.id === itemId);
         if (!item) throw new Error(`Content item "${itemId}" was not found.`);
         await requireCourseAccess(data, item.courseId, COURSE_PERMISSION_ROLES.manageContent);
@@ -1186,8 +1282,8 @@ export const createInstitutionRepositoryFactory = (options: InstitutionRepositor
         return clone((data.contentProgress ?? []).filter(record => record.userId === userId && allowed.has(record.courseId)));
       },
       async markViewed(contentItemId, userId) {
-        return client.runExclusiveMutation(async () => {
-          const data = await client.getData();
+        return client.runExclusiveMutation(async readData => {
+          const data = await readData();
           const sessionUser = await options.getSessionUser();
           if (!sessionUser || sessionUser.id !== userId) throw new Error('Content progress identity does not match the authenticated session.');
           const entry = data.courses.find(course => course.items.some(item => item.id === contentItemId));
@@ -1217,11 +1313,11 @@ export const createInstitutionRepositoryFactory = (options: InstitutionRepositor
           }, 'content-progress.write');
           data.contentProgress = [...(data.contentProgress ?? []).filter(record => record.userId !== userId || record.contentItemId !== contentItemId), next];
           return clone(next);
-        });
+        }, canonical => requireCanonicalRecord(canonical.contentProgress?.find(record => record.userId === userId && record.contentItemId === contentItemId)));
       },
       async setCompleted(contentItemId, userId, completed) {
-        return client.runExclusiveMutation(async () => {
-          const data = await client.getData();
+        return client.runExclusiveMutation(async readData => {
+          const data = await readData();
           const sessionUser = await options.getSessionUser();
           if (!sessionUser || sessionUser.id !== userId) throw new Error('Content progress identity does not match the authenticated session.');
           const entry = data.courses.find(course => course.items.some(item => item.id === contentItemId));
@@ -1253,7 +1349,7 @@ export const createInstitutionRepositoryFactory = (options: InstitutionRepositor
           }, 'content-progress.write');
           data.contentProgress = [...(data.contentProgress ?? []).filter(record => record.userId !== userId || record.contentItemId !== contentItemId), next];
           return clone(next);
-        });
+        }, canonical => requireCanonicalRecord(canonical.contentProgress?.find(record => record.userId === userId && record.contentItemId === contentItemId)));
       },
     },
 
@@ -1267,8 +1363,8 @@ export const createInstitutionRepositoryFactory = (options: InstitutionRepositor
         return clone((data.submissions ?? []).filter(submission => allowed.has(submission.courseId) && canAccessSubmission(data, submission, sessionUser)));
       },
       async upsertSubmission(submission) {
-        return client.runExclusiveMutation(async () => {
-        const data = await client.getData();
+        return client.runExclusiveMutation(async readData => {
+        const data = await readData();
         const existingSubmissions = data.submissions ?? [];
         const index = existingSubmissions.findIndex(existing => existing.id === submission.id);
         const existing = index >= 0 ? existingSubmissions[index] : undefined;
@@ -1432,14 +1528,14 @@ export const createInstitutionRepositoryFactory = (options: InstitutionRepositor
         if (index < 0) data.submissions.push(clone(proposedSubmission));
         else data.submissions[index] = clone(proposedSubmission);
         return clone(proposedSubmission);
-        });
+        }, canonical => requireCanonicalRecord(canonical.submissions?.find(record => record.id === submission.id)));
       },
     },
 
     gradebook: {
       async createExternalGrade(item, submissions) {
-        return client.runExclusiveMutation(async () => {
-        const data = await client.getData();
+        return client.runExclusiveMutation(async readData => {
+        const data = await readData();
         const entry = getCourse(data, item.courseId);
         if (!entry) throw new Error(`Course "${item.courseId}" was not found.`);
           await requireCourseAccess(data, item.courseId, COURSE_PERMISSION_ROLES.grade);
@@ -1630,8 +1726,8 @@ export const createInstitutionRepositoryFactory = (options: InstitutionRepositor
         };
       },
       async sendMessage(input) {
-        return client.runExclusiveMutation(async () => {
-        const data = await client.getData();
+        return client.runExclusiveMutation(async readData => {
+        const data = await readData();
         const sessionUser = await options.getSessionUser();
         if (!sessionUser || sessionUser.id !== input.senderId) throw new Error('Message sender does not match the authenticated session.');
         const thread = (data.threads ?? []).find(candidate => candidate.id === input.threadId);
@@ -1710,11 +1806,11 @@ export const createInstitutionRepositoryFactory = (options: InstitutionRepositor
           currentThread.unreadCount = 0;
         }
         return clone(message);
-        });
+        }, (canonical, message) => requireCanonicalRecord(canonical.messages?.find(record => record.id === message.id)));
       },
       async editMessage(messageId, userId, text, expectedRevision, mentionedUserIds) {
-        return client.runExclusiveMutation(async () => {
-        const data = await client.getData();
+        return client.runExclusiveMutation(async readData => {
+        const data = await readData();
         const sessionUser = await options.getSessionUser();
         if (!sessionUser || sessionUser.id !== userId) throw new Error('Message editor does not match the authenticated session.');
         const messageIndex = (data.messages ?? []).findIndex(candidate => candidate.id === messageId);
@@ -1756,11 +1852,11 @@ export const createInstitutionRepositoryFactory = (options: InstitutionRepositor
         }, 'chat.write');
         data.messages![messageIndex] = clone(updated);
         return clone(updated);
-        });
+        }, (canonical, updated) => requireCanonicalRecord(canonical.messages?.find(record => record.id === updated.id)));
       },
       async deleteMessage(messageId, userId, expectedRevision) {
-        return client.runExclusiveMutation(async () => {
-        const data = await client.getData();
+        return client.runExclusiveMutation(async readData => {
+        const data = await readData();
         const sessionUser = await options.getSessionUser();
         if (!sessionUser || sessionUser.id !== userId) throw new Error('Message deletion does not match the authenticated session.');
         const messageIndex = (data.messages ?? []).findIndex(candidate => candidate.id === messageId);
@@ -1796,11 +1892,11 @@ export const createInstitutionRepositoryFactory = (options: InstitutionRepositor
         }, 'chat.write');
         data.messages![messageIndex] = clone(updated);
         return clone(updated);
-        });
+        }, (canonical, updated) => requireCanonicalRecord(canonical.messages?.find(record => record.id === updated.id)));
       },
       async reportMessage(messageId, userId, reason) {
-        return client.runExclusiveMutation(async () => {
-        const data = await client.getData();
+        return client.runExclusiveMutation(async readData => {
+        const data = await readData();
         const sessionUser = await options.getSessionUser();
         if (!sessionUser || sessionUser.id !== userId) throw new Error('Message reporter does not match the authenticated session.');
         const message = (data.messages ?? []).find(candidate => candidate.id === messageId);
@@ -1816,8 +1912,8 @@ export const createInstitutionRepositoryFactory = (options: InstitutionRepositor
         });
       },
       async createThread(input) {
-        return client.runExclusiveMutation(async () => {
-        const data = await client.getData();
+        return client.runExclusiveMutation(async readData => {
+        const data = await readData();
         const sessionUser = await options.getSessionUser();
         if (!sessionUser || sessionUser.id !== input.createdBy) throw new Error('Conversation creator does not match the authenticated session.');
         const scope = input.scope ?? 'course';
@@ -1890,11 +1986,11 @@ export const createInstitutionRepositoryFactory = (options: InstitutionRepositor
         await client.push({ entity: 'thread', operation: 'create', entityId: thread.id, payload: { ...thread } }, 'chat.write');
         data.threads = mergeById(data.threads ?? [], [clone(thread)]);
         return clone(thread);
-        });
+        }, (canonical, thread) => requireCanonicalRecord(canonical.threads?.find(record => record.id === thread.id)));
       },
       async markThreadRead(threadId, userId) {
-        return client.runExclusiveMutation(async () => {
-        const data = await client.getData();
+        return client.runExclusiveMutation(async readData => {
+        const data = await readData();
         const sessionUser = await options.getSessionUser();
         if (!sessionUser || sessionUser.id !== userId) throw new Error('Read receipt does not match the authenticated session.');
         const thread = (data.threads ?? []).find(candidate => candidate.id === threadId);
@@ -2054,10 +2150,21 @@ export const createInstitutionRepositoryFactory = (options: InstitutionRepositor
     },
     liveSessions,
   };
+  return {
+    ...factory,
+    courses: session.guard(factory.courses),
+    content: session.guard(factory.content),
+    progress: session.guard(factory.progress),
+    submissions: session.guard(factory.submissions),
+    gradebook: session.guard(factory.gradebook),
+    chat: session.guard(factory.chat, { subscribeToMessages: 3 }),
+    liveSessions: session.guard(factory.liveSessions, { subscribeToSession: 2 }),
+  };
 };
 
 export const configureInstitutionRepositories = (options: InstitutionRepositoryOptions) => {
-  const factory = createInstitutionRepositoryFactory(options);
+  if (!options.logout) throw new Error('Institution repositories require an app-session logout callback.');
+  const factory = createInstitutionRepositoryFactory({ ...options, requireCanonicalMutationReadback: true });
   configureRepositoryFactory(factory);
   return factory;
 };
