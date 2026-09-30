@@ -28,6 +28,7 @@ import Ionicons from '@expo/vector-icons/Ionicons';
 import { DIAGNOSTIC_CONTEXTS, logDiagnosticError } from '../../lib/diagnosticLog';
 import { filterDeckLibrary } from '../../lib/flashcardLibrary';
 import { seedProgrammingCourseLearnDemo } from '../../lib/db/seedProgrammingCourse';
+import { getAppFontFamilies } from '../../lib/appFonts';
 
 const DeckActionTab = ({ color, icon, position, onPress, label }: { color: string, icon: string, position: 'top' | 'middle' | 'bottom', onPress: () => void, label: string }) => {
   const isTop = position === 'top';
@@ -198,9 +199,7 @@ export default function MainMenu() {
   };
 
   // Dynamic Styles
-  const fontFamilyBold = enableModernTypography ? 'Inter_800ExtraBold' : undefined;
-  const fontFamilySemiBold = enableModernTypography ? 'Inter_600SemiBold' : undefined;
-  const fontFamilyRegular = enableModernTypography ? 'Inter_400Regular' : undefined;
+  const { bold: fontFamilyBold, semiBold: fontFamilySemiBold, regular: fontFamilyRegular } = getAppFontFamilies(enableModernTypography);
 
   if (loading) {
     return (

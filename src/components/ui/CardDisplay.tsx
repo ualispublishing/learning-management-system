@@ -29,7 +29,7 @@ import { typography, spacing } from '../../lib/theme';
 import { useSettingsStore } from '../../lib/store/useSettingsStore';
 import { createEntityId } from '../../lib/id';
 import { userAlert as Alert } from '../../lib/userAlert';
-import { resolveCardMediaUri } from '../../lib/cardMedia';
+import { resolveCardMediaUri, type ResolvedCardMediaSource } from '../../lib/cardMedia';
 import { canonicalSafeHttpsUrl } from '../../lib/safeUrl';
 import { accessibleTextColor, hasAccessibleTextContrast, isSixDigitHexColor } from '../../lib/color';
 import { DIAGNOSTIC_CONTEXTS, logDiagnosticError, logDiagnosticWarning } from '../../lib/diagnosticLog';
@@ -101,10 +101,23 @@ const RemoteMediaPrompt = ({ host, kind, onLoad }: { host: string; kind: 'image'
   </View>
 );
 
-const CustomImage = ({ uri, style, contentFit, transition, accessibilityLabel = 'Card image' }: any) => {
+// Keep approval and playback state inside a canonical-destination lifetime.
+// An effect reset is too late: a video hook can create a player during render.
+const mediaSourceKey = (source: ResolvedCardMediaSource) => source.kind === 'invalid' ? 'invalid' : source.uri;
+
+type CardImageProps = Pick<React.ComponentProps<typeof ExpoImage>, 'contentFit' | 'transition' | 'accessibilityLabel'> & {
+  uri: unknown;
+  style?: React.ComponentProps<typeof View>['style'];
+};
+
+const CustomImage = ({ uri, ...props }: CardImageProps) => {
+  const source = resolveCardMediaUri(uri, FileSystem.documentDirectory);
+  return <SourceImage key={mediaSourceKey(source)} source={source} {...props} />;
+};
+
+const SourceImage = ({ source, style, contentFit, transition, accessibilityLabel = 'Card image' }: Omit<CardImageProps, 'uri'> & { source: ResolvedCardMediaSource }) => {
   const [isLoading, setIsLoading] = useState(true);
   const [remoteApproved, setRemoteApproved] = useState(false);
-  const source = resolveCardMediaUri(uri, FileSystem.documentDirectory);
 
   if (source.kind === 'invalid') {
     return <View style={style}><MediaUnavailable reason={source.reason} /></View>;
@@ -179,10 +192,14 @@ const AudioPlayer = ({ uri }: { uri: string }) => {
 };
 
 const VideoPlayer = ({ uri }: { uri: string }) => {
+  const source = resolveCardMediaUri(uri, FileSystem.documentDirectory);
+  return <SourceVideoPlayer key={mediaSourceKey(source)} source={source} />;
+};
+
+const SourceVideoPlayer = ({ source }: { source: ResolvedCardMediaSource }) => {
   const [hasStarted, setHasStarted] = useState(false);
   const [playbackError, setPlaybackError] = useState<string | null>(null);
   const [remoteApproved, setRemoteApproved] = useState(false);
-  const source = resolveCardMediaUri(uri, FileSystem.documentDirectory);
   const playbackUri = source.kind === 'invalid' ? '' : source.uri;
   const player = useVideoPlayer(
     playbackUri && (source.kind !== 'remote' || remoteApproved) ? { uri: playbackUri } : null,
@@ -256,10 +273,14 @@ const VideoPlayer = ({ uri }: { uri: string }) => {
 };
 
 const FullscreenVideoPlayer = ({ uri }: { uri: string }) => {
+  const source = resolveCardMediaUri(uri, FileSystem.documentDirectory);
+  return <SourceFullscreenVideoPlayer key={mediaSourceKey(source)} source={source} />;
+};
+
+const SourceFullscreenVideoPlayer = ({ source }: { source: ResolvedCardMediaSource }) => {
   const [hasStarted, setHasStarted] = useState(false);
   const [playbackError, setPlaybackError] = useState<string | null>(null);
   const [remoteApproved, setRemoteApproved] = useState(false);
-  const source = resolveCardMediaUri(uri, FileSystem.documentDirectory);
   const playbackUri = source.kind === 'invalid' ? '' : source.uri;
   const player = useVideoPlayer(
     playbackUri && (source.kind !== 'remote' || remoteApproved) ? { uri: playbackUri } : null,

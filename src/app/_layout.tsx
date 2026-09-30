@@ -91,7 +91,7 @@ export default function Layout() {
     setI18nConfig(language);
   }, [language]);
 
-  const [fontsLoaded] = useFonts({
+  const [fontsLoaded, fontError] = useFonts({
     Inter_400Regular,
     Inter_600SemiBold,
     Inter_800ExtraBold,
@@ -178,7 +178,9 @@ export default function Layout() {
     };
   }, [persistedDisplayedWidth, setAppContentWidth, viewportCanvasMaximum]);
 
-  if (!fontsLoaded || isInitializingMocks) {
+  // Custom typography is optional. A failed download must not block sign-in,
+  // initialization recovery, or the application using system fonts.
+  if ((!fontsLoaded && !fontError) || isInitializingMocks) {
     return (
       <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center', backgroundColor: colors.background }}>
         <ActivityIndicator size="large" color={colors.primary} accessibilityLabel="Loading learning management system" />
