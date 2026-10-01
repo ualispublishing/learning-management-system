@@ -3,14 +3,14 @@ import type { IdentityProvider } from './oidc.ts';
 import { AuthStore } from './store.ts';
 
 const PREFIX = '/lms/v1/auth';
-const SESSION_COOKIE = '__Host-lms_session';
+export const SESSION_COOKIE = '__Host-lms_session';
 const LOGIN_COOKIE = '__Host-lms_login';
 const LOGIN_SECONDS = 10 * 60;
 const SESSION_SECONDS = 8 * 60 * 60;
 const opaque = () => randomBytes(32).toString('base64url');
 const cookie = (name: string, value: string, seconds: number) => `${name}=${value}; Path=/; Secure; HttpOnly; SameSite=Lax; Max-Age=${seconds}`;
 
-function readCookie(request: Request, name: string): string | null {
+export function readCookie(request: Request, name: string): string | null {
   const values = (request.headers.get('cookie') ?? '').split(';').map(part => part.trim()).filter(part => part.startsWith(`${name}=`));
   if (values.length !== 1) return null;
   const value = values[0].slice(name.length + 1);

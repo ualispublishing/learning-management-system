@@ -1,3 +1,5 @@
+import { institution, type Institution } from './gateway-validation.ts';
+
 export interface AuthConfig {
   origin: string;
   issuer: string;
@@ -5,6 +7,13 @@ export interface AuthConfig {
   clientSecret: string;
   databasePath: string;
   port: number;
+}
+
+/** Unset keeps the existing auth-only mode; partial configuration fails closed. */
+export function readGatewayConfig(env: NodeJS.ProcessEnv): Institution | undefined {
+  const keys = ['LMS_INSTITUTION_ID', 'LMS_INSTITUTION_NAME', 'LMS_INSTITUTION_TIME_ZONE'];
+  if (keys.every(key => env[key] === undefined)) return undefined;
+  return institution({ id: required(env, keys[0]), name: required(env, keys[1]), timeZone: required(env, keys[2]) });
 }
 
 const required = (env: NodeJS.ProcessEnv, name: string): string => {

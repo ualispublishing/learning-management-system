@@ -66,15 +66,19 @@ export class InstitutionAdapterError extends Error {
   }
 }
 
-export interface HttpInstitutionAdapterOptions {
+interface HttpInstitutionAdapterCommonOptions {
   baseUrl: string;
-  getAccessToken: () => Promise<string | null>;
   fetchImpl?: typeof fetch;
   timeoutMs?: number;
   maxResponseBytes?: number;
   maxRequestBytes?: number;
   tenantId?: string;
 }
+
+export type HttpInstitutionAdapterOptions = HttpInstitutionAdapterCommonOptions & (
+  | { authentication?: 'bearer'; getAccessToken: () => Promise<string | null> }
+  | { authentication: 'same-origin-cookie'; getAccessToken?: never }
+);
 
 const trimBaseUrl = (url: string) => url.replace(/\/+$/, '');
 
@@ -140,6 +144,7 @@ export class HttpInstitutionAdapter implements InstitutionAdapter, LearningState
   constructor(private readonly options: HttpInstitutionAdapterOptions) {
     const validatedUrl = validateBaseUrl(options.baseUrl);
     this.baseUrl = validatedUrl.url;
+    this.validateCookieOrigin();
     this.localDevelopment = validatedUrl.localDevelopment;
     this.fetchImpl = options.fetchImpl || fetch;
     this.timeoutMs = boundedInteger(options.timeoutMs, 20_000, 'Institution API timeout', 5 * 60_000);
@@ -151,6 +156,13 @@ export class HttpInstitutionAdapter implements InstitutionAdapter, LearningState
         throw new InstitutionAdapterError('Institution tenant identifier is invalid.', 'invalid_configuration');
       }
       this.tenantId = tenantId;
+    }
+  }
+
+  private validateCookieOrigin() {
+    if (this.options.authentication !== 'same-origin-cookie') return;
+    if (typeof window === 'undefined' || window.location?.origin !== this.baseUrl || !this.baseUrl.startsWith('https://') || this.options.getAccessToken !== undefined) {
+      throw new InstitutionAdapterError('Cookie sessions require the exact HTTPS browser origin and no token callback.', 'invalid_cookie_origin');
     }
   }
 
@@ -280,10 +292,14 @@ export class HttpInstitutionAdapter implements InstitutionAdapter, LearningState
   }
 
   private async requestWithMetadata(path: string, init: RequestInit): Promise<{ body: unknown; etag?: string }> {
-    const token = (await this.options.getAccessToken())?.trim();
-    if (!token) throw new InstitutionAdapterError('Authentication is required to synchronize institutional data.', 'authentication_required', 401);
-    if (token.length > 8_192 || /[\u0000-\u001f\u007f]/.test(token)) {
-      throw new InstitutionAdapterError('The institution access token is invalid.', 'invalid_access_token', 401);
+    this.validateCookieOrigin();
+    let token: string | undefined;
+    if (this.options.authentication !== 'same-origin-cookie') {
+      token = (await this.options.getAccessToken())?.trim();
+      if (!token) throw new InstitutionAdapterError('Authentication is required to synchronize institutional data.', 'authentication_required', 401);
+      if (token.length > 8_192 || /[\u0000-\u001f\u007f]/.test(token)) {
+        throw new InstitutionAdapterError('The institution access token is invalid.', 'invalid_access_token', 401);
+      }
     }
 
     const controller = new AbortController();
@@ -294,10 +310,11 @@ export class HttpInstitutionAdapter implements InstitutionAdapter, LearningState
         // Never forward an authenticated institutional request body through a
         // redirect. The API origin must be explicit and stable.
         redirect: 'error',
+        credentials: this.options.authentication === 'same-origin-cookie' ? 'same-origin' : 'omit',
         signal: controller.signal,
         headers: {
           Accept: 'application/json',
-          Authorization: `Bearer ${token}`,
+          ...(token ? { Authorization: `Bearer ${token}` } : {}),
           'X-LMS-Schema-Version': '1.0',
           ...(this.tenantId ? { 'X-Institution-Id': this.tenantId } : {}),
           ...init.headers,

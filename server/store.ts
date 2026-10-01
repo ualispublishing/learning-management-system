@@ -47,6 +47,9 @@ export class AuthStore {
     for (const value of [issuer, subject, user.id, user.name]) {
       if (!value || value !== value.trim() || value.length > 2048 || /[\u0000-\u001f\u007f]/.test(value)) throw new Error('Identity mapping has an invalid field.');
     }
+    // These values are also exposed through the institutional schema. Keep the
+    // approved identity valid for both session and learning responses.
+    if (user.id.length > 128 || !/^[A-Za-z0-9][A-Za-z0-9._:-]*$/.test(user.id) || user.name.length > 500) throw new Error('Identity mapping exceeds the LMS identifier/name contract.');
     if (!['admin', 'user'].includes(user.globalRole)) throw new Error('Identity mapping has an invalid role.');
     if (user.email !== undefined && (!user.email.includes('@') || user.email.length > 500 || /\s/.test(user.email))) throw new Error('Identity mapping has an invalid email.');
     // This command creates mappings; it never silently changes identity ownership

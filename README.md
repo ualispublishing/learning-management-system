@@ -62,7 +62,7 @@ privacy, retention, and cross-origin behavior is recorded in
 
 ## Checks
 
-Install the app and separate reference authentication service dependency graphs:
+Install the app and separate reference service dependency graphs:
 
 ```bash
 npm ci
@@ -77,7 +77,8 @@ npm run check:server
 npm run check:release
 ```
 
-The [reference authentication service](./server/README.md) provides real OIDC
-protocol handling and durable application sessions for the next backend phase.
-It requires an actual provider registration and HTTPS deployment, and is not yet
-connected to the LMS data gateway. Demo sign-in remains synthetic.
+The [reference service](./server/README.md) provides OIDC authentication, durable
+sessions and an optional [written-assessment gateway](./server/gateway-contract.md).
+The actual client repositories pass the assign/submit/grade/reload workflow in
+local tests. Live provider/HTTPS acceptance, app login wiring and the remaining
+backend services are still required. Demo sign-in remains synthetic.

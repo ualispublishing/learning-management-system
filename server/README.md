@@ -1,14 +1,14 @@
-# Reference authentication service
+# Reference identity and learning service
 
 This is the first real authentication infrastructure for the LMS. It is a separately installed Node service that can run under customer or publisher operation. It uses OpenID Connect authorization code flow with PKCE, state and nonce checks, signed ID-token validation, explicit issuer/subject mapping, and durable application sessions. Provider credentials and tokens stay on the server.
 
-**Status: tested foundation, not a production deployment or a connected LMS backend.** No identity-provider account, client registration, HTTPS endpoint, or live browser acceptance has been supplied. The existing app demo still uses synthetic identities. Production app startup still fails closed until all institution adapters are configured. This service does not serve snapshots, coursework, files, AI or live sessions and does not grant access to the demo repositories.
+**Status: tested authentication and a narrow durable gateway, not a production deployment or a complete LMS backend.** No identity-provider account, client registration, HTTPS endpoint, or live browser acceptance has been supplied. The existing app demo still uses synthetic identities. Production app startup still fails closed until all institution adapters are configured. The optional [written-assessment gateway](./gateway-contract.md) now serves principal-scoped snapshots and atomic assignment/submission/grading mutations. It does not supply the full application service set or grant access to the demo repositories.
 
 ## Demo versus real login
 
 A supervised demonstration with synthetic data can use the current demo account picker. A real-data pilot needs actual authentication, server-side authorization and durable institutional records. The current work establishes the login boundary early so those services can be built around verified identity. A visual login form alone would not provide that boundary.
 
-Authentication proves who signed in. Course membership, staff permissions, attempts, grade release, asset access and tenant scope must still be enforced by the forthcoming gateway. An identity provider's email or arbitrary role claim is never automatically treated as an LMS administrator assignment.
+Authentication proves who signed in. The written-assessment gateway enforces course membership, staff permissions, one-attempt limits, term dates, grade release and installation scope. Asset access and other unsupported service permissions remain work. An identity provider's email or arbitrary role claim is never automatically treated as an LMS administrator assignment.
 
 ## Implemented behavior
 
@@ -19,7 +19,7 @@ Authentication proves who signed in. Course membership, staff permissions, attem
 - Eight-hour absolute application sessions with hashed cookie credentials in a private SQLite file; active-account checks on each session lookup. Restart preserves sessions; logout and operator disablement revoke them durably.
 - Logout cancels a pending exchange and handles a callback completing before its cookie response arrives. It closes the application session; it does not terminate every session at the identity provider.
 - Login and logout require POST and the exact configured Origin. Redirect destinations are fixed; no caller-controlled return URL. Callback uses the query response mode, with duplicate parameters and replay rejected.
-- No-store/private responses, redacted errors, HTTPS provider endpoints, bounded login/session records and a bounded rate limiter. The HTTP listener accepts only GET/POST and no request bodies.
+- No-store/private responses, redacted errors, HTTPS provider endpoints, bounded login/session records and a bounded rate limiter. The HTTP listener accepts only GET/POST, rejects bodies on authentication routes, and bounds mutation bodies to 1 MiB, including chunked transfer.
 
 The reference store targets **one host and a dedicated installation**, not horizontal scaling or high availability. It uses Node's built-in SQLite with schema version 1. No external database credentials are embedded in the web/mobile client.
 
@@ -63,13 +63,13 @@ Disable a mapping with:
 node --env-file=/absolute/private/auth.env server/provision.ts disable learner-001
 ```
 
-Provisioning creates new mappings only, defaults to global role `user`, and fails on duplicates. It does not silently reactivate accounts, reassign ownership or grant course roles. Account updates/reactivation/admin assignment need an explicit audited operator workflow in a later increment.
+LMS IDs must meet the bounded identifier contract in the gateway guide; display names are capped at 500 characters. Provisioning creates new mappings only, defaults to global role `user`, and fails on duplicates. It does not silently reactivate accounts, reassign ownership or grant course roles. Account updates/reactivation/admin assignment need an explicit audited operator workflow in a later increment.
 
 ## Integration work still required
 
 1. Connect an actual customer test issuer and verify success, cancellation, callback rejection, reload, expiry, sign-out and deprovisioning in supported browsers. Test provider redirects against the page's CSP. The current tests replace provider HTTP transport, not the OIDC implementation.
-2. Implement the durable institutional gateway and apply verified sessions plus object/tenant/course authorization to every API and subscription. Session lookup alone must never authorize arbitrary records.
-3. Add an explicit same-origin cookie-authenticated web transport and route bootstrap. Existing `HttpInstitutionAdapter`, assets and AI clients require bearer tokens; do **not** fill their `getAccessToken` callback with cookie contents or the CSRF state. Bind the new transport to this exact origin and protect every unsafe request against CSRF. Wire real app sign-in only when the services required by `configureInstitutionLMS` are available, or deliberately version/test a narrower capability profile.
+2. Extend the [implemented narrow gateway](./gateway-contract.md) to the agreed pilot feature profile; keep verified sessions and object/tenant/course authorization on every API and subscription. Session lookup alone must never authorize arbitrary records.
+3. Wire the tested `HttpInstitutionAdapter` same-origin cookie mode into app authentication and route bootstrap. Asset and AI transports remain bearer-only. Do **not** fill a `getAccessToken` callback with cookie contents or CSRF state. Wire real app sign-in only when the services required by `configureInstitutionLMS` are available, or deliberately version/test a narrower capability profile. Durable client retry/outbox behavior remains work.
 4. Add the native authentication transport, app-owned redirect scheme/universal links and secure credential handling. HttpOnly web cookies are not a cross-platform credential strategy. Native OAuth testing requires an Expo development build rather than Expo Go. See [Expo's authentication guide](https://docs.expo.dev/guides/authentication/).
 5. Agree session lifetime, identity-provider deprovisioning propagation, MFA/conditional-access rules, support access and audit retention. MFA/password recovery remain provider responsibilities. Disabling an IdP account alone does not immediately revoke this eight-hour local application session; add the agreed revalidation/revocation mechanism before promising that behavior.
 6. Add operator-visible, redacted authentication/security events, request correlation, health/readiness monitoring, alert delivery and key/secret-rotation procedures. Configure startup supervision and graceful termination on the actual host.

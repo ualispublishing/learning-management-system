@@ -232,5 +232,11 @@ test('the production promotion command cannot bypass provider acceptance', async
     scripts?: Record<string, string>;
   };
   assert.equal(packageManifest.scripts?.['validate:provider'], 'node scripts/validate-provider-readiness.mjs');
-  assert.match(packageManifest.scripts?.['check:production'] ?? '', /npm run validate:production-config && npm run validate:provider && npm run audit:release && npm run check:release/);
+  assert.deepEqual(packageManifest.scripts?.['check:production']?.split(' && '), [
+    'npm run validate:production-config',
+    'npm run validate:provider',
+    'npm run audit:release',
+    'npm --prefix server run audit',
+    'npm run check:release',
+  ]);
 });
