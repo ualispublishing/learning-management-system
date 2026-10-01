@@ -5,7 +5,10 @@
  * - See docs/code-walkthrough-review.md for the project map, review priorities,
  *   and commenting standard that applies to this module.
  */
-export const colors = {
+import branding from './branding.generated.json';
+import { applyInstitutionColors } from './brandingPalette';
+
+const baseColors = {
   light: {
     background: '#F8FAFC',
     card: '#FFFFFF',
@@ -60,6 +63,11 @@ export const colors = {
     onDanger: '#0F172A',
     onInfo: '#0F172A',
   },
+};
+
+export const colors = {
+  light: applyInstitutionColors(baseColors.light, branding.primary, branding.secondary, false),
+  dark: applyInstitutionColors(baseColors.dark, branding.primary, branding.secondary, true),
 };
 
 export const typography = {

@@ -1,5 +1,6 @@
 import { spawn } from 'node:child_process';
 import process from 'node:process';
+import { watchBranding } from './watch-branding.mjs';
 
 const parsePort = (name, fallback) => {
   const value = process.env[name];
@@ -19,6 +20,8 @@ const sharedEnvironment = {
   LMS_DEMO_SERVER_PORT: String(serverPort),
   EXPO_PUBLIC_LMS_SHARED_DEMO_URL: serverUrl,
 };
+
+const stopWatchingBranding = watchBranding();
 
 const backend = spawn(process.execPath, ['--import', 'tsx', 'scripts/shared-demo-server.ts'], {
   cwd: process.cwd(),
@@ -45,6 +48,7 @@ let stopping = false;
 const stop = signal => {
   if (stopping) return;
   stopping = true;
+  stopWatchingBranding();
   app?.kill(signal);
   backend.kill(signal);
 };

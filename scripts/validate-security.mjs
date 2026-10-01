@@ -58,7 +58,7 @@ const brandAssets = [
   ['application icon', app.icon, 1024, 1024],
   ['splash image', splashImage, 512, 512],
   ['adaptive foreground', app.android?.adaptiveIcon?.foregroundImage, 432, 432],
-  ['adaptive monochrome image', app.android?.adaptiveIcon?.monochromeImage, 432, 432],
+  ...(app.android?.adaptiveIcon?.monochromeImage ? [['adaptive monochrome image', app.android.adaptiveIcon.monochromeImage, 432, 432]] : []),
   ['web favicon', app.web?.favicon, 32, 32],
 ];
 for (const [label, configuredPath, minimumWidth, minimumHeight] of brandAssets) {

@@ -51,6 +51,7 @@
     "zustand": "^5.0.14"
   },
   "devDependencies": {
+    "@expo/image-utils": "0.11.5",
     "@testing-library/react": "^16.3.3",
     "@types/jsdom": "^30.0.0",
     "@types/node": "^26.1.1",
@@ -87,10 +88,19 @@
     "validate:dependencies": "expo install --check && npm ls --all",
     "build:web": "node scripts/export-web.mjs",
     "verify:web-build": "node scripts/verify-web-build.mjs",
-    "check": "npm run lint && npm run typecheck && npm run validate:fixtures && npm run validate:security && npm run notices:check && npm test && npm run test:journeys",
+    "check": "npm run brand:check && npm run lint && npm run typecheck && npm run validate:fixtures && npm run validate:security && npm run notices:check && npm test && npm run test:journeys",
     "check:server": "npm --prefix server run check",
     "check:release": "npm run check && npm run check:server && npm run validate:dependencies && npm run sbom:check && npm run build:web && npm run verify:web-build",
-    "check:production": "npm run validate:production-config && npm run validate:provider && npm run audit:release && npm --prefix server run audit && npm run check:release"
+    "check:production": "npm run validate:production-config && npm run validate:provider && npm run audit:release && npm --prefix server run audit && npm run check:release",
+    "brand:sync": "node scripts/sync-branding.mjs",
+    "brand:check": "node scripts/sync-branding.mjs --check",
+    "prestart": "npm run brand:sync",
+    "preweb": "npm run brand:sync",
+    "preandroid": "npm run brand:sync",
+    "preios": "npm run brand:sync",
+    "predemo:multiuser": "npm run brand:sync",
+    "prebuild:web": "npm run brand:sync",
+    "brand:watch": "npm run brand:sync && node scripts/watch-branding.mjs"
   },
   "private": true,
   "overrides": {

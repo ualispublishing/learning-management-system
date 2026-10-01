@@ -108,9 +108,9 @@ test('media runtime uses maintained modules with least-privilege native configur
     (entry: unknown) => Array.isArray(entry) && entry[0] === 'expo-splash-screen',
   );
   assert.deepEqual(splashPlugin, ['expo-splash-screen', {
-    image: './assets/brand/lms-app-splash.png',
+    image: './assets/brand/institution-splash.png',
     resizeMode: 'contain',
-    backgroundColor: '#07183F',
+    backgroundColor: '#FFFFFF',
   }]);
 
   const audioPlugin = base.expo.plugins.find(

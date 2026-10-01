@@ -10,6 +10,10 @@ import AsyncStorage from '@react-native-async-storage/async-storage';
 import { AccessibilityInfo } from 'react-native';
 import { clampAppContentWidth, parseStoredAppContentWidth } from '../appCanvasWidth';
 import { isSixDigitHexColor } from '../color';
+import branding from '../branding.generated.json';
+
+const primaryColorKey = `institution-primary-preview:${branding.revision}`;
+const secondaryColorKey = `institution-secondary-preview:${branding.revision}`;
 
 export type AppTheme = 'light' | 'dark' | 'system';
 export type AppContentWidth = number;
@@ -37,6 +41,7 @@ interface SettingsState {
 
   // Custom theme color
   customThemeHex: string | null;
+  customSecondaryHex: string | null;
 
   // First time experience
   hasViewedTutorial: boolean;
@@ -62,6 +67,7 @@ interface SettingsState {
   setLanguage: (lang: string) => void;
   setHasViewedTutorial: (val: boolean) => void;
   setCustomThemeHex: (val: string | null) => void;
+  setCustomSecondaryHex: (val: string | null) => void;
   setAdminCourseLayoutMode: (val: 'compact' | 'classic') => void;
   setAppContentWidth: (val: AppContentWidth) => void;
   clearSettingsError: () => void;
@@ -90,6 +96,7 @@ export const useSettingsStore = create<SettingsState>((set, get) => {
   language: 'en',
   hasViewedTutorial: false,
   customThemeHex: null,
+  customSecondaryHex: null,
   adminCourseLayoutMode: 'compact',
   appContentWidth: 768,
   settingsError: null,
@@ -159,8 +166,16 @@ export const useSettingsStore = create<SettingsState>((set, get) => {
     const normalized = val?.trim().toUpperCase() || null;
     const safeValue = normalized && isSixDigitHexColor(normalized) ? normalized : null;
     set({ customThemeHex: safeValue });
-    if (safeValue) persistSetting(AsyncStorage.setItem('customThemeHex', safeValue));
-    else persistSetting(AsyncStorage.removeItem('customThemeHex'));
+    if (safeValue) persistSetting(AsyncStorage.setItem(primaryColorKey, safeValue));
+    else persistSetting(AsyncStorage.removeItem(primaryColorKey));
+  },
+
+  setCustomSecondaryHex: (val) => {
+    const normalized = val?.trim().toUpperCase() || null;
+    const safeValue = normalized && isSixDigitHexColor(normalized) ? normalized : null;
+    set({ customSecondaryHex: safeValue });
+    if (safeValue) persistSetting(AsyncStorage.setItem(secondaryColorKey, safeValue));
+    else persistSetting(AsyncStorage.removeItem(secondaryColorKey));
   },
 
   setAdminCourseLayoutMode: (val) => {
@@ -189,14 +204,15 @@ export const useSettingsStore = create<SettingsState>((set, get) => {
         'simpleControls',
         'language',
         'hasViewedTutorial',
-        'customThemeHex',
+        primaryColorKey,
+        secondaryColorKey,
         'study_custom',
         'learn_custom',
         'quiz_custom',
         'adminCourseLayoutMode',
         'appContentWidth'
       ]);
-      const updates: Partial<SettingsState> = {};
+      const updates: Partial<SettingsState> = { customThemeHex: null, customSecondaryHex: null };
       const customT = { study: '20', learn: '∞', quiz: '20' };
       
       // Default OS check for reduced motion
@@ -219,7 +235,8 @@ export const useSettingsStore = create<SettingsState>((set, get) => {
           if (key === 'simpleControls') updates.simpleControls = val === 'true';
           if (key === 'language') updates.language = val;
           if (key === 'hasViewedTutorial') updates.hasViewedTutorial = val === 'true';
-          if (key === 'customThemeHex' && isSixDigitHexColor(val)) updates.customThemeHex = val.toUpperCase();
+          if (key === primaryColorKey && isSixDigitHexColor(val)) updates.customThemeHex = val.toUpperCase();
+          if (key === secondaryColorKey && isSixDigitHexColor(val)) updates.customSecondaryHex = val.toUpperCase();
           if (key === 'adminCourseLayoutMode' && (val === 'compact' || val === 'classic')) updates.adminCourseLayoutMode = val;
           if (key === 'appContentWidth') {
             const parsed = parseStoredAppContentWidth(val);

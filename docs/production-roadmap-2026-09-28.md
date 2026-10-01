@@ -8,7 +8,7 @@ This is a remaining-work plan. The original review records the 28 September base
 
 ## 1. Correct starting point
 
-**Automated tests already exist.** The baseline review observed all 391 tests passing across its runs. The first implementation batch passed **412 automated tests and 270 synthetic repository/store journeys from a clean checkout**. The client now passes **431 tests**, and the reference identity/learning service adds **34 tests**. Strict TypeScript, lint, fixture checks, dependency/security checks, SBOM/notices and a CI workflow definition are also present. See sections 8–11 for the exact evidence and limits, including the corrected release-gate assertion noted in section 11.
+**Automated tests already exist.** The baseline review observed all 391 tests passing across its runs. The first implementation batch passed **412 automated tests and 270 synthetic repository/store journeys from a clean checkout**. The client now passes **435 tests**, and the reference identity/learning service adds **34 tests**. Strict TypeScript, lint, fixture checks, dependency/security checks, SBOM/notices and a CI workflow definition are also present. See sections 8–12 for the exact evidence and limits, including the corrected release-gate assertion noted in section 11.
 
 The missing pieces are broader maintained rendered-component coverage and browser E2E tests, real-provider integration evidence, additional failure/concurrency coverage, supported-device/accessibility acceptance, and enforced production promotion. Static source checks and synthetic journeys remain useful; they do not establish those other forms of assurance.
 
@@ -375,3 +375,22 @@ Validation completed locally:
 **What you can do now:** ask the first customer's IT contact for the intended identity provider and an approved test client registration, the HTTPS application origin/hosting constraints, synthetic test accounts, pilot user/concurrency estimates, and the operational/support owners. Supply secrets through the host's private configuration system, not chat. Confirm the minimum must-have teaching/learning workflow so unsupported features can be explicitly excluded from a first pilot or prioritized for implementation. Customer-operated remains the default, with the same code usable under publisher operation.
 
 **Production decision remains NO GO for real learner data.** A supervised synthetic demo or product-discovery pitch can show the implemented behavior and this roadmap; a claim of full production readiness would still be premature.
+
+## 12. Institution branding and demo focus — 1 October 2026
+
+The requested immediate focus is a functioning, easily rebranded demonstration. The [branding and demo setup guide](./institution-branding.md) documents the three root PNG inputs and optional institution name/tagline. One shared logo now appears on sign-in, startup/recovery, main headers and deep course/study screens. Generated assets also configure the favicon, native launcher icon, adaptive foreground and splash. Native launch assets still need a rebuild/install and physical-device review.
+
+Two root colour swatches define the default palette. The in-app palette panel previews primary and secondary colours plus light/dark/system appearance, and restores institution defaults. Readable foreground tones are derived for text/actions; the brand stripe retains the exact supplied colours. Browser/device preview settings are scoped to the generated institution revision so rebranding does not inherit a different institution's preview.
+
+The shared demo command generates branding at startup and watches the four input files using a small polling watcher that tolerates atomic file replacement and OS file-watcher limits. Ordinary development and web exports regenerate at startup; a separate watch command is available. Invalid images/swatches fail with an actionable message before replacing the generated set, and the standard checks reject stale generated assets.
+
+Local verification:
+
+- `npm run check:release` passed with **435 client tests + 34 server tests**, **270 synthetic journeys / 1,620 steps**, both TypeScript configurations, lint, fixture/security/notices and dependency checks, both SBOMs, web export and verification of **30 artifact files**.
+- Four new branding tests cover file generation/revision changes/staleness, malformed or missing inputs without overwriting the previous manifest, invalid/ambiguous swatches, and readable palette contrast across light/dark appearances and extreme colours.
+- An actual Chromium browser check covered synthetic learner sign-in, course navigation, Learn/deck selection and flashcard answer reveal, the two-colour preview and reset, appearance selection, and the logo/colour layout at desktop and 390-pixel mobile width. No uncaught browser errors were observed in those checked flows. The automatic file watcher was also exercised locally.
+- The already-installed Expo image utility is now an explicit, pinned development dependency. No dependency versions changed. The refreshed runtime-only inventory contains **518 package versions**, with **15 unresolved notice dispositions**; this reflects the development dependency graph classification and is not a claim that license or vulnerability work is complete.
+
+This is local demo evidence, not the complete manual acceptance plan or automated browser regression coverage. Live SSO, full connected services, native acceptance and operating/release gates retain the limitations in sections 10–11. The current role picker uses fictional accounts and requires no password; the reference authentication service remains a separate foundation for a later real-data deployment.
+
+**What you can provide for the pitch:** the approved logo, exact two colours, displayed institution name/tagline, a believable synthetic demonstration course, and a short list of buyer tasks to rehearse on the presentation computer. Production remains a separate gate; the demo can support discovery conversations when the implemented, simulated and planned features are described accurately.

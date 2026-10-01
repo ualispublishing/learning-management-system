@@ -8,11 +8,14 @@
 import { useColorScheme } from 'react-native';
 import { useSettingsStore } from './store/useSettingsStore';
 import { colors } from './theme';
-import { accessibleForegroundColor, accessibleTextColor, isSixDigitHexColor } from './color';
+import { useMemo } from 'react';
+import branding from './branding.generated.json';
+import { applyInstitutionColors } from './brandingPalette';
 
 export function useThemeColors() {
   const themeSetting = useSettingsStore((state) => state.theme);
   const customThemeHex = useSettingsStore((state) => state.customThemeHex);
+  const customSecondaryHex = useSettingsStore((state) => state.customSecondaryHex);
   const systemColorScheme = useColorScheme();
 
   const isDark = 
@@ -21,19 +24,7 @@ export function useThemeColors() {
 
   const baseColors = colors[isDark ? 'dark' : 'light'];
 
-  if (customThemeHex && isSixDigitHexColor(customThemeHex)) {
-    const accessiblePrimary = accessibleForegroundColor(customThemeHex, [baseColors.background, baseColors.card])
-      || baseColors.primary;
-    return {
-      ...baseColors,
-      // Header surfaces retain their tested palette. The custom accent is
-      // adjusted only as much as needed for the active light/dark surfaces.
-      primary: accessiblePrimary,
-      buttonBackground: accessiblePrimary,
-      buttonText: accessibleTextColor(accessiblePrimary) || baseColors.buttonText,
-      onPrimary: accessibleTextColor(accessiblePrimary) || baseColors.onPrimary,
-    };
-  }
-
-  return baseColors;
+  return useMemo(() => customThemeHex || customSecondaryHex
+    ? applyInstitutionColors(baseColors, customThemeHex || branding.primary, customSecondaryHex || branding.secondary, isDark)
+    : baseColors, [baseColors, customThemeHex, customSecondaryHex, isDark]);
 }

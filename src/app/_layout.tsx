@@ -18,6 +18,8 @@ import { Inter_400Regular } from '@expo-google-fonts/inter/400Regular';
 import { Inter_600SemiBold } from '@expo-google-fonts/inter/600SemiBold';
 import { Inter_800ExtraBold } from '@expo-google-fonts/inter/800ExtraBold';
 import { getError } from '../lib/errorCodes';
+import { InstitutionBrand, InstitutionColorBar } from '../components/ui/InstitutionBrand';
+import branding from '../lib/branding.generated.json';
 import { GlobalHeader } from '../components/ui/GlobalHeader';
 
 import { View, Platform, StyleSheet, Text, Pressable, KeyboardAvoidingView, ActivityIndicator, useWindowDimensions, PanResponder } from 'react-native';
@@ -55,6 +57,7 @@ export function ErrorBoundary({ error, retry }: ErrorBoundaryProps) {
   const colors = useThemeColors();
   return (
     <View style={[styles.errorContainer, { backgroundColor: colors.background }]}>
+      <View style={{ marginBottom: 20 }}><InstitutionBrand size={64} showName /></View>
       <Text accessibilityRole="header" style={[styles.errorTitle, { color: colors.text }]}>Oops! Something went wrong.</Text>
       <Text style={[styles.errorSubtitle, { color: colors.textSecondary }]}>We have encountered an unexpected error.</Text>
       <View style={[styles.errorBox, { backgroundColor: colors.card, borderColor: colors.border }]}>
@@ -86,6 +89,10 @@ export default function Layout() {
   const initializeLMS = useLMSStore(state => state.initializeMocks);
   const refreshSharedDemoState = useLMSStore(state => state.refreshSharedDemoState);
   const router = useRouter();
+
+  useEffect(() => {
+    if (Platform.OS === 'web' && typeof document !== 'undefined') document.title = branding.name;
+  }, []);
 
   useEffect(() => {
     setI18nConfig(language);
@@ -183,7 +190,8 @@ export default function Layout() {
   if ((!fontsLoaded && !fontError) || isInitializingMocks) {
     return (
       <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center', backgroundColor: colors.background }}>
-        <ActivityIndicator size="large" color={colors.primary} accessibilityLabel="Loading learning management system" />
+        <InstitutionBrand size={72} showName />
+        <View style={{ marginTop: 24 }}><ActivityIndicator size="large" color={colors.primary} accessibilityLabel="Loading learning management system" /></View>
       </View>
     );
   }
@@ -191,6 +199,7 @@ export default function Layout() {
   if (initializationError) {
     return (
       <View style={[styles.errorContainer, { backgroundColor: colors.background }]}>
+        <View style={{ marginBottom: 20 }}><InstitutionBrand size={64} showName /></View>
         <Text accessibilityRole="header" style={[styles.errorTitle, { color: colors.text }]}>The LMS could not load.</Text>
         <Text style={[styles.errorSubtitle, { color: colors.textSecondary }]}>{initializationError}</Text>
         <Pressable accessibilityRole="button" style={[styles.retryButton, { backgroundColor: colors.primary }]} onPress={() => {
@@ -236,6 +245,7 @@ export default function Layout() {
   if (!__DEV__ && !currentUserId) {
     return (
       <View style={[styles.errorContainer, { backgroundColor: colors.background }]}> 
+        <View style={{ marginBottom: 20 }}><InstitutionBrand size={64} showName /></View>
         <Text accessibilityRole="header" style={[styles.errorTitle, { color: colors.text }]}>Sign in to your institution</Text>
         <Text style={[styles.errorSubtitle, { color: colors.textSecondary }]}>Your institution controls authentication. No course, grade, or message data loads before the signed-in identity is verified.</Text>
         {!!signInError && <Text accessibilityRole="alert" style={{ color: colors.error, textAlign: 'center', marginBottom: spacing[4] }}>{signInError}</Text>}
@@ -277,7 +287,10 @@ export default function Layout() {
       <StatusBar style={theme === 'dark' ? 'light' : theme === 'light' ? 'dark' : 'auto'} />
       <KeyboardAvoidingView behavior={Platform.OS === 'ios' ? 'padding' : undefined} style={{ flex: 1, width: '100%', alignItems: 'center' }}>
         <View style={[styles.appContainer, { backgroundColor: colors.navBg, maxWidth: isCourseScreen && Platform.OS === 'web' ? undefined : appCanvasMaxWidth }]}> 
-          {!isDeepScreen && <GlobalHeader />}
+          {isDeepScreen ? <View style={{ width: '100%', backgroundColor: colors.navBg }}>
+            <View style={{ paddingHorizontal: 16, paddingVertical: 8 }}><InstitutionBrand size={28} showName /></View>
+            <InstitutionColorBar />
+          </View> : <GlobalHeader />}
           <Stack screenOptions={{ headerShown: false }}>
             <Stack.Screen name="(tabs)" />
           </Stack>

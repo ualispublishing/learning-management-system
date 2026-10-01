@@ -12,6 +12,9 @@ import { DEMO_ACCOUNTS, DEMO_ACCOUNT_GROUPS } from '../../lib/demoAccounts';
 import { useThemeColors } from '../../lib/useThemeColors';
 import { spacing, typography } from '../../lib/theme';
 
+import branding from '../../lib/branding.generated.json';
+import { InstitutionBrand, InstitutionColorBar } from '../ui/InstitutionBrand';
+
 interface DemoSignInProps {
   busyEmail: string | null;
   error: string | null;
@@ -28,14 +31,13 @@ export function DemoSignIn({ busyEmail, error, onSignIn }: DemoSignInProps) {
       keyboardShouldPersistTaps="handled"
     >
       <View style={[styles.card, { backgroundColor: colors.card, borderColor: colors.border }]}> 
-        <View style={[styles.icon, { backgroundColor: colors.primary }]}> 
-          <Ionicons name="school" size={30} color={colors.buttonText} accessibilityElementsHidden importantForAccessibility="no-hide-descendants" />
-        </View>
-        <Text accessibilityRole="header" style={[styles.title, { color: colors.text }]}>Sign in to the shared LMS demo</Text>
-        <Text style={[styles.subtitle, { color: colors.textSecondary }]}>Choose a synthetic account for this browser tab. Other tabs can sign in separately and will share the same loopback-only course data.</Text>
-        <View style={[styles.notice, { backgroundColor: colors.background, borderColor: colors.border }]}> 
-          <Text style={{ color: colors.text, fontWeight: '700' }}>Local acceptance environment</Text>
-          <Text style={{ color: colors.textSecondary, marginTop: 3 }}>No password or real institutional identity is used. Refreshing this demo tab signs it out.</Text>
+        <InstitutionBrand size={64} showName />
+        <View style={{ marginTop: 20, marginBottom: 20 }}><InstitutionColorBar /></View>
+        <Text accessibilityRole="header" style={[styles.title, { color: colors.text }]}>Explore the learning demo</Text>
+        <Text style={[styles.subtitle, { color: colors.textSecondary }]}>{branding.tagline} Choose a role below to explore courses, assessments and conversations.</Text>
+        <View style={[styles.notice, { backgroundColor: colors.background, borderColor: colors.border }]}>
+          <Text style={{ color: colors.text, fontWeight: '700' }}>Demo accounts</Text>
+          <Text style={{ color: colors.textSecondary, marginTop: 3 }}>No password needed. These sample accounts use fictional data. Open another tab to try a different role. Refreshing signs you out.</Text>
         </View>
 
         {error ? <Text accessibilityRole="alert" style={[styles.error, { color: colors.error }]}>{error}</Text> : null}

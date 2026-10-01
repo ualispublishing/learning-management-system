@@ -6,12 +6,14 @@
  *   and commenting standard that applies to this module.
  */
 import React, { useState, useEffect } from 'react';
-import { View, Text, StyleSheet, Pressable, TextInput, Modal } from 'react-native';
+import { View, Text, StyleSheet, Pressable, Modal } from 'react-native';
 import { useThemeColors } from '../../lib/useThemeColors';
 import { useSettingsStore } from '../../lib/store/useSettingsStore';
 import { useLMSStore } from '../../lib/store/useLMSStore';
 import Ionicons from '@expo/vector-icons/Ionicons';
-import { isSixDigitHexColor } from '../../lib/color';
+import branding from '../../lib/branding.generated.json';
+import { InstitutionBrand, InstitutionColorBar } from './InstitutionBrand';
+import { InstitutionThemeSettings } from './InstitutionThemeSettings';
 import { spacing } from '../../lib/theme';
 
 const MOTIVATIONAL_TEXTS = [
@@ -24,7 +26,7 @@ const MOTIVATIONAL_TEXTS = [
 
 export function GlobalHeader() {
   const colors = useThemeColors();
-  const { customThemeHex, setCustomThemeHex, settingsError, clearSettingsError } = useSettingsStore();
+  const { settingsError, clearSettingsError } = useSettingsStore();
   const {
     currentUserName,
     currentUserEmail,
@@ -47,10 +49,6 @@ export function GlobalHeader() {
   const [showAccountMenu, setShowAccountMenu] = useState(false);
   const [isSigningOut, setIsSigningOut] = useState(false);
   const [accountError, setAccountError] = useState('');
-  const [hexCode, setHexCode] = useState(customThemeHex || '');
-  const normalizedHexCode = hexCode.trim().toUpperCase();
-  const hexCodeIsValid = !normalizedHexCode || isSixDigitHexColor(normalizedHexCode);
-  
   useEffect(() => {
     const interval = setInterval(() => {
       setGreetingIndex(prev => (prev + 1) % MOTIVATIONAL_TEXTS.length);
@@ -72,12 +70,11 @@ export function GlobalHeader() {
   return (
     <View style={{ backgroundColor: colors.navBg }}>
       <View style={[styles.container, { backgroundColor: colors.navBg }]}> 
-        <View style={styles.iconSection}>
-          <Ionicons name="school" size={28} color={colors.primary} accessibilityElementsHidden importantForAccessibility="no-hide-descendants" />
-        </View>
+        <InstitutionBrand size={36} />
         <View style={styles.greetingSection}>
-          <Text accessibilityRole="header" style={[styles.greeting, { color: colors.text }]}>{authenticatedName ? `Hello, ${authenticatedName}` : 'Welcome'}</Text>
-          <Text style={[styles.motivational, { color: colors.textSecondary }]}>{MOTIVATIONAL_TEXTS[greetingIndex]}</Text>
+          <Text numberOfLines={1} style={{ color: colors.primary, fontWeight: '800', fontSize: 13, marginBottom: 2 }}>{branding.name}</Text>
+          <Text numberOfLines={1} accessibilityRole="header" style={[styles.greeting, { color: colors.text }]}>{authenticatedName ? `Hello, ${authenticatedName}` : 'Welcome'}</Text>
+          <Text numberOfLines={1} style={[styles.motivational, { color: colors.textSecondary }]}>{MOTIVATIONAL_TEXTS[greetingIndex]}</Text>
         </View>
         <View style={styles.headerActions}>
           {currentUserId ? (
@@ -91,37 +88,15 @@ export function GlobalHeader() {
         </View>
       </View>
 
+      <InstitutionColorBar />
+
       {dataError && (
         <Pressable onPress={dismissDataError} accessibilityRole="button" accessibilityLabel={`Changes were not saved: ${dataError}. Dismiss error.`} style={[styles.errorBanner, { backgroundColor: colors.error }]}> 
           <Text accessibilityRole="alert" accessibilityLiveRegion="assertive" style={[styles.errorBannerText, { color: colors.onError }]} numberOfLines={2}>Changes were not saved: {dataError} Tap to dismiss.</Text>
         </Pressable>
       )}
 
-      <Modal visible={showColorSettings} transparent animationType="fade" onRequestClose={() => setShowColorSettings(false)}>
-        <View style={styles.modalOverlay}>
-           <View accessibilityViewIsModal style={[styles.modalContent, { backgroundColor: colors.card }]}> 
-             <Text accessibilityRole="header" style={{ color: colors.text, marginBottom: 10, fontWeight: 'bold' }}>Theme Color Settings</Text>
-             <TextInput 
-               autoFocus
-               accessibilityLabel="Custom theme hex color"
-               style={{ borderWidth: 1, borderColor: colors.border, padding: 12, color: colors.text, marginBottom: 16, width: '100%', borderRadius: 8 }}
-               value={hexCode}
-               onChangeText={setHexCode}
-               placeholder="#HEX Code"
-               placeholderTextColor={colors.textSecondary}
-             />
-             {!hexCodeIsValid && <Text accessibilityRole="alert" style={{ color: colors.error, marginBottom: 12 }}>Use a six-digit hex color such as #1D3557.</Text>}
-             <View style={{ width: '100%', flexDirection: 'row', justifyContent: 'flex-end', gap: 8 }}>
-               <Pressable accessibilityRole="button" onPress={() => setShowColorSettings(false)} style={styles.modalAction}>
-                 <Text style={{ color: colors.text, fontWeight: 'bold' }}>Cancel</Text>
-               </Pressable>
-               <Pressable disabled={!hexCodeIsValid} accessibilityRole="button" accessibilityState={{ disabled: !hexCodeIsValid }} onPress={() => { setCustomThemeHex(normalizedHexCode || null); setShowColorSettings(false); }} style={[styles.modalAction, { backgroundColor: '#1D3557', opacity: hexCodeIsValid ? 1 : 0.5 }]}> 
-                 <Text style={{ color: '#FFF', fontWeight: 'bold' }}>Apply</Text>
-               </Pressable>
-             </View>
-           </View>
-        </View>
-      </Modal>
+      {showColorSettings ? <InstitutionThemeSettings onClose={() => setShowColorSettings(false)} /> : null}
 
       <Modal visible={showAccountMenu} transparent animationType="fade" onRequestClose={() => { if (!isSigningOut) setShowAccountMenu(false); }}>
         <View style={styles.modalOverlay}>
@@ -190,10 +165,11 @@ const styles = StyleSheet.create({
   },
   greetingSection: {
     flex: 1,
-    marginLeft: 16,
+    marginLeft: 12,
+    minWidth: 0,
   },
   greeting: {
-    fontSize: 22,
+    fontSize: 18,
     fontWeight: '800',
   },
   motivational: {

@@ -40,7 +40,7 @@ export const accessibleTextColor = (background: string): '#000000' | '#FFFFFF' |
 export const hasAccessibleTextContrast = (foreground: string, background: string): boolean =>
   (colorContrastRatio(foreground, background) ?? 0) >= 4.5;
 
-const mixHexColors = (from: string, to: '#000000' | '#FFFFFF', amount: number): string => {
+export const mixHexColors = (from: string, to: '#000000' | '#FFFFFF', amount: number): string => {
   const ratio = Math.max(0, Math.min(1, amount));
   const channels = [1, 3, 5].map(index => {
     const start = Number.parseInt(from.slice(index, index + 2), 16);

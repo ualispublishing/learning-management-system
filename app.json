@@ -4,7 +4,7 @@
     "slug": "lms-app",
     "version": "1.0.0",
     "orientation": "default",
-    "icon": "./assets/brand/lms-app-icon.png",
+    "icon": "./assets/brand/institution-icon.png",
     "userInterfaceStyle": "automatic",
     "ios": {
       "supportsTablet": true,
@@ -87,14 +87,13 @@
         "android.permission.SYSTEM_ALERT_WINDOW"
       ],
       "adaptiveIcon": {
-        "backgroundColor": "#07183F",
-        "foregroundImage": "./assets/brand/lms-app-adaptive-foreground.png",
-        "monochromeImage": "./assets/brand/lms-app-adaptive-foreground.png"
+        "backgroundColor": "#FFFFFF",
+        "foregroundImage": "./assets/brand/institution-adaptive.png"
       },
       "predictiveBackGestureEnabled": false
     },
     "web": {
-      "favicon": "./assets/brand/lms-app-favicon.png",
+      "favicon": "./assets/brand/institution-favicon.png",
       "bundler": "metro",
       "output": "single"
     },
@@ -103,9 +102,9 @@
       [
         "expo-splash-screen",
         {
-          "image": "./assets/brand/lms-app-splash.png",
+          "image": "./assets/brand/institution-splash.png",
           "resizeMode": "contain",
-          "backgroundColor": "#07183F"
+          "backgroundColor": "#FFFFFF"
         }
       ],
       "expo-sqlite",

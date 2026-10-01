@@ -14,6 +14,18 @@ stages without creating a tenant or contacting a real provider.
 See the [`institution activation user journey`](./docs/institution-activation-user-journey.md)
 for the actors, system outcomes, and production gates behind each stage.
 
+## Institution branding
+
+Replace `institution-logo.png`, `institution-primary.png` and
+`institution-secondary.png` in this main folder. The last two files should be
+solid colour swatches. Edit `institution.json` for the displayed name/tagline.
+Startup and web builds generate the shared logo, palette and platform assets.
+The shared demo also watches these files while it is running. Use the header's
+palette button for quick two-colour previews and light/dark appearance.
+
+See the [branding and demo setup guide](./docs/institution-branding.md) for exact
+file requirements, refresh behavior and a presentation checklist.
+
 ## Local single-user development
 
 ```bash

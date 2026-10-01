@@ -1,6 +1,6 @@
 # Content, asset, and IP provenance
 
-Last engineering review: 2026-09-03
+Last engineering review: 2026-10-01
 
 This inventory supports release review; it is not a copyright, trademark,
 patent, or freedom-to-operate legal opinion.
@@ -50,6 +50,9 @@ optional media playback is unavailable.
 | `assets/images/math_banner_original.jpg` | 2026-08-12 | OpenAI image generation from an original prompt written for this project; no reference image was supplied; resized and JPEG-compressed locally from the retained generation master | Crop-safe generic mathematics deck banner |
 | `assets/brand/lms-app-icon-master.png` | 2026-08-20 | OpenAI image generation from an original project prompt with no reference image; the selected square artwork was resized locally for the app icon and favicon | Brand-neutral LMS application icon |
 | `assets/brand/lms-app-mark-master.png` | 2026-08-20 | OpenAI edit of the project-generated icon to remove the background and preserve a transparent alpha channel; no external reference image was used | Android adaptive foreground and splash mark |
+| `institution-logo.png` | 2026-10-01 | Copy of the existing `lms-app-icon-master.png` above; no new artwork | Default input for replaceable institution branding |
+| `institution-primary.png`, `institution-secondary.png` | 2026-10-01 | Original solid navy/blue colour swatches, created programmatically | Default palette inputs |
+| `assets/brand/institution-*.png` | 2026-10-01 | Deterministic resizing, containment and neutral padding of `institution-logo.png` by `scripts/sync-branding.mjs` | Shared in-app logo, favicon, native icons and splash |
 
 Generation constraints explicitly prohibited logos, school names, brand
 marks, copied diagrams, characters, trademarks, and watermarks. The prompt
@@ -70,16 +73,20 @@ deleting a user-owned file during this review.
 
 ## Application and platform assets
 
-The app icon, adaptive foreground, favicon, and splash now derive only from the
-project-generated masters recorded above. The earlier Expo-template graphics
+The configured app icon, adaptive foreground, favicon, and splash derive from
+the replaceable root `institution-logo.png`, whose current default is the
+project-generated master recorded above. When replacing it, record the
+institution's permission and source alongside the release evidence. The
+[branding guide](./institution-branding.md) describes the generation workflow.
+The earlier Expo-template graphics
 remain unreferenced source files and are not part of the configured release
 identity. Bundled fonts, icon fonts, WASM, and all dependency artifacts still
 require a release-owner license check. Before distribution:
 
-The exact-lockfile engineering inventory currently contains 529 runtime
+The exact-lockfile engineering inventory currently contains 518 runtime
 components. Its generated
 [`THIRD_PARTY_NOTICES.md`](../THIRD_PARTY_NOTICES.md) uses bundled text plus
-digest-pinned exact official sources; 16 package versions still require the
+digest-pinned exact official sources; 15 package versions still require the
 release-owner disposition documented in
 [`third-party-license-review.md`](./third-party-license-review.md). This does
 not constitute legal approval or artifact-level completeness.
