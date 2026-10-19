@@ -1,7 +1,55 @@
 # LMS app
 
-For the complete local demo, run `npm run web` and open
-<http://127.0.0.1:4178/demo>. Follow the [demo presentation runbook](./docs/demo-setup.md).
+An Expo / React Native learning management app with course authoring, learner
+study tools, flashcards, assessments, discussions and institution branding.
+The web demo includes independent synthetic user sessions and prepared AI
+workflows for converting a syllabus into course fields and lesson material into
+source-cited flashcards.
+
+**Current status:** a functioning local demonstration with tested production
+integration foundations. It is not approved for real learner data or a production
+institution rollout. The demo's role picker and in-memory backend are separate
+from the reference authentication service.
+
+## Quick start
+
+CI uses **Node.js 26.5.0** and **npm 11.17.0**; match those versions when reproducing
+release checks. From the repository root:
+
+```bash
+npm ci
+npm ci --prefix server
+npm run web
+```
+
+Keep the terminal open, then visit:
+
+| Page | Local URL |
+| --- | --- |
+| Demo guide | <http://127.0.0.1:4178/demo> |
+| App and synthetic role picker | <http://127.0.0.1:4178/> |
+| AI source/result comparison | <http://127.0.0.1:4178/ai-demo> |
+
+No AI API key or institutional login is needed for this local demo. Use only
+synthetic data. Start with the [demo README](./demo/README.md), then follow the
+[presentation runbook](./docs/demo-setup.md).
+
+## App and production scope
+
+| Area | Available in this repository | Remaining production work |
+| --- | --- | --- |
+| Teaching and learning | Course presentations, reviewed syllabus import, lesson/card publication, study tools and synthetic shared workflows | Connect and accept the full agreed institutional service profile |
+| Identity | Reference OIDC service, durable sessions, tested authorization boundaries and web cookie clients | Real issuer/HTTPS acceptance, complete app sign-in/bootstrap, native authentication |
+| AI | Prepared replay, provider interface, OpenAI Responses connector, bounded text/caption extraction, optional authenticated jobs and result recovery | Binary document/media workers, provider acceptance and instructor-reviewed live evaluations |
+| File storage | Validated multipart client, bearer or exact-origin HTTPS cookies, bounded upload deadlines | Authorized asset server, durable storage/retrieval, scanning/quarantine and retention |
+| Release and operations | Automated tests, CI workflow, build checks, integration contracts and acceptance templates | Deployment acceptance, recovery drills, monitoring, load, support and outstanding release gates |
+
+The [production roadmap](./docs/production-roadmap-2026-09-28.md) is the detailed
+remaining-work outline. Prepared output checks verify the recorded source/output
+contract; they do not establish educational accuracy or measured teacher time
+savings.
+
+## Walkthroughs
 
 For a focused product review, follow the
 [`MVP overview walkthrough`](./docs/mvp-overview-walkthrough.md). It separates
@@ -119,12 +167,7 @@ showcase. Use `npm run web` for presentations and multi-user testing.
 
 ## Checks
 
-Install the app and separate reference service dependency graphs:
-
-```bash
-npm ci
-npm ci --prefix server
-```
+After installing both dependency graphs in Quick start:
 
 ```bash
 npm run typecheck
@@ -133,6 +176,16 @@ npm test
 npm run check:server
 npm run check:release
 ```
+
+The latest local verification on **19 October 2026** passed **556 app tests**, **54
+server tests**, **270 synthetic journeys / 1,620 steps**, lint, both TypeScript
+checks, fixture/security/notices checks, server metadata checks, web export and
+verification of 30 exported files. See the
+[verification record](./docs/verification/asset-transport-check-2026-10-19.json).
+These results cover the commands in that record; they are not a fresh dependency
+audit, hosted CI result or production acceptance. `npm run check:production`
+additionally enforces institution configuration, provider acceptance and audit
+gates, which remain separate from a passing local demo.
 
 App tests run one file at a time with a 512 MiB V8 old-space limit per process
 and a 30-second test timeout. This limits test heap growth, not total system RSS.
@@ -145,3 +198,44 @@ sessions and an optional [written-assessment gateway](./server/gateway-contract.
 The actual client repositories pass the assign/submit/grade/reload workflow in
 local tests. Live provider/HTTPS acceptance, app login wiring and the remaining
 backend services are still required. Demo sign-in remains synthetic.
+
+## Repository guide
+
+| Location | Purpose |
+| --- | --- |
+| `src/app/` | Expo routes, including the demo guide and AI showcase |
+| `src/components/` | App screens, course presentation and review components |
+| `src/lib/` | Domain logic, repositories, AI contracts and integration clients |
+| `server/` | Separately installed reference OIDC, assessment and optional AI service |
+| `demo/ai/` | Prepared sources, extraction/results, attribution and demo evidence |
+| `tests/` and `server/tests/` | Automated application and reference-service checks |
+| `scripts/` | Demo launcher, branding, validation and export commands |
+| `docs/` and `deployment/` | Architecture, production roadmap and deployment contracts |
+| `.github/workflows/` | GitHub release-check workflow; uploading the repository does not deploy it |
+
+## Contributions and completed work
+
+Recent work includes the shared multiuser demo and launcher, reusable institution
+branding, coherent AI source/result bundles, shared course/flashcard previews,
+provider adapters and authenticated AI recovery, safer upload/session boundaries,
+memory safeguards, regression tests and the production documentation.
+
+See [CONTRIBUTING.md](./CONTRIBUTING.md) for the contribution record, the distinction
+between product direction and assisted implementation, and the workflow for
+future changes. Detailed code history is available through `git log`.
+
+## Documentation and licensing
+
+- [Demo setup and presentation](./demo/README.md)
+- [Reference authentication and gateway service](./server/README.md)
+- [Institution integration contract](./docs/institution-integration.md)
+- [AI provider and extraction contracts](./docs/ai-provider-adapters.md)
+- [Deployment and production acceptance](./deployment/README.md)
+- [Contribution record and development guide](./CONTRIBUTING.md)
+
+Original application code is proprietary under [LICENSE](./LICENSE). Third-party
+packages and assets retain their own terms; see
+[THIRD_PARTY_NOTICES.md](./THIRD_PARTY_NOTICES.md) and the
+[license review](./docs/third-party-license-review.md). The MIT OCW prepared pack
+has separate attribution and noncommercial terms in its
+[bundle README](./demo/ai/README.md#attribution-and-licence).

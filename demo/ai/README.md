@@ -1,5 +1,9 @@
 # Prepared MIT OCW lesson demo
 
+For installation and the complete presentation, see the
+[demo README](../README.md). For development workflow and completed work, see
+[the contribution guide](../../CONTRIBUTING.md).
+
 All six files belong to **MIT 6.0001, Introduction to Computer Science and Programming in Python, Fall 2016**. The lesson is **Lecture 1: What is Computation?**, focused on declarative knowledge, imperative knowledge and algorithms. This is a coherent course sample, not a complete course.
 
 | File in `sources/` | Prepared result |

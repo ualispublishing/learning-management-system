@@ -81,13 +81,21 @@ learner actions. Change roles from Courses, or sign out through the account menu
 
 ## Verification and remaining boundaries
 
+The latest broader automated run on October 19 passed 556 app tests, 54 server
+tests and 270 synthetic journeys / 1,620 steps, plus lint, type/configuration and
+metadata checks, web export and 30-file verification. It added cookie-authenticated
+asset-client and complete upload-deadline coverage. See the
+[verification record](./verification/asset-transport-check-2026-10-19.json).
+This run did not repeat browser visual checks or exercise a deployed storage/SSO
+service; the browser evidence below retains its original scope and dates.
+
 On October 18, a visual follow-up verified workspace entry, code-pattern feedback
 and reset, chart/table updates, workspace exit, and the prepared syllabus's course
 information, draft, field mapping and evaluation views. No console errors were
 recorded. Server-process RSS peaked at 1007.2 MiB, excluding browser memory, and
 the temporary server was stopped. See the [record and screenshots](../demo/ai/verification/demo-visual-check-2026-10-18.json).
-No application code changed; the latest full automated check remains the October
-16 run documented in the [verification log](../demo/ai/verification/README.md).
+No application code changed during that visual pass. The then-current automated
+check was the October 16 run in the [verification log](../demo/ai/verification/README.md).
 
 On October 17, the browser pass verified all five prepared lesson formats,
 PowerPoint file selection, syllabus draft/mapping/export preview, and actual
