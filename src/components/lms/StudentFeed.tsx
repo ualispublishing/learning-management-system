@@ -5,6 +5,7 @@
  * - See docs/code-walkthrough-review.md for the project map, review priorities,
  *   and commenting standard that applies to this module.
  */
+import { resolvePreparedDemoUrl } from '../../lib/ai/preparedDemo';
 import React, { useMemo, useState, useRef, useEffect } from 'react';
 import { View, Text, StyleSheet, ScrollView, TouchableOpacity, Pressable, Linking, Platform, useWindowDimensions, Modal } from 'react-native';
 import Ionicons from '@expo/vector-icons/Ionicons';
@@ -66,7 +67,7 @@ const openExternalUrl = async (value?: string) => {
     return;
   }
   try {
-    await Linking.openURL(url);
+    await Linking.openURL(resolvePreparedDemoUrl(url));
   } catch (error) {
     Alert.alert('Link could not be opened', error instanceof Error ? error.message : 'Try again or contact course staff.');
   }
@@ -89,7 +90,7 @@ const activateFromKeyboard = (event: WebActivationEvent, action: () => void) => 
 
 const NativeCourseVideoSurface = ({ asset, title }: { asset: CoursePresentationAsset; title: string }) => {
   const colors = useThemeColors();
-  const player = useVideoPlayer({ uri: asset.url, contentType: isCourseHlsAsset(asset) ? 'hls' : 'auto' }, instance => {
+  const player = useVideoPlayer({ uri: resolvePreparedDemoUrl(asset.url), contentType: isCourseHlsAsset(asset) ? 'hls' : 'auto' }, instance => {
     instance.loop = false;
     instance.pause();
   });
@@ -145,11 +146,11 @@ const CourseVideoPlayer = ({
         'aria-label': `Course video: ${title}`,
         style: { width: '100%', aspectRatio: 16 / 9, minHeight: 220, backgroundColor: '#000' },
       }, [
-        React.createElement('source', { key: 'source', src: asset.url, type: asset.mimeType }),
+        React.createElement('source', { key: 'source', src: resolvePreparedDemoUrl(asset.url), type: asset.mimeType }),
         ...captionTracks.map((track, index) => React.createElement('track', {
           key: `${track.url}-${index}`,
           kind: 'captions',
-          src: track.url,
+          src: resolvePreparedDemoUrl(track.url),
           srcLang: track.language,
           label: track.label,
           default: track.isDefault === true,

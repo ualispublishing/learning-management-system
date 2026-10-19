@@ -1,0 +1,25 @@
+{
+  "text": "WHAT DOES A COMPUTER DO  Fundamentally: ◦ performs calculations a billion calculations per second! ◦ remembers results 100s of gigabytes of storage!  What kinds of calculations? ◦ built-in to the language ◦ ones that you define as the programmer  computers only know what you tell them 6.0001 LECTURE 1 9\n\nTYPES OF KNOWLEDGE  declarative knowledge is statements of fact. ◦ someone will win a Google Cardboard before class ends  imperative knowledge is a recipe or “how-to”. 1) Students sign up for raffle 2) Ana opens her IDE 3) Ana chooses a random number between 1st and nth responder 4) Ana finds the number in the responders sheet. Winner! 6.0001 LECTURE 1 10\n\nA NUMERICAL EXAMPLE  square root of a number x is y such that y*y = x  recipe for deducing square root of a number x (16) 1) Start with a guess, g 2) If g*g is close enough to x, stop and say g is the answer 3) Otherwise make a new guess by averaging g and x/g 4) Using the new guess, repeat process until close enough 6.0001 LECTURE 1 11 g g*g x/g (g+x/g)/2 3 9 16/3 4.17 4.17 17.36 3.837 4.0035 4.0035 16.0277 3.997 4.000002\n\nWHAT IS A RECIPE 1) sequence of simple steps 2) flow of control process that specifies when each step is executed 3) a means of determining when to stop 1+2+3 = an algorithm! 6.0001 LECTURE 1 12\n\nMIT OpenCourseWare https://ocw.mit.edu 6.0001 Introduction to Computer Science and Programming in Python Fall 2016 For information about citing these materials or our Terms of Use, visit: https://ocw.mit.edu/terms.",
+  "segments": [
+    {
+      "location": "PDF page 1 (original lecture slide 9)",
+      "text": "WHAT DOES A COMPUTER DO  Fundamentally: ◦ performs calculations a billion calculations per second! ◦ remembers results 100s of gigabytes of storage!  What kinds of calculations? ◦ built-in to the language ◦ ones that you define as the programmer  computers only know what you tell them 6.0001 LECTURE 1 9"
+    },
+    {
+      "location": "PDF page 2 (original lecture slide 10)",
+      "text": "TYPES OF KNOWLEDGE  declarative knowledge is statements of fact. ◦ someone will win a Google Cardboard before class ends  imperative knowledge is a recipe or “how-to”. 1) Students sign up for raffle 2) Ana opens her IDE 3) Ana chooses a random number between 1st and nth responder 4) Ana finds the number in the responders sheet. Winner! 6.0001 LECTURE 1 10"
+    },
+    {
+      "location": "PDF page 3 (original lecture slide 11)",
+      "text": "A NUMERICAL EXAMPLE  square root of a number x is y such that y*y = x  recipe for deducing square root of a number x (16) 1) Start with a guess, g 2) If g*g is close enough to x, stop and say g is the answer 3) Otherwise make a new guess by averaging g and x/g 4) Using the new guess, repeat process until close enough 6.0001 LECTURE 1 11 g g*g x/g (g+x/g)/2 3 9 16/3 4.17 4.17 17.36 3.837 4.0035 4.0035 16.0277 3.997 4.000002"
+    },
+    {
+      "location": "PDF page 4 (original lecture slide 12)",
+      "text": "WHAT IS A RECIPE 1) sequence of simple steps 2) flow of control process that specifies when each step is executed 3) a means of determining when to stop 1+2+3 = an algorithm! 6.0001 LECTURE 1 12"
+    },
+    {
+      "location": "PDF page 5 (original lecture slide 35)",
+      "text": "MIT OpenCourseWare https://ocw.mit.edu 6.0001 Introduction to Computer Science and Programming in Python Fall 2016 For information about citing these materials or our Terms of Use, visit: https://ocw.mit.edu/terms."
+    }
+  ]
+}

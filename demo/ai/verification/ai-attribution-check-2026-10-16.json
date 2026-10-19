@@ -1,0 +1,73 @@
+{
+  "stages": [
+    {
+      "command": [
+        "npm",
+        "run",
+        "check"
+      ],
+      "exit_code": 0,
+      "cutoff": null
+    },
+    {
+      "command": [
+        "npm",
+        "--prefix",
+        "server",
+        "run",
+        "check"
+      ],
+      "exit_code": 0,
+      "cutoff": null
+    },
+    {
+      "command": [
+        "npm",
+        "run",
+        "build:web"
+      ],
+      "exit_code": 0,
+      "cutoff": null
+    },
+    {
+      "command": [
+        "npm",
+        "run",
+        "verify:web-build"
+      ],
+      "exit_code": 0,
+      "cutoff": null
+    }
+  ],
+  "peak_group_rss_mib": 1711.5,
+  "limit_mib": 3072,
+  "time_limit_seconds": 300,
+  "elapsed_seconds": 40.4,
+  "date": "2026-10-16",
+  "scope": "Recorded model attribution in actual AI review, course information, syllabus, course study player and portable exports",
+  "app_tests": 543,
+  "server_tests": 54,
+  "synthetic_journeys": 270,
+  "synthetic_steps": 1620,
+  "exported_files": 30,
+  "node_heap_mib": 1536,
+  "test_heap_mib": 512,
+  "paid_provider_calls": 0,
+  "new_browser_visual_check": false,
+  "server_marker_scan": {
+    "bundles_checked": 2,
+    "markers": [
+      "api.openai.com/v1/responses",
+      "text-source.v1",
+      "gateway_ai_jobs",
+      "ai_storage_capacity_reached"
+    ],
+    "matches": []
+  },
+  "limitations": [
+    "Configured-agent attribution is retained from the source/result generation record; it is not a live API receipt or evidence of identical API outputs.",
+    "Previously saved imports without authoring metadata remain explicitly unattributed; new imports retain the record.",
+    "Rendered learner views use JSDOM with native shells and progress persistence stubbed, after real HTTP publication and learner re-login.",
+    "No live SSO, paid provider call, deployment, new browser visual check or institution acceptance."
+  ]
+}

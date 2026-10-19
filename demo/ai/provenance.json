@@ -1,0 +1,38 @@
+{
+  "retrieved": "2026-10-01",
+  "authors": [
+    "Ana Bell",
+    "Eric Grimson",
+    "John Guttag"
+  ],
+  "publisher": "MIT OpenCourseWare",
+  "license": "CC BY-NC-SA 4.0",
+  "licenseUrl": "https://creativecommons.org/licenses/by-nc-sa/4.0/",
+  "termsUrl": "https://ocw.mit.edu/pages/privacy-and-terms-of-use/",
+  "commercialPermissionIncluded": false,
+  "endorsedByMIT": false,
+  "sources": [
+    {
+      "url": "https://ocw.mit.edu/courses/6-0001-introduction-to-computer-science-and-programming-in-python-fall-2016/pages/syllabus/",
+      "originalSha256": "5fd8378f16d70884407a7b19a46f003ae44f6541456722e8ba47e9f656c60e01",
+      "changes": "Converted main syllabus content to plain text; included course title and instructors from Course Info. Navigation omitted."
+    },
+    {
+      "url": "https://ocw.mit.edu/courses/6-0001-introduction-to-computer-science-and-programming-in-python-fall-2016/e921a690079369751bcce3e34da6c6ee_MIT6_0001F16_Lec1.pdf",
+      "originalSha256": "26d1bd5f1c42489dc0ffe8b3610bc245f1278d7035f368013e5a58c7cd8a890c",
+      "changes": "PDF retains original pages 9–12 and 35. Editable PowerPoint is an attributed text adaptation of slides 10–12. Other pages, including third-party word-cloud artwork, are not bundled."
+    },
+    {
+      "url": "https://archive.org/download/MIT6.0001F16/MIT6_0001F16_Lecture_01_300k.mp4",
+      "linkedFrom": "https://ocw.mit.edu/courses/6-0001-introduction-to-computer-science-and-programming-in-python-fall-2016/resources/lecture-1-what-is-computation/",
+      "originalSha256": "06236664b370ca2309aa5e74918a36a39512fad690ad9938d50b776217c02dcf",
+      "changes": "Trimmed original 00:08:40.000 to 00:15:34.000; re-encoded video; extracted audio from the same clip."
+    },
+    {
+      "url": "https://ocw.mit.edu/courses/6-0001-introduction-to-computer-science-and-programming-in-python-fall-2016/a746f6bc380f5e6d807ffff5f56cd877_nykOeWgQcHM.vtt",
+      "originalSha256": "404eb34eff454f97932952f677ce4bec0457488616dc5548ed8be81f70210a9f",
+      "changes": "Retained complete cues inside the excerpt; shifted timestamps by 520 seconds; added attribution. Extracted text joins cue text with spaces."
+    }
+  ],
+  "preparedResults": "Syllabus fields and flashcards authored with Codex from these extracted sources, with exact excerpts and locations. Reference files freeze the initial output for regression checking; they are not an independent expert accuracy evaluation. Derivative educational content in this folder is offered under CC BY-NC-SA 4.0. Application code is separately licensed."
+}

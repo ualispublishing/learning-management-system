@@ -17,6 +17,8 @@ export interface AIDocumentAsset {
 }
 
 export interface AIGenerationInput {
+  /** Stable course scope for server authorization; a title never grants access. */
+  courseId?: string;
   sourceText?: string;
   document?: AIDocumentAsset;
   courseTitle?: string;
@@ -46,6 +48,20 @@ export interface AIProvenance {
   documentSha256?: string;
   requestId?: string;
   model?: string;
+  /** Historical authoring, attached by the prepared server after checking the source/result record. */
+  preparedGeneration?: PreparedAIGeneration;
+  /** Bounded extraction notices supplied by the gateway, never by generated task JSON. */
+  sourceReviewNotices?: string[];
+}
+
+export interface PreparedAIGeneration {
+  authoringTool: string;
+  preparedOn: string;
+  model: string | null;
+  reasoningEffort?: string;
+  contextMode?: 'isolated-agent';
+  enrichmentNote?: string;
+  recordSha256: string;
 }
 
 export interface SyllabusEvidence {
@@ -55,6 +71,11 @@ export interface SyllabusEvidence {
 }
 
 export interface SyllabusExtraction {
+  courseCode?: string;
+  courseDuration?: string;
+  intendedAudience?: string;
+  learningObjectives?: string[];
+  meetingTimes?: string[];
   title?: string;
   description?: string;
   termStart?: string;
@@ -70,6 +91,30 @@ export interface SyllabusExtraction {
 }
 
 export interface AIService {
+  /** Declared by the integration, never inferred from the selected vendor/model. */
+  sourceProfile?: 'text-v1';
   generateFlashcards(input: AIGenerationInput): Promise<GeneratedFlashcard[]>;
   extractSyllabus(input: AIGenerationInput): Promise<SyllabusExtraction>;
+  /** Explicit opt-in for authenticated, source-matched recovery after a reload. */
+  requestHistory?: AIRequestHistory;
+}
+
+export interface AIRequestHistoryItem {
+  id: string;
+  requestId: string;
+  courseId: string;
+  task: 'flashcards' | 'syllabus';
+  status: 'processing' | 'succeeded' | 'uncertain';
+  createdAt: number;
+  expiresAt: number;
+  fileName: string | null;
+  hasPastedText: boolean;
+  locale: string;
+  requestedCardCount: number;
+}
+export interface AIRequestHistoryPage { items: AIRequestHistoryItem[]; nextCursor: string | null }
+export interface AIRequestHistory {
+  list(task: AIRequestHistoryItem['task'], courseId: string, cursor?: string): Promise<AIRequestHistoryPage>;
+  /** Must never invoke generation, including on missing/expired requests. */
+  recover(task: AIRequestHistoryItem['task'], input: AIGenerationInput, requestId: string): Promise<unknown>;
 }

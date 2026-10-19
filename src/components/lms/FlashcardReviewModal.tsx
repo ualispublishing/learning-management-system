@@ -5,6 +5,9 @@
  * - See docs/code-walkthrough-review.md for the project map, review priorities,
  *   and commenting standard that applies to this module.
  */
+import { PreparedAccuracyNotice } from './PreparedSourcePicker';
+import { AIGenerationAttribution } from './AIGenerationAttribution';
+import { isPreparedAIDemo } from '../../lib/ai/preparedDemo';
 import React, { useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import {
   ActivityIndicator,
@@ -23,6 +26,7 @@ import {
   AIDocumentAsset,
   AIProcessingAttestation,
   AIProvenance,
+  AIRequestError,
   beginAIRequestSession,
   completeAIRequestSession,
   createAIProcessingAttestation,
@@ -31,9 +35,15 @@ import {
   generateValidatedFlashcards,
   isCurrentAIRequestSession,
   resetAIRequestSession,
+  recoverValidatedFlashcards,
   runAttestedAIRequest,
 } from '../../lib/ai';
 import { createEntityId } from '../../lib/id';
+import { AISourceReviewNotice } from './AISourceReviewNotice';
+import { AIRequestRecoveryActions } from './AIRequestRecoveryActions';
+import { AIRequestHistoryPicker } from './AIRequestHistoryPicker';
+import { getAISourceSupport } from '../../lib/ai/service';
+import { assertAISourceProfile } from '../../lib/ai/sourceProfile';
 
 interface FlashcardReviewModalProps {
   visible: boolean;
@@ -41,6 +51,7 @@ interface FlashcardReviewModalProps {
   onApprove: (cards: GeneratedFlashcard[], attestation: AIProcessingAttestation) => Promise<void> | void;
   sourceText?: string;
   sourceDocument?: AIDocumentAsset;
+  courseId?: string;
   courseTitle?: string;
   requestedCardCount?: number;
 }
@@ -51,6 +62,7 @@ export const FlashcardReviewModal = ({
   onApprove,
   sourceText,
   sourceDocument,
+  courseId,
   courseTitle,
   requestedCardCount = 30,
 }: FlashcardReviewModalProps) => {
@@ -59,6 +71,8 @@ export const FlashcardReviewModal = ({
   const [cards, setCards] = useState<GeneratedFlashcard[]>([]);
   const [provenance, setProvenance] = useState<AIProvenance | undefined>();
   const [error, setError] = useState<string | null>(null);
+  const [requestFailure, setRequestFailure] = useState<AIRequestError | null>(null);
+  const [checkingSaved, setCheckingSaved] = useState(false);
   const [sourceRightsConfirmed, setSourceRightsConfirmed] = useState(false);
   const [sourceAttestation, setSourceAttestation] = useState<AIProcessingAttestation | null>(null);
   const [generationStarted, setGenerationStarted] = useState(false);
@@ -73,6 +87,7 @@ export const FlashcardReviewModal = ({
   const sourceDocumentFile = sourceDocument?.file;
   const sourceDocumentKind = sourceDocument?.kind;
   const generationInput = useMemo(() => ({
+    courseId,
     sourceText,
     document: sourceDocumentUri && sourceDocumentName ? {
       uri: sourceDocumentUri,
@@ -84,15 +99,22 @@ export const FlashcardReviewModal = ({
     } : undefined,
     courseTitle,
     requestedCardCount,
-  }), [courseTitle, requestedCardCount, sourceDocumentFile, sourceDocumentKind, sourceDocumentMimeType, sourceDocumentName, sourceDocumentSize, sourceDocumentUri, sourceText]);
+  }), [courseId, courseTitle, requestedCardCount, sourceDocumentFile, sourceDocumentKind, sourceDocumentMimeType, sourceDocumentName, sourceDocumentSize, sourceDocumentUri, sourceText]);
+  const sourceSupport = getAISourceSupport('flashcards');
+  const sourceIssue = useMemo(() => {
+    try { assertAISourceProfile(generationInput, 'flashcards', sourceSupport.profile); return null; }
+    catch (failure) { return failure instanceof Error ? failure.message : 'This source is not supported by the AI service.'; }
+  }, [generationInput, sourceSupport.profile]);
 
-  const generate = useCallback(async (session: number, attestation: AIProcessingAttestation) => {
+  const generate = useCallback(async (session: number, attestation: AIProcessingAttestation, recovery?: AIRequestError) => {
     setIsGenerating(true);
+    setCheckingSaved(Boolean(recovery));
     setError(null);
+    setRequestFailure(null);
     setCards([]);
     setProvenance(undefined);
     try {
-      const generated = await runAttestedAIRequest(attestation, () => generateValidatedFlashcards(generationInput));
+      const generated = await runAttestedAIRequest(attestation, () => recovery ? recoverValidatedFlashcards(recovery, generationInput) : generateValidatedFlashcards(generationInput));
       if (isCurrentAIRequestSession(generationSessionRef.current, session)) {
         setCards(generated);
         setProvenance(generated[0]?.provenance);
@@ -100,6 +122,7 @@ export const FlashcardReviewModal = ({
     } catch (generationError) {
       if (isCurrentAIRequestSession(generationSessionRef.current, session)) {
         setError(generationError instanceof Error ? generationError.message : 'Flashcard generation failed.');
+        setRequestFailure(generationError instanceof AIRequestError ? generationError : null);
       }
     } finally {
       if (completeAIRequestSession(generationSessionRef.current, session)) setIsGenerating(false);
@@ -114,6 +137,8 @@ export const FlashcardReviewModal = ({
     setCards([]);
     setProvenance(undefined);
     setError(null);
+    setRequestFailure(null);
+    setCheckingSaved(false);
     setPublishError(null);
     setSourceRightsConfirmed(false);
     setSourceAttestation(null);
@@ -121,21 +146,21 @@ export const FlashcardReviewModal = ({
     /* eslint-enable react-hooks/set-state-in-effect */
   }, [generationInput, visible]);
 
-  const startGeneration = () => {
-    if (!visible || !sourceRightsConfirmed) return;
+  const startGeneration = (recovery?: AIRequestError) => {
+    if (!visible || !sourceRightsConfirmed || sourceIssue) return;
     const session = beginAIRequestSession(generationSessionRef.current);
     if (session === null) return;
     const attestation = createAIProcessingAttestation();
     setSourceAttestation(attestation);
     setGenerationStarted(true);
-    void generate(session, attestation);
+    void generate(session, attestation, recovery);
   };
 
-  const retryGeneration = () => {
+  const retryGeneration = (recovery?: AIRequestError) => {
     if (!visible || !sourceAttestation) return;
     const session = beginAIRequestSession(generationSessionRef.current);
     if (session === null) return;
-    void generate(session, sourceAttestation);
+    void generate(session, sourceAttestation, recovery);
   };
 
   const handleEdit = (id: string, field: 'front' | 'back' | 'sourceExcerpt' | 'sourceLocation', value: string) => {
@@ -207,50 +232,57 @@ export const FlashcardReviewModal = ({
           </View>
 
           {!generationStarted ? (
-            <View style={styles.loadingContainer}>
+            <ScrollView contentContainerStyle={[styles.loadingContainer, { flex: undefined, flexGrow: 1 }]} keyboardShouldPersistTaps="handled">
               <Ionicons name="shield-checkmark-outline" size={42} color={colors.primary} />
               <Text accessibilityRole="header" style={{ color: colors.text, marginTop: 16, fontSize: 18, fontWeight: 'bold', textAlign: 'center' }}>Confirm source rights and AI processing</Text>
+              <Text style={{ color: colors.textSecondary, marginTop: 10, textAlign: 'center', maxWidth: 560 }}>{sourceSupport.description}</Text>
+              {sourceIssue && <Text accessibilityRole="alert" style={{ color: colors.error, marginTop: 10 }}>{sourceIssue}</Text>}
               <Text style={{ color: colors.textSecondary, marginTop: 10, textAlign: 'center', maxWidth: 560 }}>
-                Generation sends the selected source material to the institution-configured AI service. Vendor, retention, training use, deletion, and data residency are governed by your institution&apos;s policy. Do not include learner personal data unless your institution authorizes it.
+                {isPreparedAIDemo() ? 'Prepared demo: the local server checks this file and returns the saved source-linked result. No external AI provider is contacted.' : 'Generation sends the selected source material to the institution-configured AI service. Vendor, retention, training use, deletion, and data residency are governed by your institution’s policy. Do not include learner personal data unless your institution authorizes it.'}
               </Text>
               <TouchableOpacity
                 onPress={() => setSourceRightsConfirmed(confirmed => !confirmed)}
                 accessibilityRole="checkbox"
                 accessibilityState={{ checked: sourceRightsConfirmed }}
+                aria-checked={sourceRightsConfirmed}
                 style={{ flexDirection: 'row', alignItems: 'center', width: '100%', maxWidth: 560, minHeight: 44, marginTop: 16 }}
               >
                 <Ionicons name={sourceRightsConfirmed ? 'checkbox' : 'square-outline'} size={22} color={sourceRightsConfirmed ? colors.primary : colors.textSecondary} />
                 <Text style={{ color: colors.text, marginLeft: 8, flex: 1 }}>I am authorized to process this material and understand that it will be sent to the configured AI service.</Text>
               </TouchableOpacity>
               <TouchableOpacity
-                disabled={!sourceRightsConfirmed}
-                onPress={startGeneration}
+                disabled={!sourceRightsConfirmed || Boolean(sourceIssue)}
+                onPress={() => startGeneration()}
                 accessibilityRole="button"
-                accessibilityState={{ disabled: !sourceRightsConfirmed }}
-                accessibilityHint={sourceRightsConfirmed ? 'Starts source-grounded flashcard generation.' : 'Confirm source rights and AI processing before generation.'}
-                style={[styles.retryButton, { backgroundColor: sourceRightsConfirmed ? colors.primary : colors.border, minHeight: 44, justifyContent: 'center' }]}
+                accessibilityState={{ disabled: !sourceRightsConfirmed || Boolean(sourceIssue) }}
+                accessibilityHint={sourceIssue ? 'Choose a supported source before generation.' : sourceRightsConfirmed ? 'Starts source-grounded flashcard generation.' : 'Confirm source rights and AI processing before generation.'}
+                style={[styles.retryButton, { backgroundColor: sourceRightsConfirmed && !sourceIssue ? colors.primary : colors.border, minHeight: 44, justifyContent: 'center' }]}
               >
-                <Text style={{ color: sourceRightsConfirmed ? colors.buttonText : colors.textSecondary, fontWeight: 'bold' }}>Start generation</Text>
+                <Text style={{ color: sourceRightsConfirmed && !sourceIssue ? colors.buttonText : colors.textSecondary, fontWeight: 'bold' }}>Start generation</Text>
               </TouchableOpacity>
-            </View>
+              <AIRequestHistoryPicker task="flashcards" input={generationInput} disabled={!visible || !sourceRightsConfirmed || Boolean(sourceIssue)} onSelect={startGeneration} />
+            </ScrollView>
           ) : isGenerating ? (
             <View style={styles.loadingContainer}>
               <ActivityIndicator size="large" color={colors.primary} />
-              <Text style={{ color: colors.text, marginTop: 20, fontSize: 18, fontWeight: 'bold' }}>Analyzing source material…</Text>
-              <Text style={{ color: colors.textSecondary, marginTop: 10, textAlign: 'center' }}>Documents and media may take several minutes to extract. Nothing is published automatically.</Text>
+              <Text style={{ color: colors.text, marginTop: 20, fontSize: 18, fontWeight: 'bold' }}>{checkingSaved ? 'Checking saved result…' : 'Analyzing source material…'}</Text>
+              <Text style={{ color: colors.textSecondary, marginTop: 10, textAlign: 'center' }}>{checkingSaved ? 'Retrieving the original request. No new generation is started.' : 'Documents and media may take several minutes to extract. Nothing is published automatically.'}</Text>
             </View>
           ) : error ? (
             <View style={styles.loadingContainer}>
               <Ionicons name="alert-circle" size={40} color={colors.error} />
               <Text style={{ color: colors.text, fontWeight: 'bold', fontSize: 18, marginTop: 12 }}>Generation did not complete</Text>
               <Text style={{ color: colors.textSecondary, marginTop: 8, textAlign: 'center', maxWidth: 520 }}>{error}</Text>
-              <TouchableOpacity style={[styles.retryButton, { backgroundColor: colors.primary }]} onPress={retryGeneration} accessibilityRole="button">
+              {requestFailure ? <AIRequestRecoveryActions failure={requestFailure} onCheck={() => retryGeneration(requestFailure)} onNew={() => retryGeneration()} /> : <TouchableOpacity style={[styles.retryButton, { backgroundColor: colors.primary }]} onPress={() => retryGeneration()} accessibilityRole="button">
                 <Text style={{ color: colors.buttonText, fontWeight: 'bold' }}>Retry</Text>
-              </TouchableOpacity>
+              </TouchableOpacity>}
             </View>
           ) : (
             <>
               <ScrollView pointerEvents={isPublishing ? 'none' : 'auto'} keyboardShouldPersistTaps="handled" contentContainerStyle={{ padding: 20 }}>
+                <PreparedAccuracyNotice provenance={provenance} />
+                <AIGenerationAttribution provenance={provenance} />
+                <AISourceReviewNotice notices={provenance?.sourceReviewNotices} />
                 {cards.map((card, index) => (
                   <View key={card.id} style={[styles.card, { backgroundColor: colors.card, borderColor: colors.border }]}>
                     <View style={styles.cardHeader}>
@@ -278,7 +310,7 @@ export const FlashcardReviewModal = ({
                       multiline
                     />
                     <View style={[styles.evidence, { borderColor: colors.border }]}> 
-                      <Text style={{ color: colors.textSecondary, fontSize: 11, fontWeight: 'bold' }}>SOURCE EVIDENCE · {Math.round(card.confidence * 100)}% grounding confidence</Text>
+                      <Text style={{ color: colors.textSecondary, fontSize: 11, fontWeight: 'bold' }}>SOURCE EVIDENCE{provenance?.model === 'prepared-demo/v1' ? ' · Prepared source' : ` · Model estimate ${Math.round(card.confidence * 100)}% (not measured accuracy)`}</Text>
                       <Text style={{ color: colors.text, marginTop: 5 }}>{card.sourceExcerpt}</Text>
                       {card.sourceLocation && <Text style={{ color: colors.textSecondary, fontSize: 12, marginTop: 5 }}>{card.sourceLocation}</Text>}
                       {card.reviewerEdited && (
@@ -306,6 +338,7 @@ export const FlashcardReviewModal = ({
                         onPress={() => { setPublishError(null); setCards(previous => previous.map(candidate => candidate.id === card.id ? { ...candidate, reviewerVerified: !candidate.reviewerVerified } : candidate)); }}
                         accessibilityRole="checkbox"
                         accessibilityState={{ checked: card.reviewerVerified === true }}
+                        aria-checked={card.reviewerVerified === true}
                         style={{ flexDirection: 'row', alignItems: 'center', marginTop: 12, paddingVertical: 8 }}
                       >
                         <Ionicons name={card.reviewerVerified ? 'checkbox' : 'square-outline'} size={22} color={card.reviewerVerified ? colors.primary : colors.textSecondary} />

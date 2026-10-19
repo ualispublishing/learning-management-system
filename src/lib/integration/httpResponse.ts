@@ -12,6 +12,19 @@ export interface RemoteErrorDetail {
   message?: string;
 }
 
+/** Stop awaiting a transport/credential callback even if it ignores cancellation. */
+export async function awaitWithAbort<T>(signal: AbortSignal | undefined, work: () => Promise<T>): Promise<T> {
+  if (!signal) return work();
+  signal.throwIfAborted();
+  let onAbort: () => void = () => {};
+  const aborted = new Promise<never>((_resolve, reject) => {
+    onAbort = () => reject(signal.reason ?? new DOMException('Request aborted.', 'AbortError'));
+    signal.addEventListener('abort', onAbort, { once: true });
+  });
+  try { return await Promise.race([work(), aborted]); }
+  finally { signal.removeEventListener('abort', onAbort); }
+}
+
 /**
  * Reads only a short, single-line error code in production. Human-authored
  * upstream messages may contain learner data or internal diagnostics, so they
@@ -41,16 +54,24 @@ export async function readBoundedResponseText(
   response: Response,
   maxBytes: number,
   createSizeError: () => Error,
+  signal?: AbortSignal,
 ): Promise<string> {
+  if (signal?.aborted) {
+    void response.body?.cancel().catch(() => undefined);
+    signal.throwIfAborted();
+  }
   const declaredHeader = response.headers.get('Content-Length');
   if (declaredHeader !== null) {
     const declaredBytes = Number(declaredHeader);
-    if (Number.isFinite(declaredBytes) && declaredBytes > maxBytes) throw createSizeError();
+    if (Number.isFinite(declaredBytes) && declaredBytes > maxBytes) {
+      void response.body?.cancel().catch(() => undefined);
+      throw createSizeError();
+    }
   }
 
   const body = response.body;
   if (!body?.getReader || typeof TextDecoder === 'undefined') {
-    const text = await response.text();
+    const text = await awaitWithAbort(signal, () => response.text());
     if (utf8ByteLength(text) > maxBytes) throw createSizeError();
     return text;
   }
@@ -59,13 +80,13 @@ export async function readBoundedResponseText(
   const decoder = new TextDecoder();
   const parts: string[] = [];
   let bytesRead = 0;
+  let complete = false;
   try {
     while (true) {
-      const chunk = await reader.read();
-      if (chunk.done) break;
+      const chunk = await awaitWithAbort(signal, () => reader.read());
+      if (chunk.done) { complete = true; break; }
       bytesRead += chunk.value.byteLength;
       if (bytesRead > maxBytes) {
-        await reader.cancel().catch(() => undefined);
         throw createSizeError();
       }
       parts.push(decoder.decode(chunk.value, { stream: true }));
@@ -73,6 +94,7 @@ export async function readBoundedResponseText(
     parts.push(decoder.decode());
     return parts.join('');
   } finally {
+    if (!complete) void reader.cancel().catch(() => undefined);
     reader.releaseLock();
   }
 }

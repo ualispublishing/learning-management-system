@@ -8,6 +8,8 @@
 import React, { useEffect, useMemo, useRef, useState } from 'react';
 import { Modal, ScrollView, StyleSheet, Text, TouchableOpacity, View } from 'react-native';
 import Ionicons from '@expo/vector-icons/Ionicons';
+import { CourseStudyCardBody, CourseStudyNavigation } from './CourseStudyCardView';
+import { AIGenerationAttribution } from './AIGenerationAttribution';
 import { ContentItem } from '../../types/lms';
 import { useThemeColors } from '../../lib/useThemeColors';
 import { Deck } from '../../types';
@@ -19,6 +21,8 @@ import { getLearningStateService, recordConsentedLearningActivity } from '../../
 
 export const CourseFlashcardPlayer = ({ item, onClose, previewMode = false }: { item: ContentItem; onClose: () => void; previewMode?: boolean }) => {
   const colors = useThemeColors();
+  const rawAI = item.metadata?.ai;
+  const savedAI = rawAI && typeof rawAI === 'object' && !Array.isArray(rawAI) ? rawAI as Record<string, unknown> : undefined;
   const currentUserId = useLMSStore(state => state.currentUserId);
   const cards = useMemo(() => item.studyCards || [], [item.studyCards]);
   const cardIds = useMemo(() => cards.map(card => card.id), [cards]);
@@ -207,52 +211,14 @@ export const CourseFlashcardPlayer = ({ item, onClose, previewMode = false }: { 
                   <Text style={{ color: colors.buttonText, fontWeight: 'bold' }}>{isSavingDeck ? 'Saving…' : 'Save deck'}</Text>
                 </TouchableOpacity>
               </View>
-              <TouchableOpacity
-                onPress={() => setRevealed(value => !value)}
-                accessibilityRole="button"
-                accessibilityLabel={revealed ? `Answer: ${card.back}` : `Question: ${card.front}. Activate to reveal the answer.`}
-                accessibilityState={{ expanded: revealed }}
-                style={[styles.card, { backgroundColor: colors.card, borderColor: revealed ? colors.primary : colors.border }]}
-              >
-                <Text style={{ color: colors.textSecondary, fontWeight: 'bold', fontSize: 12 }}>{revealed ? 'ANSWER' : 'QUESTION'}</Text>
-                <Text style={{ color: colors.text, fontSize: 24, lineHeight: 34, textAlign: 'center', marginTop: 20 }}>{revealed ? card.back : card.front}</Text>
-                <Text style={{ color: colors.primary, marginTop: 24, fontWeight: 'bold' }}>{revealed ? 'Tap to show the question' : 'Tap to reveal the answer'}</Text>
-              </TouchableOpacity>
-
-              {revealed && (card.sourceExcerpt || card.sourceLocation) && (
-                <View style={[styles.evidence, { backgroundColor: colors.card, borderColor: colors.border }]}>
-                  <Text style={{ color: colors.textSecondary, fontSize: 11, fontWeight: 'bold' }}>SOURCE EVIDENCE</Text>
-                  {!!card.sourceExcerpt && <Text style={{ color: colors.text, marginTop: 6 }}>{card.sourceExcerpt}</Text>}
-                  {!!card.sourceLocation && <Text style={{ color: colors.textSecondary, marginTop: 5, fontSize: 12 }}>{card.sourceLocation}</Text>}
-                </View>
-              )}
-
-              {revealed && (
-                <View style={styles.ratingRow}>
-                  <TouchableOpacity onPress={() => markAndAdvance(false)} accessibilityRole="button" style={[styles.ratingButton, { backgroundColor: colors.card, borderColor: colors.border }]}>
-                    <Text style={{ color: colors.text, fontWeight: 'bold' }}>Review again</Text>
-                  </TouchableOpacity>
-                  <TouchableOpacity onPress={() => markAndAdvance(true)} accessibilityRole="button" style={[styles.ratingButton, { backgroundColor: colors.primary, borderColor: colors.primary }]}>
-                    <Text style={{ color: colors.buttonText, fontWeight: 'bold' }}>{index === cards.length - 1 ? 'Mark understood' : 'Got it · Next'}</Text>
-                  </TouchableOpacity>
-                </View>
-              )}
+              <CourseStudyCardBody cards={cards} index={index} revealed={revealed} onToggleAnswer={() => setRevealed(value => !value)} onRate={markAndAdvance} />
+              <View style={{ width: '100%', maxWidth: 720 }}>
+                <AIGenerationAttribution provenance={savedAI?.provenance} sourceName={savedAI?.sourceFileName} />
+              </View>
             </ScrollView>
           )}
 
-          {!!card && (
-            <View style={[styles.footer, { borderTopColor: colors.border }]}>
-              <TouchableOpacity disabled={index === 0} onPress={() => moveTo(index - 1)} accessibilityRole="button" accessibilityState={{ disabled: index === 0 }} style={{ opacity: index === 0 ? 0.4 : 1, padding: 12 }}>
-                <Text style={{ color: colors.primary, fontWeight: 'bold' }}>Previous</Text>
-              </TouchableOpacity>
-              <View style={styles.progressTrack} accessibilityRole="progressbar" accessibilityValue={{ min: 0, max: cards.length, now: index + 1 }}>
-                <View style={[styles.progressFill, { backgroundColor: colors.primary, width: `${((index + 1) / cards.length) * 100}%` }]} />
-              </View>
-              <TouchableOpacity disabled={index === cards.length - 1} onPress={() => moveTo(index + 1)} accessibilityRole="button" accessibilityState={{ disabled: index === cards.length - 1 }} style={{ opacity: index === cards.length - 1 ? 0.4 : 1, padding: 12 }}>
-                <Text style={{ color: colors.primary, fontWeight: 'bold' }}>Next</Text>
-              </TouchableOpacity>
-            </View>
-          )}
+          <CourseStudyNavigation cards={cards} index={index} onMove={moveTo} />
         </View>
       </View>
     </Modal>

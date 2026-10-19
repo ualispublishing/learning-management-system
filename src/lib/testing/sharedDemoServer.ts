@@ -52,6 +52,9 @@ interface SharedDemoServerOptions {
   host?: string;
   port?: number;
   resetKey?: string;
+  /** Identifies the local launcher session; never an authentication credential. */
+  launchId?: string;
+  handlePreparedAI?: (request: IncomingMessage, response: ServerResponse, url: URL) => Promise<boolean>;
 }
 
 const clone = <T,>(value: T): T => structuredClone(value);
@@ -306,7 +309,7 @@ const setCORS = (request: IncomingMessage, response: ServerResponse) => {
   const origin = request.headers.origin;
   if (origin && allowedOrigin(origin)) response.setHeader('access-control-allow-origin', origin);
   response.setHeader('vary', 'Origin');
-  response.setHeader('access-control-allow-headers', 'content-type, x-demo-user-id, x-demo-reset-key');
+  response.setHeader('access-control-allow-headers', 'content-type, x-demo-user-id, x-demo-reset-key, x-request-id, idempotency-key');
   response.setHeader('access-control-allow-methods', 'GET, POST, OPTIONS');
 };
 
@@ -375,11 +378,13 @@ export const createSharedDemoServer = (options: SharedDemoServerOptions = {}): S
       }
 
       const requestUrl = new URL(request.url || '/', `http://${host}:${port || DEFAULT_SHARED_DEMO_PORT}`);
+      if (options.handlePreparedAI && await options.handlePreparedAI(request, response, requestUrl)) return;
       if (request.method === 'GET' && requestUrl.pathname === '/health') {
         sendJSON(response, 200, {
           ok: true,
           result: {
             mode: 'shared-demo',
+            launchId: options.launchId,
             version,
             counts: {
               users: demoUsers.length,

@@ -1,0 +1,238 @@
+{
+  "title": "6.0001 Introduction to Computer Science and Programming in Python",
+  "description": "6.0001 Introduction to Computer Science and Programming in Python is intended for students with little or no programming experience. It aims to provide students with an understanding of the role computation can play in solving problems and to help students, regardless of their major, feel justifiably confident of their ability to write small programs that allow them to accomplish useful goals. The class will use the Python 3.5 programming language.",
+  "instructorNames": [
+    "Dr. Ana Bell",
+    "Prof. Eric Grimson",
+    "Prof. John Guttag"
+  ],
+  "requiredMaterials": [
+    "John Guttag. Introduction to Computation and Programming Using Python: With Application to Understanding Data, Second Edition. MIT Press, 2016. ISBN: 9780262529624. The textbook is available in hard copy or as an e-book."
+  ],
+  "policies": [
+    {
+      "name": "Lecture attendance",
+      "text": "Students are expected to attend lectures regularly because a significant portion of the course material is presented only in lecture."
+    },
+    {
+      "name": "Recitation attendance",
+      "text": "Recitation attendance is encouraged but not required. New material may sometimes be covered in recitation."
+    },
+    {
+      "name": "Problem sets and quizzes",
+      "text": "The course has six problem sets involving Python programming and two quizzes. Quizzes are closed-book, with one page of notes allowed for the first quiz and two pages for the second. Notes pages must be letter-sized and double-sided, and may be handwritten or typed."
+    },
+    {
+      "name": "Mandatory finger exercises",
+      "text": "Finger exercises are mandatory."
+    },
+    {
+      "name": "Problem-set grading",
+      "text": "Problem sets are graded out of 10 points. Submissions that do not run receive at most 20% of the points. Students should contact their Teaching Assistant if they have trouble understanding a problem-set grade."
+    },
+    {
+      "name": "Extensions",
+      "text": "No extensions are granted. Late days and the option to roll at most two problem-set grades into the final quiz score are offered instead."
+    },
+    {
+      "name": "Late-day allowance and accrual",
+      "text": "Students begin the term with two late days for problem sets. Starting with Problem Set 1, submitting an assignment early earns one late day per day before its deadline. Students may hold at most three late days at any time."
+    },
+    {
+      "name": "Late-day use and tracking",
+      "text": "Late days must be used in whole days; half days are not allowed. Staff track the balance and include the remaining late days in each problem set’s feedback. Additional late work beyond the available late days is not accepted."
+    },
+    {
+      "name": "Dropping problem sets",
+      "text": "Before the final quiz, an announcement will allow students to choose at most two problem sets to drop. The percentages assigned to those problem sets are rolled into the final quiz score. Late days and dropped problem sets are strongly advised as emergency backups."
+    },
+    {
+      "name": "Checking submissions",
+      "text": "After submitting a problem set, students are advised to double-check that it uploaded correctly."
+    }
+  ],
+  "schedule": [
+    {
+      "topic": "Session 1: What is computation? Pset 0 released."
+    },
+    {
+      "topic": "Session 2: Branching and Iteration. Pset 1 released."
+    },
+    {
+      "topic": "Session 3: String Manipulation, Guess and Check, Approximations, Bisection. Pset 0 due."
+    },
+    {
+      "topic": "Session 4: Decomposition, Abstractions, Functions. Pset 2 released."
+    },
+    {
+      "topic": "Session 5: Tuples, Lists, Aliasing, Mutability, Cloning. Pset 1 due."
+    },
+    {
+      "topic": "Session 6: Recursion, Dictionaries. Pset 3 released."
+    },
+    {
+      "topic": "Session 7: Testing, Debugging, Exceptions, Assertions. Pset 2 due; Quiz 1."
+    },
+    {
+      "topic": "Session 8: Object Oriented Programming."
+    },
+    {
+      "topic": "Session 9: Python Classes and Inheritance. Pset 3 due; Pset 4 released."
+    },
+    {
+      "topic": "Session 10: Understanding Program Efficiency, Part 1. Pset 4 due; Pset 5 released."
+    },
+    {
+      "topic": "Session 11: Understanding Program Efficiency, Part 2."
+    },
+    {
+      "topic": "Session 12: Searching and Sorting. Pset 5 due; Final Quiz."
+    }
+  ],
+  "evidence": [
+    {
+      "field": "title",
+      "sourceExcerpt": "6.0001 Introduction to Computer Science and Programming in Python",
+      "sourceLocation": "Course info / title"
+    },
+    {
+      "field": "description",
+      "sourceExcerpt": "6.0001 Introduction to Computer Science and Programming in Python is intended for students with little or no programming experience. It aims to provide students with an understanding of the role computation can play in solving problems and to help students, regardless of their major, feel justifiably confident of their ability to write small programs that allow them to accomplish useful goals. The class will use the Python 3.5 programming language.",
+      "sourceLocation": "Syllabus / Course Information / paragraph 3"
+    },
+    {
+      "field": "instructorNames[0]",
+      "sourceExcerpt": "Dr. Ana Bell",
+      "sourceLocation": "Course info / instructors"
+    },
+    {
+      "field": "instructorNames[1]",
+      "sourceExcerpt": "Prof. Eric Grimson",
+      "sourceLocation": "Course info / instructors"
+    },
+    {
+      "field": "instructorNames[2]",
+      "sourceExcerpt": "Prof. John Guttag",
+      "sourceLocation": "Course info / instructors"
+    },
+    {
+      "field": "requiredMaterials[0]",
+      "sourceExcerpt": "The textbook is Buy at MIT Press Guttag, John. Introduction to Computation and Programming Using Python: With Application to Understanding Data Second Edition . MIT Press, 2016. ISBN: 9780262529624. The book and the course lectures parallel each other, though there is more detail in the book about some topics. It is available both in hard copy and as an e-book.",
+      "sourceLocation": "Syllabus / Textbook / paragraph 8"
+    },
+    {
+      "field": "policies[0]",
+      "sourceExcerpt": "A significant portion of the material for this course will presented only in lecture, so students are expected to regularly attend lectures.",
+      "sourceLocation": "Syllabus / Lecture and Recitation Attendance / paragraph 9"
+    },
+    {
+      "field": "policies[1]",
+      "sourceExcerpt": "Sometimes, new material may be covered in recitation. Recitation attendance is encouraged but not required.",
+      "sourceLocation": "Syllabus / Lecture and Recitation Attendance / paragraph 10"
+    },
+    {
+      "field": "policies[2]",
+      "sourceExcerpt": "Each problem set will involve programming in Python. There will be 6 problem sets in the course. There will be two quizzes. All quizzes will be closed-book, though you will be allowed to bring one page of notes to the first quiz and two pages of notes to the second quiz. Pages must be letter-sized, double-sided, either handwritten or typed.",
+      "sourceLocation": "Syllabus / Problem Sets and Quizzes / paragraph 11"
+    },
+    {
+      "field": "policies[3]",
+      "sourceExcerpt": "Completion of mandatory finger exercises 10%",
+      "sourceLocation": "Syllabus / Grading Policy / paragraph 15"
+    },
+    {
+      "field": "policies[4]",
+      "sourceExcerpt": "Problem sets will be graded out of 10 points. Submissions that do not run will receive at most 20% of the points. Please contact your Teaching Assistant if you have a problem understanding your problem set grade.",
+      "sourceLocation": "Syllabus / Grading Policy / paragraph 18"
+    },
+    {
+      "field": "policies[5]",
+      "sourceExcerpt": "We do not grant any extensions. Instead, we offer late days and the option of rolling at most 2 problem set grades into the final quiz score.",
+      "sourceLocation": "Syllabus / Extension and Dropping Problem Sets Policy / paragraph 20"
+    },
+    {
+      "field": "policies[6]",
+      "sourceExcerpt": "At the beginning of the term, students are given two late days that they can use on problem sets. Starting with Problem Set 1, additional late days can be accumulated for each assignment, one late day for each day the assignment is turned in ahead of the deadline. Up to three late days may be accumulated in this fashion in this course, i.e you can only have a maximum of 3 late days at any point in time.",
+      "sourceLocation": "Syllabus / Late Days / paragraph 21"
+    },
+    {
+      "field": "policies[7]",
+      "sourceExcerpt": "Late days are discrete (a student cannot use half a late day). The staff will keep track of late days and feedback for each problem set will include the number of late days the student has remaining. Any additional late work beyond these late days will not be accepted.",
+      "sourceLocation": "Syllabus / Late Days / paragraph 21"
+    },
+    {
+      "field": "policies[8]",
+      "sourceExcerpt": "Before the final quiz, we will send out an announcement in which you can choose at most 2 problem sets that you can drop. If dropped, the percent that the problem sets are worth will be rolled into the final quiz score. We strongly urge you to see the late days and dropping the problem sets as backup in case of an emergency.",
+      "sourceLocation": "Syllabus / Rolling Over Problem Sets / paragraph 22"
+    },
+    {
+      "field": "policies[9]",
+      "sourceExcerpt": "To avoid surprises, we suggest that after you submit your problem set, you double check to make sure the submission was uploaded correctly.",
+      "sourceLocation": "Syllabus / Late Days / paragraph 21"
+    },
+    {
+      "field": "schedule[0]",
+      "sourceExcerpt": "1 What is computation? Pset 0 released",
+      "sourceLocation": "Syllabus / Calendar / paragraph 24"
+    },
+    {
+      "field": "schedule[1]",
+      "sourceExcerpt": "2 Branching and Iteration Pset 1 released",
+      "sourceLocation": "Syllabus / Calendar / paragraph 25"
+    },
+    {
+      "field": "schedule[2]",
+      "sourceExcerpt": "3 String Manipulation, Guess and Check, Approximations, Bisection Pset 0 due",
+      "sourceLocation": "Syllabus / Calendar / paragraph 26"
+    },
+    {
+      "field": "schedule[3]",
+      "sourceExcerpt": "4 Decomposition, Abstractions, Functions Pset 2 released",
+      "sourceLocation": "Syllabus / Calendar / paragraph 27"
+    },
+    {
+      "field": "schedule[4]",
+      "sourceExcerpt": "5 Tuples, Lists, Aliasing, Mutability, Cloning Pset 1 due",
+      "sourceLocation": "Syllabus / Calendar / paragraph 28"
+    },
+    {
+      "field": "schedule[5]",
+      "sourceExcerpt": "6 Recursion, Dictionaries Pset 3 released",
+      "sourceLocation": "Syllabus / Calendar / paragraph 29"
+    },
+    {
+      "field": "schedule[6]",
+      "sourceExcerpt": "7 Testing, Debugging, Exceptions, Assertions Pset 2 due; Quiz 1",
+      "sourceLocation": "Syllabus / Calendar / paragraph 30"
+    },
+    {
+      "field": "schedule[7]",
+      "sourceExcerpt": "8 Object Oriented Programming",
+      "sourceLocation": "Syllabus / Calendar / paragraph 31"
+    },
+    {
+      "field": "schedule[8]",
+      "sourceExcerpt": "9 Python Classes and Inheritance Pset 3 due; Pset 4 released",
+      "sourceLocation": "Syllabus / Calendar / paragraph 32"
+    },
+    {
+      "field": "schedule[9]",
+      "sourceExcerpt": "10 Understanding Program Efficiency, Part 1 Pset 4 due; Pset 5 released",
+      "sourceLocation": "Syllabus / Calendar / paragraph 33"
+    },
+    {
+      "field": "schedule[10]",
+      "sourceExcerpt": "11 Understanding Program Efficiency, Part 2",
+      "sourceLocation": "Syllabus / Calendar / paragraph 34"
+    },
+    {
+      "field": "schedule[11]",
+      "sourceExcerpt": "12 Searching and Sorting Pset 5 due; Final Quiz",
+      "sourceLocation": "Syllabus / Calendar / paragraph 35"
+    }
+  ],
+  "warnings": [
+    "gradingWeights is omitted because the stated percentages are approximate and conditional: problem sets 30%, mandatory finger exercises 10%, midterm quiz 20%, and final quiz 40% (Syllabus / Grading Policy / paragraphs 12–17). Up to two dropped problem sets transfer their percentage to the final quiz (Syllabus / Rolling Over Problem Sets / paragraph 22). Human configuration must account for that rollover and the problem-set point scheme (Syllabus / Grading Policy / paragraph 18).",
+    "termStart and termEnd are omitted because no explicit dated course or term boundaries are supplied. The course is described as half-semester (Syllabus / Course Information / paragraph 4). Schedule dates are also omitted: the calendar supplies session numbers and assignment events without calendar dates (Syllabus / Calendar / paragraphs 24–35)."
+  ]
+}

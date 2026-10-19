@@ -1,0 +1,196 @@
+{
+  "title": "6.0001 Introduction to Computer Science and Programming in Python",
+  "description": "6.0001 Introduction to Computer Science and Programming in Python is intended for students with little or no programming experience. It aims to provide students with an understanding of the role computation can play in solving problems and to help students, regardless of their major, feel justifiably confident of their ability to write small programs that allow them to accomplish useful goals. The class will use the Python 3.5 programming language.",
+  "instructorNames": [
+    "Dr. Ana Bell",
+    "Prof. Eric Grimson",
+    "Prof. John Guttag"
+  ],
+  "schedule": [
+    {
+      "topic": "What is computation?"
+    },
+    {
+      "topic": "Branching and Iteration"
+    },
+    {
+      "topic": "String Manipulation, Guess and Check, Approximations, Bisection"
+    },
+    {
+      "topic": "Decomposition, Abstractions, Functions"
+    },
+    {
+      "topic": "Tuples, Lists, Aliasing, Mutability, Cloning"
+    },
+    {
+      "topic": "Recursion, Dictionaries"
+    },
+    {
+      "topic": "Testing, Debugging, Exceptions, Assertions"
+    },
+    {
+      "topic": "Object Oriented Programming"
+    },
+    {
+      "topic": "Python Classes and Inheritance"
+    },
+    {
+      "topic": "Understanding Program Efficiency, Part 1"
+    },
+    {
+      "topic": "Understanding Program Efficiency, Part 2"
+    },
+    {
+      "topic": "Searching and Sorting"
+    }
+  ],
+  "requiredMaterials": [
+    "Guttag, John. Introduction to Computation and Programming Using Python: With Application to Understanding Data, Second Edition. MIT Press, 2016. ISBN: 9780262529624."
+  ],
+  "policies": [
+    {
+      "name": "Lecture attendance",
+      "text": "Students are expected to regularly attend lectures."
+    },
+    {
+      "name": "Recitation attendance",
+      "text": "Recitation attendance is encouraged but not required."
+    },
+    {
+      "name": "Quiz materials",
+      "text": "Both quizzes are closed-book. One page of notes is allowed for the first quiz and two for the second; pages must be letter-sized, double-sided, handwritten or typed."
+    },
+    {
+      "name": "Extensions and dropped problem sets",
+      "text": "No extensions are granted; late days are available, and at most two problem-set grades may be rolled into the final quiz score."
+    },
+    {
+      "name": "Late days",
+      "text": "Late days must be used as whole days. Staff track remaining late days; additional late work beyond available late days will not be accepted."
+    }
+  ],
+  "warnings": [
+    "Historical Fall 2016 syllabus. It explicitly uses Python 3.5; review and update this for a current institution before publishing.",
+    "No unambiguous term start or end dates, or calendar dates for individual sessions, are supplied. Dates have been omitted.",
+    "Grading weights are omitted: Grading Policy lists 30% problem sets, 10% finger exercises, 20% midterm quiz and 40% final quiz, but Rolling Over Problem Sets permits transferring up to two problem-set weights to the final quiz. Configure this conditional policy manually; existing course weights are not replaced.",
+    "Late Days contains a longer accumulation policy; consult the complete syllabus before configuring deadlines. The extracted policies are a review aid, not the entire syllabus.",
+    "Quizzes and finger exercises are not supplied by OCW. This bundle contains the syllabus and one lecture excerpt, not the complete course or its textbook."
+  ],
+  "evidence": [
+    {
+      "field": "title",
+      "sourceExcerpt": "6.0001 Introduction to Computer Science and Programming in Python",
+      "sourceLocation": "Course info / title"
+    },
+    {
+      "field": "description",
+      "sourceExcerpt": "6.0001 Introduction to Computer Science and Programming in Python is intended for students with little or no programming experience. It aims to provide students with an understanding of the role computation can play in solving problems and to help students, regardless of their major, feel justifiably confident of their ability to write small programs that allow them to accomplish useful goals. The class will use the Python 3.5 programming language.",
+      "sourceLocation": "Syllabus / Course Information / paragraph 3"
+    },
+    {
+      "field": "instructorNames[0]",
+      "sourceExcerpt": "Dr. Ana Bell",
+      "sourceLocation": "Course info / instructors"
+    },
+    {
+      "field": "instructorNames[1]",
+      "sourceExcerpt": "Prof. Eric Grimson",
+      "sourceLocation": "Course info / instructors"
+    },
+    {
+      "field": "instructorNames[2]",
+      "sourceExcerpt": "Prof. John Guttag",
+      "sourceLocation": "Course info / instructors"
+    },
+    {
+      "field": "requiredMaterials[0]",
+      "sourceExcerpt": "Guttag, John. Introduction to Computation and Programming Using Python: With Application to Understanding Data Second Edition . MIT Press, 2016. ISBN: 9780262529624.",
+      "sourceLocation": "Syllabus / Textbook / paragraph 8"
+    },
+    {
+      "field": "schedule[0]",
+      "sourceExcerpt": "1 What is computation? Pset 0 released",
+      "sourceLocation": "Syllabus / Calendar / paragraph 24"
+    },
+    {
+      "field": "schedule[1]",
+      "sourceExcerpt": "2 Branching and Iteration Pset 1 released",
+      "sourceLocation": "Syllabus / Calendar / paragraph 25"
+    },
+    {
+      "field": "schedule[2]",
+      "sourceExcerpt": "3 String Manipulation, Guess and Check, Approximations, Bisection Pset 0 due",
+      "sourceLocation": "Syllabus / Calendar / paragraph 26"
+    },
+    {
+      "field": "schedule[3]",
+      "sourceExcerpt": "4 Decomposition, Abstractions, Functions Pset 2 released",
+      "sourceLocation": "Syllabus / Calendar / paragraph 27"
+    },
+    {
+      "field": "schedule[4]",
+      "sourceExcerpt": "5 Tuples, Lists, Aliasing, Mutability, Cloning Pset 1 due",
+      "sourceLocation": "Syllabus / Calendar / paragraph 28"
+    },
+    {
+      "field": "schedule[5]",
+      "sourceExcerpt": "6 Recursion, Dictionaries Pset 3 released",
+      "sourceLocation": "Syllabus / Calendar / paragraph 29"
+    },
+    {
+      "field": "schedule[6]",
+      "sourceExcerpt": "7 Testing, Debugging, Exceptions, Assertions Pset 2 due; Quiz 1",
+      "sourceLocation": "Syllabus / Calendar / paragraph 30"
+    },
+    {
+      "field": "schedule[7]",
+      "sourceExcerpt": "8 Object Oriented Programming",
+      "sourceLocation": "Syllabus / Calendar / paragraph 31"
+    },
+    {
+      "field": "schedule[8]",
+      "sourceExcerpt": "9 Python Classes and Inheritance Pset 3 due; Pset 4 released",
+      "sourceLocation": "Syllabus / Calendar / paragraph 32"
+    },
+    {
+      "field": "schedule[9]",
+      "sourceExcerpt": "10 Understanding Program Efficiency, Part 1 Pset 4 due; Pset 5 released",
+      "sourceLocation": "Syllabus / Calendar / paragraph 33"
+    },
+    {
+      "field": "schedule[10]",
+      "sourceExcerpt": "11 Understanding Program Efficiency, Part 2",
+      "sourceLocation": "Syllabus / Calendar / paragraph 34"
+    },
+    {
+      "field": "schedule[11]",
+      "sourceExcerpt": "12 Searching and Sorting Pset 5 due; Final Quiz",
+      "sourceLocation": "Syllabus / Calendar / paragraph 35"
+    },
+    {
+      "field": "policies[0]",
+      "sourceExcerpt": "A significant portion of the material for this course will presented only in lecture, so students are expected to regularly attend lectures.",
+      "sourceLocation": "Syllabus / Lecture and Recitation Attendance / paragraph 9"
+    },
+    {
+      "field": "policies[1]",
+      "sourceExcerpt": "Recitations give students a chance to ask questions about the lecture material or the problem set for the given week. Sometimes, new material may be covered in recitation. Recitation attendance is encouraged but not required.",
+      "sourceLocation": "Syllabus / Lecture and Recitation Attendance / paragraph 10"
+    },
+    {
+      "field": "policies[2]",
+      "sourceExcerpt": "Each problem set will involve programming in Python. There will be 6 problem sets in the course. There will be two quizzes. All quizzes will be closed-book, though you will be allowed to bring one page of notes to the first quiz and two pages of notes to the second quiz. Pages must be letter-sized, double-sided, either handwritten or typed.",
+      "sourceLocation": "Syllabus / Problem Sets and Quizzes / paragraph 11"
+    },
+    {
+      "field": "policies[3]",
+      "sourceExcerpt": "We do not grant any extensions. Instead, we offer late days and the option of rolling at most 2 problem set grades into the final quiz score.",
+      "sourceLocation": "Syllabus / Extension and Dropping Problem Sets Policy / paragraph 20"
+    },
+    {
+      "field": "policies[4]",
+      "sourceExcerpt": "Late days are discrete (a student cannot use half a late day). The staff will keep track of late days and feedback for each problem set will include the number of late days the student has remaining. Any additional late work beyond these late days will not be accepted.",
+      "sourceLocation": "Syllabus / Late Days / paragraph 21"
+    }
+  ]
+}

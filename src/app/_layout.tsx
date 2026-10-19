@@ -41,6 +41,7 @@ import {
 } from '../lib/appCanvasWidth';
 import { isSharedDemoMode, subscribeToSharedDemoChanges } from '../lib/repositories/remote/SharedDemoRepositoryFactory';
 import { DemoSignIn } from '../components/lms/DemoSignIn';
+import { isPreparedAIDemo } from '../lib/ai/preparedDemo';
 
 const safeInitializationError = (error: unknown) => {
   const message = error instanceof Error ? error.message : '';
@@ -129,8 +130,9 @@ export default function Layout() {
 
   const colors = useThemeColors();
   const pathname = usePathname();
+  const isDemoPage = Platform.OS === 'web' && isPreparedAIDemo() && (pathname === '/ai-demo' || pathname === '/demo');
   const isCourseScreen = pathname.includes('/admin/course/');
-  const desktopResizeControlsVisible = !isCourseScreen && Platform.OS === 'web' && viewportWidth >= MIN_RESIZABLE_VIEWPORT_WIDTH;
+  const desktopResizeControlsVisible = !isDemoPage && !isCourseScreen && Platform.OS === 'web' && viewportWidth >= MIN_RESIZABLE_VIEWPORT_WIDTH;
   const viewportCanvasMaximum = desktopResizeControlsVisible
     ? resolveAppCanvasViewportMaximum(viewportWidth)
     : MIN_APP_CONTENT_WIDTH;
@@ -212,9 +214,11 @@ export default function Layout() {
     );
   }
 
-  if (__DEV__ && isSharedDemoMode && (!currentUserId || isSigningIn)) {
+  if (__DEV__ && isSharedDemoMode && !isDemoPage && (!currentUserId || isSigningIn)) {
     return (
       <DemoSignIn
+        onShowGuide={Platform.OS === 'web' && isPreparedAIDemo() ? () => router.push('/demo') : undefined}
+        onShowAI={Platform.OS === 'web' && isPreparedAIDemo() ? () => router.push('/ai-demo') : undefined}
         busyEmail={demoBusyEmail}
         error={signInError}
         onSignIn={async email => {
@@ -286,10 +290,11 @@ export default function Layout() {
     <GestureHandlerRootView style={[styles.root, { backgroundColor: Platform.OS === 'web' ? colors.navBgEnd : colors.navBg }]}>
       <StatusBar style={theme === 'dark' ? 'light' : theme === 'light' ? 'dark' : 'auto'} />
       <KeyboardAvoidingView behavior={Platform.OS === 'ios' ? 'padding' : undefined} style={{ flex: 1, width: '100%', alignItems: 'center' }}>
-        <View style={[styles.appContainer, { backgroundColor: colors.navBg, maxWidth: isCourseScreen && Platform.OS === 'web' ? undefined : appCanvasMaxWidth }]}> 
-          {isDeepScreen ? <View style={{ width: '100%', backgroundColor: colors.navBg }}>
+        <View style={[styles.appContainer, { backgroundColor: colors.navBg, maxWidth: isDemoPage || (isCourseScreen && Platform.OS === 'web') ? undefined : appCanvasMaxWidth }]}>
+          {isDemoPage ? null : isDeepScreen ? <View style={{ width: '100%', backgroundColor: colors.navBg }}>
             <View style={{ paddingHorizontal: 16, paddingVertical: 8 }}><InstitutionBrand size={28} showName /></View>
             <InstitutionColorBar />
+            {Platform.OS === 'web' && isPreparedAIDemo() ? <Pressable accessibilityRole="button" accessibilityLabel="Open Demo guide" onPress={() => router.push('/demo')} style={{ padding: 12 }}><Text style={{ color: colors.primary, fontWeight: '700' }}>Demo guide →</Text></Pressable> : null}
           </View> : <GlobalHeader />}
           <Stack screenOptions={{ headerShown: false }}>
             <Stack.Screen name="(tabs)" />

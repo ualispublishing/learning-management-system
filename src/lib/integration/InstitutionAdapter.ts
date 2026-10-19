@@ -146,7 +146,7 @@ export class HttpInstitutionAdapter implements InstitutionAdapter, LearningState
     this.baseUrl = validatedUrl.url;
     this.validateCookieOrigin();
     this.localDevelopment = validatedUrl.localDevelopment;
-    this.fetchImpl = options.fetchImpl || fetch;
+    this.fetchImpl = (options.fetchImpl || fetch).bind(globalThis);
     this.timeoutMs = boundedInteger(options.timeoutMs, 20_000, 'Institution API timeout', 5 * 60_000);
     this.maxResponseBytes = boundedInteger(options.maxResponseBytes, 10 * 1024 * 1024, 'Institution response limit', 100 * 1024 * 1024);
     this.maxRequestBytes = boundedInteger(options.maxRequestBytes, 10 * 1024 * 1024, 'Institution request limit', 100 * 1024 * 1024);

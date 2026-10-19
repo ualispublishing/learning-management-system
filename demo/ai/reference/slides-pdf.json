@@ -1,0 +1,46 @@
+{
+  "cards": [
+    {
+      "front": "What is declarative knowledge?",
+      "back": "Statements of fact.",
+      "sourceExcerpt": "declarative knowledge is statements of fact.",
+      "sourceLocation": "PDF page 2 (original lecture slide 10)",
+      "confidence": 1
+    },
+    {
+      "front": "What is imperative knowledge?",
+      "back": "A recipe or “how-to”.",
+      "sourceExcerpt": "imperative knowledge is a recipe or “how-to”.",
+      "sourceLocation": "PDF page 2 (original lecture slide 10)",
+      "confidence": 1
+    },
+    {
+      "front": "What equation defines y as a square root of x?",
+      "back": "y*y = x.",
+      "sourceExcerpt": "square root of a number x is y such that y*y = x",
+      "sourceLocation": "PDF page 3 (original lecture slide 11)",
+      "confidence": 1
+    },
+    {
+      "front": "When does the square-root recipe accept the current guess g as its answer?",
+      "back": "When g*g is close enough to x.",
+      "sourceExcerpt": "If g*g is close enough to x, stop and say g is the answer",
+      "sourceLocation": "PDF page 3 (original lecture slide 11)",
+      "confidence": 1
+    },
+    {
+      "front": "How does the square-root recipe update g when the current guess is not close enough?",
+      "back": "By averaging g and x/g.",
+      "sourceExcerpt": "If g*g is close enough to x, stop and say g is the answer 3) Otherwise make a new guess by averaging g and x/g",
+      "sourceLocation": "PDF page 3 (original lecture slide 11)",
+      "confidence": 1
+    },
+    {
+      "front": "What does flow of control specify in an algorithm?",
+      "back": "When each step is executed.",
+      "sourceExcerpt": "flow of control process that specifies when each step is executed",
+      "sourceLocation": "PDF page 4 (original lecture slide 12)",
+      "confidence": 1
+    }
+  ]
+}

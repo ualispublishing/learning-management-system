@@ -3,6 +3,8 @@ import { DatabaseSync } from 'node:sqlite';
 import { AuthStore, hash, type AuthUser } from './store.ts';
 import { answers, assignment, id, institution, integer, requireCondition as check, submissionPayload, text } from './gateway-validation.ts';
 import type { Assignment, Batch, Institution, Mutation, Submission } from './gateway-validation.ts';
+import { AI_HISTORY_PAGE_SIZE, MAX_AI_ARTIFACT_BYTES, MAX_AI_RESPONSE_BYTES, MAX_AI_STORAGE_BYTES, type AIJob, type AIJobPolicy } from './ai-policy.ts';
+import type { AIRequestHistoryPage } from '../src/lib/ai/types.ts';
 
 type Role = 'teacher' | 'ta' | 'student';
 interface Course { id: string; title: string; timeZone: string; status: 'active'; presentationMode: 'timeline'; gradingWeights: { Assessments: 100 }; termStart: number; termEnd: number; announcements: never[]; visibilityTimer: 0 }
@@ -51,6 +53,14 @@ export class GatewayStore {
           CREATE INDEX IF NOT EXISTS gateway_member ON gateway_enrollments(user_id);
           CREATE INDEX IF NOT EXISTS gateway_course_items ON gateway_items(course_id);
           CREATE INDEX IF NOT EXISTS gateway_course_submissions ON gateway_submissions(course_id);
+          CREATE TABLE IF NOT EXISTS gateway_ai_jobs (
+            id TEXT PRIMARY KEY, principal TEXT NOT NULL REFERENCES identities(id), key TEXT NOT NULL,
+            digest TEXT NOT NULL, course_id TEXT NOT NULL REFERENCES gateway_courses(id), task TEXT NOT NULL,
+            state TEXT NOT NULL CHECK(state IN ('processing','succeeded','uncertain')),
+            artifact TEXT NOT NULL, source_file BLOB, result TEXT, receipt TEXT, notices TEXT NOT NULL,
+            created_at INTEGER NOT NULL, expires_at INTEGER NOT NULL, UNIQUE(principal,key)
+          );
+          CREATE INDEX IF NOT EXISTS gateway_ai_created ON gateway_ai_jobs(created_at);
         `);
         const meta = this.db.prepare('SELECT version,institution FROM gateway_meta').get();
         if (meta) check(meta.version === 1 && meta.institution === JSON.stringify(this.institution), 'gateway_configuration_mismatch');
@@ -111,6 +121,88 @@ export class GatewayStore {
     const row = this.db.prepare('SELECT role FROM gateway_enrollments WHERE course_id=? AND user_id=? AND active=1').get(courseId, userId);
     check(row, 'course_access_denied', 403);
     return row.role as Role;
+  }
+  /** Called inside authorized(), before extraction and again before completion/replay. */
+  authorizeAI(user: AuthUser, courseId: string, task: 'syllabus' | 'flashcards'): { title: string } {
+    id(courseId);
+    const role = this.role(user.id, courseId);
+    check(role === 'teacher' || task === 'flashcards' && role === 'ta', 'ai_permission_denied', 403);
+    const row = this.db.prepare('SELECT data FROM gateway_courses WHERE id=?').get(courseId);
+    check(row, 'course_access_denied', 403);
+    return { title: (JSON.parse(String(row.data)) as Course).title };
+  }
+  /** Startup recovery never retries work whose provider outcome may be unknown. */
+  recoverAIRequests() { this.db.prepare("UPDATE gateway_ai_jobs SET state='uncertain' WHERE state='processing'").run(); }
+  pruneAI(now: number) { this.db.prepare("DELETE FROM gateway_ai_jobs WHERE expires_at<=? AND state!='processing'").run(now); }
+  private aiStorageBytes(): number {
+    return Number(this.db.prepare("SELECT COALESCE(SUM(length(CAST(artifact AS BLOB))+COALESCE(length(source_file),0)+COALESCE(length(CAST(result AS BLOB)),0)+COALESCE(length(CAST(receipt AS BLOB)),0)+length(CAST(notices AS BLOB))),0) AS n FROM gateway_ai_jobs").get()?.n);
+  }
+  reserveAI(user: AuthUser, request: { key: string; digest: string; courseId: string; task: 'syllabus' | 'flashcards'; artifact: string; sourceFile?: Uint8Array; reviewNotices: string[] }, policy: AIJobPolicy, now: number): { jobId: string; replay?: Record<string, unknown> } {
+    this.authorizeAI(user, request.courseId, request.task);
+    this.pruneAI(now);
+    const saved = this.db.prepare('SELECT id,digest,state,result FROM gateway_ai_jobs WHERE principal=? AND key=?').get(user.id, request.key);
+    if (saved) {
+      check(saved.digest === request.digest, 'idempotency_key_reused', 409);
+      check(saved.state !== 'processing', 'ai_request_in_progress', 409);
+      check(saved.state === 'succeeded', 'ai_outcome_uncertain', 409);
+      return { jobId: String(saved.id), replay: JSON.parse(String(saved.result)) as Record<string, unknown> };
+    }
+    const bytes = Buffer.byteLength(request.artifact) + (request.sourceFile?.byteLength ?? 0) + Buffer.byteLength(JSON.stringify(request.reviewNotices));
+    check(bytes <= MAX_AI_ARTIFACT_BYTES, 'ai_artifact_too_large', 413);
+    const processing = Number(this.db.prepare("SELECT COUNT(*) AS n FROM gateway_ai_jobs WHERE state='processing'").get()?.n);
+    check(this.aiStorageBytes() + bytes + (processing + 1) * (MAX_AI_RESPONSE_BYTES + 16_384) <= MAX_AI_STORAGE_BYTES, 'ai_storage_capacity_reached', 503);
+    check(Number(this.db.prepare('SELECT COUNT(*) AS n FROM gateway_ai_jobs').get()?.n) < 1000, 'ai_storage_capacity_reached', 503);
+    check(processing < 2, 'ai_capacity_reached', 429);
+    const since = now - 86_400_000;
+    check(Number(this.db.prepare('SELECT COUNT(*) AS n FROM gateway_ai_jobs WHERE created_at>?').get(since)?.n) < policy.dailyRequestLimit, 'ai_daily_limit_reached', 429);
+    check(Number(this.db.prepare('SELECT COUNT(*) AS n FROM gateway_ai_jobs WHERE principal=? AND created_at>?').get(user.id, since)?.n) < Math.min(20, policy.dailyRequestLimit), 'ai_daily_limit_reached', 429);
+    const jobId = randomUUID();
+    this.db.prepare("INSERT INTO gateway_ai_jobs VALUES(?,?,?,?,?,?,'processing',?,?,NULL,NULL,?,?,?)").run(jobId, user.id, request.key, request.digest, request.courseId, request.task, request.artifact, request.sourceFile ?? null, JSON.stringify(request.reviewNotices), now, now + policy.retentionHours * 3_600_000);
+    return { jobId };
+  }
+  completeAI(user: AuthUser, jobId: string, result: Record<string, unknown>, receipt: unknown, now: number) {
+    const row = this.db.prepare('SELECT course_id,task,state,expires_at FROM gateway_ai_jobs WHERE id=? AND principal=?').get(jobId, user.id);
+    check(row && row.state === 'processing' && Number(row.expires_at) > now, 'ai_outcome_uncertain', 409);
+    this.authorizeAI(user, String(row.course_id), row.task as 'syllabus' | 'flashcards');
+    const serialized = JSON.stringify(result); const receiptText = JSON.stringify(receipt ?? null);
+    check(Buffer.byteLength(serialized) <= MAX_AI_RESPONSE_BYTES && Buffer.byteLength(receiptText) <= 16_384, 'ai_result_too_large', 502);
+    check(this.aiStorageBytes() + Buffer.byteLength(serialized) + Buffer.byteLength(receiptText) <= MAX_AI_STORAGE_BYTES, 'ai_storage_capacity_reached', 503);
+    this.db.prepare("UPDATE gateway_ai_jobs SET state='succeeded',result=?,receipt=? WHERE id=?").run(serialized, receiptText, jobId);
+  }
+  failAI(jobId: string) { this.db.prepare("UPDATE gateway_ai_jobs SET state='uncertain' WHERE id=? AND state='processing'").run(jobId); }
+  listAI(user: AuthUser, courseId: string, task: AIJob['task'], cursor: string | undefined, now: number): AIRequestHistoryPage {
+    this.authorizeAI(user, courseId, task);
+    const before = cursor ? this.db.prepare('SELECT created_at,id FROM gateway_ai_jobs WHERE id=? AND principal=? AND course_id=? AND task=? AND expires_at>?').get(cursor, user.id, courseId, task, now) : undefined;
+    check(!cursor || before, 'ai_history_cursor_expired', 404);
+    // Select only summary fields; never load source blobs or results into the history response.
+    const rows = this.db.prepare(`SELECT id,key,course_id,task,state,created_at,expires_at,
+      json_extract(artifact,'$.input.document.name') AS file_name,
+      json_extract(artifact,'$.input.sourceText') IS NOT NULL AS has_text,
+      json_extract(artifact,'$.input.locale') AS locale,
+      json_extract(artifact,'$.input.requestedCardCount') AS card_count
+      FROM gateway_ai_jobs WHERE principal=? AND course_id=? AND task=? AND expires_at>?
+      ${before ? 'AND (created_at<? OR (created_at=? AND id<?))' : ''}
+      ORDER BY created_at DESC,id DESC LIMIT ?`).all(user.id, courseId, task, now,
+        ...(before ? [before.created_at, before.created_at, before.id] : []), AI_HISTORY_PAGE_SIZE + 1);
+    const items = rows.slice(0, AI_HISTORY_PAGE_SIZE).map(row => ({ id: String(row.id), requestId: String(row.key), courseId: String(row.course_id),
+      task: row.task as AIJob['task'], status: row.state as AIJob['status'], createdAt: Number(row.created_at), expiresAt: Number(row.expires_at),
+      fileName: row.file_name === null ? null : String(row.file_name), hasPastedText: Boolean(row.has_text), locale: String(row.locale), requestedCardCount: Number(row.card_count) }));
+    return { items, nextCursor: rows.length > AI_HISTORY_PAGE_SIZE ? items.at(-1)!.id : null };
+  }
+  /** A missing/expired key must never reserve a job or call a provider. */
+  recoverAI(user: AuthUser, key: string, digest: string, now: number): AIJob {
+    const saved = this.readAI(user, key, now);
+    const row = this.db.prepare('SELECT digest FROM gateway_ai_jobs WHERE principal=? AND key=?').get(user.id, key);
+    check(row?.digest === digest, 'ai_source_or_settings_mismatch', 409);
+    return saved;
+  }
+  readAI(user: AuthUser, key: string, now: number): AIJob {
+    const row = this.db.prepare('SELECT * FROM gateway_ai_jobs WHERE principal=? AND key=? AND expires_at>?').get(user.id, key, now);
+    check(row, 'ai_request_not_found', 404);
+    this.authorizeAI(user, String(row.course_id), row.task as 'syllabus' | 'flashcards');
+    return { id: String(row.id), requestId: String(row.key), courseId: String(row.course_id), task: row.task as AIJob['task'], status: row.state as AIJob['status'],
+      ...(row.result ? { result: JSON.parse(String(row.result)) as Record<string, unknown> } : {}),
+      reviewNotices: JSON.parse(String(row.notices)) as string[], createdAt: Number(row.created_at), expiresAt: Number(row.expires_at) };
   }
   private checkpoint(userId: string) {
     const meta = this.db.prepare('SELECT instance,sequence,changed_at FROM gateway_meta').get()!;

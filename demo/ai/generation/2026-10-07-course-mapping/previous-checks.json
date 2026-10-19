@@ -1,0 +1,54 @@
+{
+  "version": 1,
+  "mode": "prepared-demo",
+  "status": "passed",
+  "checks": [
+    "Source file byte length and SHA-256",
+    "Extracted text SHA-256",
+    "Result SHA-256 and saved reference equality",
+    "Strict response shape and field limits",
+    "Exact evidence quotations at matching source locations",
+    "Evidence present in canonical source text",
+    "Required syllabus field evidence",
+    "Timestamp citations for audio and video",
+    "Card count, duplicate detection, and fresh unverified review state"
+  ],
+  "sources": [
+    {
+      "id": "syllabus",
+      "sourceSha256": "1883fc146153aad9f413938d10496559938155e175c02bd3817744a72d397e15",
+      "resultSha256": "e1563fb0f2e39432e56f8cf3bdb4412a6935da63a8c8157141f6ea793f44a32b"
+    },
+    {
+      "id": "slides-pdf",
+      "sourceSha256": "fe1207e81d17dd465dd65fec8b550f17248646d5b2d6b8372912557bd57c39fb",
+      "resultSha256": "b481a32b164cf72c7eb1314a214f0b4ed8f8aa565acafc10881ca60336c26e2a"
+    },
+    {
+      "id": "slides-pptx",
+      "sourceSha256": "78294440e01c74aa3d794754703a8a111d24a8bb74f7ddfb1c8911a93052ba72",
+      "resultSha256": "6db08873f563d9ef9083159274cf80711064ce679a750eee51dc20bde8f3c5c6"
+    },
+    {
+      "id": "lecture-video",
+      "sourceSha256": "78df14e66172d210e2912e0047d40568b398ef66e6d2fcf1f698a24cb795d92d",
+      "resultSha256": "bd94bb06bf504e9cb7f468e634f614866a54ba3e2c299f68ce35fc6057de7719"
+    },
+    {
+      "id": "lecture-audio",
+      "sourceSha256": "853d6bb99f7bd0d46a36e75a66b8963650b5607f54fe6d47f2eeeb1eda348441",
+      "resultSha256": "bd94bb06bf504e9cb7f468e634f614866a54ba3e2c299f68ce35fc6057de7719"
+    },
+    {
+      "id": "lecture-captions",
+      "sourceSha256": "7fd275e0ae70364fda46e228a6c11dbf1396844d0f6835be316f271a5fbbe377",
+      "resultSha256": "bd94bb06bf504e9cb7f468e634f614866a54ba3e2c299f68ce35fc6057de7719"
+    }
+  ],
+  "limitations": [
+    "A saved reference is a regression baseline, not independent expert verification.",
+    "These checks do not prove factual accuracy, pedagogical quality, or completeness.",
+    "No live AI provider is invoked. Human review is required before publishing.",
+    "MIT OCW commercial permission is not included."
+  ]
+}

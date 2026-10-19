@@ -92,8 +92,8 @@ test('font rejection exits the spinner and preserves the production sign-in gate
   state.fonts = [false, new Error('Font download failed')];
   view.rerender(React.createElement(Layout));
   assert.ok(ui.screen.getByRole('button', { name: 'Continue with institution SSO' }));
-  assert.equal(ui.screen.queryByLabelText('Loading learning management system'), null);
-  assert.equal(ui.screen.queryByText('Authenticated application'), null);
+  assert.equal(ui.screen.queryByLabelText('Loading learning management system') === null, true);
+  assert.equal(ui.screen.queryByText('Authenticated application') === null, true);
 });
 
 test('font fallback still waits for institution bootstrap and allows its retry', async () => {
@@ -106,7 +106,7 @@ test('font fallback still waits for institution bootstrap and allows its retry',
   assert.ok(ui.screen.getByLabelText('Loading learning management system'));
   await ui.act(async () => bootstrap.resolve());
   assert.ok(ui.screen.getByText('The LMS could not load.'));
-  assert.equal(ui.screen.queryByText('Authenticated application'), null);
+  assert.equal(ui.screen.queryByText('Authenticated application') === null, true);
   state.initializationError = null;
   ui.fireEvent.click(ui.screen.getByRole('button', { name: 'Retry' }));
   assert.ok(await ui.screen.findByText('Authenticated application'));

@@ -6,8 +6,12 @@
  *   and commenting standard that applies to this module.
  */
 import { createEntityId } from '../id';
+import { AIResponseError, readServerProvenance, validateCards, validateInstitutionFlashcardResult, validateInstitutionSyllabusResult, validateSyllabus } from './responseValidation';
+import { isPreparedAIDemo, preparedDemoBaseUrl } from './preparedDemo';
+import { assertAISourceProfile, sourceProfileDescription, sourceProfilePickerTypes } from './sourceProfile';
+import { AIRequestError, readAIHistoryPage, readRecoveredAIResult, type AIRequestTask } from './requestRecovery';
 import { appendMultipartAsset, isPickerOwnedAssetUri, validateMultipartAssetBytes } from '../integration/multipartAsset';
-import { readBoundedResponseText, readRemoteErrorDetail } from '../integration/httpResponse';
+import { awaitWithAbort, readBoundedResponseText, readRemoteErrorDetail } from '../integration/httpResponse';
 import {
   FLASHCARD_PROMPT_VERSION,
   SYLLABUS_PROMPT_VERSION,
@@ -15,19 +19,20 @@ import {
 import {
   AIDocumentAsset,
   AIGenerationInput,
-  AIProvenance,
   AIService,
+  AIRequestHistory,
   GeneratedFlashcard,
-  SyllabusEvidence,
   SyllabusExtraction,
 } from './types';
+
+export { AIResponseError, isValidISODate, readServerProvenance, validateCards, validateInstitutionFlashcardResult, validateInstitutionSyllabusResult, validateSyllabus } from './responseValidation';
+export { AIRequestError } from './requestRecovery';
 
 const MAX_TEXT_CHARACTERS = 500_000;
 const MAX_DOCUMENT_BYTES = 25 * 1024 * 1024;
 const MAX_MEDIA_BYTES = 50 * 1024 * 1024;
 const REQUEST_TIMEOUT_MS = 300_000;
 const MAX_RESPONSE_BYTES = 2_000_000;
-const ISO_DATE = /^\d{4}-\d{2}-\d{2}$/;
 const DOCUMENT_MIME_TYPES: Record<string, readonly string[]> = {
   pdf: ['application/pdf'],
   docx: ['application/vnd.openxmlformats-officedocument.wordprocessingml.document'],
@@ -57,13 +62,17 @@ export const inferAIDocumentKind = (document: AIDocumentAsset): NonNullable<AIDo
 };
 
 export class AIConfigurationError extends Error {}
-export class AIResponseError extends Error {}
 
-interface AIServiceConfig {
+type AIServiceConfig = {
   baseUrl: string;
-  getAccessToken?: () => Promise<string | null>;
   fetchImpl?: typeof fetch;
-}
+  /** Opt in only when the authenticated gateway implements this recovery contract. */
+  requestRecovery?: 'status-v1' | 'history-v1';
+  sourceProfile?: 'text-v1';
+} & (
+  | { authentication?: 'bearer'; getAccessToken?: () => Promise<string | null> }
+  | { authentication: 'same-origin-cookie'; getAccessToken?: never }
+);
 
 function safeBaseUrl(baseUrl: string): { url: string; localDevelopment: boolean } {
   let url: URL;
@@ -74,7 +83,7 @@ function safeBaseUrl(baseUrl: string): { url: string; localDevelopment: boolean 
   }
   const developmentBuild = typeof __DEV__ !== 'undefined' ? __DEV__ : process.env.NODE_ENV !== 'production';
   const localDevelopment = developmentBuild && ['localhost', '127.0.0.1', '::1'].includes(url.hostname);
-  if (url.protocol !== 'https:' && !localDevelopment) {
+  if (url.protocol !== 'https:' && !(url.protocol === 'http:' && localDevelopment)) {
     throw new AIConfigurationError('The AI service must use HTTPS outside local development.');
   }
   if (url.username || url.password || url.search || url.hash) {
@@ -83,17 +92,11 @@ function safeBaseUrl(baseUrl: string): { url: string; localDevelopment: boolean 
   return { url: url.toString().replace(/\/+$/, ''), localDevelopment };
 }
 
-export const isValidISODate = (value: string): boolean => {
-  if (!ISO_DATE.test(value)) return false;
-  const [year, month, day] = value.split('-').map(Number);
-  const parsed = new Date(Date.UTC(year, month - 1, day));
-  return parsed.getUTCFullYear() === year
-    && parsed.getUTCMonth() === month - 1
-    && parsed.getUTCDate() === day;
-};
-
 function validateInput(input: AIGenerationInput, task: 'flashcards' | 'syllabus' = 'flashcards') {
   if (!input || typeof input !== 'object') throw new Error('AI generation input is required.');
+  if (input.courseId !== undefined && (typeof input.courseId !== 'string' || !/^[A-Za-z0-9][A-Za-z0-9._:-]{0,127}$/.test(input.courseId))) {
+    throw new Error('AI course scope must be a valid stable course identifier.');
+  }
   if (input.sourceText !== undefined && typeof input.sourceText !== 'string') throw new Error('Source material must be text.');
   const text = input.sourceText?.trim() || '';
   if (!text && !input.document) throw new Error('Paste source material or select a document first.');
@@ -123,7 +126,7 @@ function validateInput(input: AIGenerationInput, task: 'flashcards' | 'syllabus'
     }
     const mimeMatches = !mimeType || mimeType === 'application/octet-stream' || expectedMimeTypes?.includes(mimeType);
     if (!expectedMimeTypes || !mimeMatches) {
-      throw new Error('Supported AI sources are PDF, DOCX, PPTX, TXT, Markdown, RTF, VTT/SRT captions, MP3/M4A/WAV audio, and MP4/MOV/WebM video.');
+      throw new Error('Supported AI sources depend on the connected service. This file extension or MIME type is not accepted.');
     }
   }
   if (input.courseTitle !== undefined && typeof input.courseTitle !== 'string') throw new Error('Course title context must be text.');
@@ -140,376 +143,191 @@ function validateInput(input: AIGenerationInput, task: 'flashcards' | 'syllabus'
   }
 }
 
-function strictString(
-  value: unknown,
-  path: string,
-  maxLength: number,
-  options: { required?: boolean; minLength?: number } = {},
-): string | undefined {
-  if (value === undefined) {
-    if (options.required) throw new AIResponseError(`${path} is required.`);
-    return undefined;
-  }
-  if (typeof value !== 'string') throw new AIResponseError(`${path} must be a string.`);
-  if (value.length > maxLength) throw new AIResponseError(`${path} exceeds ${maxLength.toLocaleString()} characters.`);
-  const trimmed = value.trim();
-  const minLength = options.minLength ?? (options.required ? 1 : 0);
-  if (trimmed.length < minLength) throw new AIResponseError(`${path} must contain at least ${minLength} non-whitespace character${minLength === 1 ? '' : 's'}.`);
-  return trimmed || undefined;
-}
-
-function assertAllowedKeys(record: Record<string, unknown>, allowed: readonly string[], path: string) {
-  const allowedKeys = new Set(allowed);
-  const unsupported = Object.keys(record).find(key => !allowedKeys.has(key));
-  if (unsupported) throw new AIResponseError(`${path}.${unsupported} is not supported by the active AI response schema.`);
-}
-
-function strictStringArray(value: unknown, path: string, limit: number, maxLength: number): string[] | undefined {
-  if (value === undefined) return undefined;
-  if (!Array.isArray(value)) throw new AIResponseError(`${path} must be an array.`);
-  if (value.length > limit) throw new AIResponseError(`${path} exceeds ${limit.toLocaleString()} entries.`);
-  return value.map((entry, index) => strictString(entry, `${path}[${index}]`, maxLength, { required: true })!);
-}
-
-function numberValue(value: unknown, min: number, max: number): number | undefined {
-  return typeof value === 'number' && Number.isFinite(value) && value >= min && value <= max ? value : undefined;
-}
-
-const normalizedEvidenceText = (value: string) => value.normalize('NFKC').replace(/\s+/g, ' ').trim().toLocaleLowerCase();
-
-const evidenceAppearsInSource = (excerpt: string, sourceText?: string, hasDocument = false) =>
-  hasDocument || !sourceText?.trim() || normalizedEvidenceText(sourceText).includes(normalizedEvidenceText(excerpt));
-
-function readServerProvenance(
-  payload: unknown,
-  task: 'flashcards' | 'syllabus',
-  required: boolean,
-  documentRequired = false,
-): AIProvenance | undefined {
-  if (!required) return undefined;
-  const provenance = payload && typeof payload === 'object' ? (payload as { provenance?: unknown }).provenance : undefined;
-  if (!provenance || typeof provenance !== 'object') throw new AIResponseError('The AI service omitted its server validation attestation.');
-  const record = provenance as Record<string, unknown>;
-  assertAllowedKeys(record, ['promptVersion', 'evidenceVerified', 'sourceSha256', 'documentSha256', 'requestId', 'model'], 'provenance');
-  const expectedVersion = task === 'flashcards' ? FLASHCARD_PROMPT_VERSION : SYLLABUS_PROMPT_VERSION;
-  if (record.promptVersion !== expectedVersion || record.evidenceVerified !== true) {
-    throw new AIResponseError('The AI service did not attest to the requested prompt version and source-grounding checks.');
-  }
-  if (typeof record.sourceSha256 !== 'string' || !/^[a-f0-9]{64}$/i.test(record.sourceSha256)) {
-    throw new AIResponseError('The AI service did not attest to the SHA-256 digest of the processed source.');
-  }
-  if (documentRequired && (typeof record.documentSha256 !== 'string' || !/^[a-f0-9]{64}$/i.test(record.documentSha256))) {
-    throw new AIResponseError('The AI service did not attest to the SHA-256 digest of the uploaded document bytes.');
-  }
-  if (record.documentSha256 !== undefined && (typeof record.documentSha256 !== 'string' || !/^[a-f0-9]{64}$/i.test(record.documentSha256))) {
-    throw new AIResponseError('provenance.documentSha256 must be a 64-character hexadecimal digest.');
-  }
-  return {
-    promptVersion: expectedVersion,
-    evidenceVerified: true,
-    sourceSha256: record.sourceSha256.toLocaleLowerCase(),
-    documentSha256: typeof record.documentSha256 === 'string' ? record.documentSha256.toLocaleLowerCase() : undefined,
-    requestId: strictString(record.requestId, 'provenance.requestId', 160),
-    model: strictString(record.model, 'provenance.model', 160),
-  };
-}
-
-function validateCards(payload: unknown, input: AIGenerationInput): GeneratedFlashcard[] {
-  if (!payload || typeof payload !== 'object' || Array.isArray(payload)) throw new AIResponseError('The AI service returned an invalid flashcard response.');
-  const payloadRecord = payload as Record<string, unknown>;
-  assertAllowedKeys(payloadRecord, ['cards', 'provenance'], 'flashcardResponse');
-  if (!Array.isArray(payloadRecord.cards)) throw new AIResponseError('The AI service returned an invalid flashcard response.');
-  const source = payloadRecord.cards;
-  const requestedLimit = input.requestedCardCount ?? 30;
-  if (source.length > Math.min(100, requestedLimit)) throw new AIResponseError(`The AI service returned more than the requested ${requestedLimit} flashcards.`);
-  const provenance = readServerProvenance(payload, 'flashcards', Boolean(payloadRecord.provenance), Boolean(input.document));
-  const seen = new Set<string>();
-  const cards: GeneratedFlashcard[] = [];
-  source.forEach((raw, index) => {
-    if (!raw || typeof raw !== 'object' || Array.isArray(raw)) throw new AIResponseError(`cards[${index}] must be an object.`);
-    const record = raw as Record<string, unknown>;
-    assertAllowedKeys(record, ['front', 'back', 'sourceExcerpt', 'sourceLocation', 'confidence', 'tags'], `cards[${index}]`);
-    const front = strictString(record.front, `cards[${index}].front`, 500, { required: true, minLength: 3 })!;
-    const back = strictString(record.back, `cards[${index}].back`, 2000, { required: true })!;
-    const sourceExcerpt = strictString(record.sourceExcerpt, `cards[${index}].sourceExcerpt`, 600, { required: true })!;
-    const sourceLocation = strictString(record.sourceLocation, `cards[${index}].sourceLocation`, 160);
-    const confidence = numberValue(record.confidence, 0, 1);
-    const duplicateKey = `${normalizedEvidenceText(front)}\u0000${normalizedEvidenceText(back)}`;
-    if (confidence === undefined) throw new AIResponseError(`cards[${index}].confidence must be a number from 0 to 1.`);
-    if (!evidenceAppearsInSource(sourceExcerpt, input.sourceText, Boolean(input.document))) throw new AIResponseError(`cards[${index}].sourceExcerpt was not found in the supplied source text.`);
-    if (seen.has(duplicateKey)) throw new AIResponseError(`cards[${index}] duplicates an earlier flashcard.`);
-    const sourceExtension = input.document?.name.toLocaleLowerCase().match(/\.([a-z0-9]+)$/)?.[1] || '';
-    if (MEDIA_EXTENSIONS.has(sourceExtension) && (!sourceLocation || !/\b(?:\d{1,2}:)?\d{1,2}:\d{2}\b/.test(sourceLocation))) {
-      throw new AIResponseError(`cards[${index}].sourceLocation must include a transcript timestamp for audio or video sources.`);
-    }
-    seen.add(duplicateKey);
-    cards.push({
-      id: createEntityId(`ai-card-${index + 1}`),
-      front,
-      back,
-      sourceExcerpt,
-      sourceLocation,
-      confidence,
-      tags: strictStringArray(record.tags, `cards[${index}].tags`, 8, 60),
-      reviewerVerified: false,
-      provenance,
-    });
-  });
-  if (!cards.length) throw new AIResponseError('The AI service returned no reviewable, source-grounded flashcards.');
-  return cards;
-}
-
-function validateEvidence(value: unknown): SyllabusEvidence[] {
-  if (!Array.isArray(value)) throw new AIResponseError('evidence must be an array.');
-  if (value.length > 200) throw new AIResponseError('evidence exceeds 200 entries.');
-  return value.map((raw, index) => {
-    if (!raw || typeof raw !== 'object' || Array.isArray(raw)) throw new AIResponseError(`evidence[${index}] must be an object.`);
-    const record = raw as Record<string, unknown>;
-    assertAllowedKeys(record, ['field', 'sourceExcerpt', 'sourceLocation'], `evidence[${index}]`);
-    return {
-      field: strictString(record.field, `evidence[${index}].field`, 160, { required: true })!,
-      sourceExcerpt: strictString(record.sourceExcerpt, `evidence[${index}].sourceExcerpt`, 600, { required: true })!,
-      sourceLocation: strictString(record.sourceLocation, `evidence[${index}].sourceLocation`, 160),
-    };
-  });
-}
-
-const hasEvidenceFor = (evidenceFields: string[], path: string) =>
-  evidenceFields.some(field => field === path || field.startsWith(`${path}.`));
-
-function validateSchedule(value: unknown): { entries?: { date?: string; topic: string }[]; invalidDateCount: number } {
-  if (value === undefined) return { invalidDateCount: 0 };
-  if (!Array.isArray(value)) throw new AIResponseError('schedule must be an array.');
-  if (value.length > 500) throw new AIResponseError('schedule exceeds 500 entries.');
-  let invalidDateCount = 0;
-  const entries = value.map((raw, index) => {
-    if (!raw || typeof raw !== 'object' || Array.isArray(raw)) throw new AIResponseError(`schedule[${index}] must be an object.`);
-    const record = raw as Record<string, unknown>;
-    assertAllowedKeys(record, ['date', 'topic'], `schedule[${index}]`);
-    const topic = strictString(record.topic, `schedule[${index}].topic`, 600, { required: true })!;
-    const candidateDate = strictString(record.date, `schedule[${index}].date`, 10);
-    const date = candidateDate && isValidISODate(candidateDate) ? candidateDate : undefined;
-    if (candidateDate && !date) invalidDateCount += 1;
-    return { topic, date };
-  });
-  return { entries, invalidDateCount };
-}
-
-function validatePolicies(value: unknown): { name: string; text: string }[] | undefined {
-  if (value === undefined) return undefined;
-  if (!Array.isArray(value)) throw new AIResponseError('policies must be an array.');
-  if (value.length > 100) throw new AIResponseError('policies exceeds 100 entries.');
-  return value.map((raw, index) => {
-    if (!raw || typeof raw !== 'object' || Array.isArray(raw)) throw new AIResponseError(`policies[${index}] must be an object.`);
-    const record = raw as Record<string, unknown>;
-    assertAllowedKeys(record, ['name', 'text'], `policies[${index}]`);
-    return {
-      name: strictString(record.name, `policies[${index}].name`, 160, { required: true })!,
-      text: strictString(record.text, `policies[${index}].text`, 4000, { required: true })!,
-    };
-  });
-}
-
-function validateSyllabus(payload: unknown, input: AIGenerationInput): SyllabusExtraction {
-  if (!payload || typeof payload !== 'object' || Array.isArray(payload)) throw new AIResponseError('The AI service returned an invalid syllabus response.');
-  const record = payload as Record<string, unknown>;
-  assertAllowedKeys(record, ['title', 'description', 'termStart', 'termEnd', 'gradingWeights', 'instructorNames', 'schedule', 'requiredMaterials', 'policies', 'evidence', 'warnings', 'provenance'], 'syllabusResponse');
-  const provenance = readServerProvenance(payload, 'syllabus', Boolean(record.provenance), Boolean(input.document));
-  const gradingWeights: Record<string, number> = {};
-  if (record.gradingWeights !== undefined && (!record.gradingWeights || typeof record.gradingWeights !== 'object' || Array.isArray(record.gradingWeights))) {
-    throw new AIResponseError('gradingWeights must be an object.');
-  }
-  if (record.gradingWeights && typeof record.gradingWeights === 'object') {
-    if (Object.keys(record.gradingWeights).length > 100) throw new AIResponseError('gradingWeights exceeds 100 categories.');
-    Object.entries(record.gradingWeights as Record<string, unknown>).forEach(([label, value]) => {
-      const safeLabel = strictString(label, 'gradingWeights category', 120, { required: true });
-      const safeValue = numberValue(value, 0, 100);
-      if (!safeLabel || safeValue === undefined) throw new AIResponseError('The syllabus result contains an invalid grading category or percentage.');
-      if (Object.keys(gradingWeights).some(existing => existing.toLocaleLowerCase() === safeLabel.toLocaleLowerCase())) {
-        throw new AIResponseError(`The syllabus result duplicated grading category "${safeLabel}".`);
-      }
-      gradingWeights[safeLabel] = safeValue;
-    });
-  }
-  const date = (value: unknown, path: string) => {
-    const parsed = strictString(value, path, 10);
-    if (parsed && !isValidISODate(parsed)) throw new AIResponseError(`${path} must be a valid YYYY-MM-DD calendar date.`);
-    return parsed;
-  };
-  const evidence = validateEvidence(record.evidence);
-  if (!evidence.length) throw new AIResponseError('The syllabus result did not include evidence for human review.');
-  const ungroundedEvidence = evidence.find(entry => !evidenceAppearsInSource(entry.sourceExcerpt, input.sourceText, Boolean(input.document)));
-  if (ungroundedEvidence) throw new AIResponseError(`The syllabus evidence for "${ungroundedEvidence.field}" was not found in the supplied source text.`);
-  const schedule = validateSchedule(record.schedule);
-  const result: SyllabusExtraction = {
-    title: strictString(record.title, 'title', 300),
-    description: strictString(record.description, 'description', 4000),
-    termStart: date(record.termStart, 'termStart'),
-    termEnd: date(record.termEnd, 'termEnd'),
-    gradingWeights: Object.keys(gradingWeights).length ? gradingWeights : undefined,
-    instructorNames: strictStringArray(record.instructorNames, 'instructorNames', 30, 200),
-    schedule: schedule.entries,
-    requiredMaterials: strictStringArray(record.requiredMaterials, 'requiredMaterials', 100, 600),
-    policies: validatePolicies(record.policies),
-    evidence,
-    warnings: (() => {
-      if (!Array.isArray(record.warnings)) throw new AIResponseError('warnings must be an array.');
-      return strictStringArray(record.warnings, 'warnings', 100, 600)!;
-    })(),
-    provenance,
-  };
-  if (result.gradingWeights) {
-    const total = Object.values(result.gradingWeights).reduce((sum, weight) => sum + weight, 0);
-    if (Math.abs(total - 100) > 0.01) result.warnings.push(`Extracted grading weights total ${total}%, not 100%.`);
-  }
-  if (schedule.invalidDateCount) result.warnings.push(`${schedule.invalidDateCount} schedule date${schedule.invalidDateCount === 1 ? ' was' : 's were'} omitted because the date was not a valid YYYY-MM-DD calendar date.`);
-  if (result.termStart && result.termEnd && result.termStart >= result.termEnd) {
-    result.warnings.push('Extracted term dates were omitted because the term end was not after the term start.');
-    result.termStart = undefined;
-    result.termEnd = undefined;
-  }
-  const populatedFields = [
-    result.title && 'title',
-    result.description && 'description',
-    result.termStart && 'termStart',
-    result.termEnd && 'termEnd',
-    result.gradingWeights && 'gradingWeights',
-    result.instructorNames?.length && 'instructorNames',
-    result.schedule?.length && 'schedule',
-    result.requiredMaterials?.length && 'requiredMaterials',
-    result.policies?.length && 'policies',
-  ].filter((field): field is string => typeof field === 'string');
-  const evidenceRoots = new Set(evidence.map(entry => entry.field.split(/[.\[]/, 1)[0]));
-  const missingEvidence = populatedFields.filter(field => !evidenceRoots.has(field));
-  if (missingEvidence.length) {
-    throw new AIResponseError(`The syllabus result omitted source evidence for: ${missingEvidence.join(', ')}.`);
-  }
-  const evidenceFields = evidence.map(entry => entry.field);
-  const missingEntryEvidence = [
-    ...Object.keys(result.gradingWeights || {}).map((_entry, index) => `gradingWeights[${index}]`),
-    ...(result.instructorNames || []).map((_entry, index) => `instructorNames[${index}]`),
-    ...(result.schedule || []).map((_entry, index) => `schedule[${index}]`),
-    ...(result.requiredMaterials || []).map((_entry, index) => `requiredMaterials[${index}]`),
-    ...(result.policies || []).map((_entry, index) => `policies[${index}]`),
-  ].filter(path => !hasEvidenceFor(evidenceFields, path));
-  if (missingEntryEvidence.length) {
-    throw new AIResponseError(`The syllabus result omitted entry-level source evidence for: ${missingEntryEvidence.join(', ')}.`);
-  }
-  return result;
-}
-
-/**
- * Runtime boundary for institution-supplied AIService adapters. TypeScript
- * return types are not a trust boundary, and generated records must never be
- * allowed to arrive pre-verified by an adapter.
- */
-export function validateInstitutionFlashcardResult(result: unknown, input: AIGenerationInput): GeneratedFlashcard[] {
-  if (!Array.isArray(result)) throw new AIResponseError('The institution AI adapter returned a non-array flashcard result.');
-  const allowedKeys = ['id', 'front', 'back', 'sourceExcerpt', 'sourceLocation', 'confidence', 'tags', 'reviewerEdited', 'reviewerVerified', 'provenance'];
-  const records = result.map((raw, index) => {
-    if (!raw || typeof raw !== 'object' || Array.isArray(raw)) throw new AIResponseError(`cards[${index}] must be an object.`);
-    const record = raw as Record<string, unknown>;
-    assertAllowedKeys(record, allowedKeys, `cards[${index}]`);
-    return record;
-  });
-  const provenanceRecords = records.map((record, index) => record.provenance === undefined
-    ? undefined
-    : readServerProvenance({ provenance: record.provenance }, 'flashcards', true, Boolean(input.document)));
-  const provenance = provenanceRecords.find((entry): entry is AIProvenance => entry !== undefined);
-  if (provenanceRecords.some(entry => !entry)) {
-    throw new AIResponseError('Every generated flashcard must include the server prompt/source-digest attestation.');
-  }
-  if (provenance && provenanceRecords.some(entry => !entry
-    || entry.promptVersion !== provenance.promptVersion
-    || entry.sourceSha256 !== provenance.sourceSha256
-    || entry.documentSha256 !== provenance.documentSha256
-    || entry.evidenceVerified !== provenance.evidenceVerified)) {
-    throw new AIResponseError('Generated flashcards contain missing or contradictory source provenance.');
-  }
-  const payload = {
-    cards: records.map(record => ({
-      front: record.front,
-      back: record.back,
-      sourceExcerpt: record.sourceExcerpt,
-      sourceLocation: record.sourceLocation,
-      confidence: record.confidence,
-      tags: record.tags,
-    })),
-    ...(provenance ? { provenance } : {}),
-  };
-  return validateCards(payload, input).map(card => ({
-    ...card,
-    reviewerEdited: false,
-    reviewerVerified: false,
-  }));
-}
-
-/** Revalidates a typed custom adapter result and requires document provenance. */
-export function validateInstitutionSyllabusResult(result: unknown, input: AIGenerationInput): SyllabusExtraction {
-  if (!result || typeof result !== 'object' || Array.isArray(result) || !(result as Record<string, unknown>).provenance) {
-    throw new AIResponseError('Every generated syllabus result must include the server prompt/source-digest attestation.');
-  }
-  return validateSyllabus(result, input);
-}
-
 export async function generateValidatedFlashcards(input: AIGenerationInput): Promise<GeneratedFlashcard[]> {
   validateInput(input, 'flashcards');
-  return validateInstitutionFlashcardResult(await getAIService().generateFlashcards(input), input);
+  const service = getAIService();
+  assertAISourceProfile(input, 'flashcards', service.sourceProfile);
+  return validateInstitutionFlashcardResult(await service.generateFlashcards(input), input);
 }
 
 export async function extractValidatedSyllabus(input: AIGenerationInput): Promise<SyllabusExtraction> {
   validateInput(input, 'syllabus');
-  return validateInstitutionSyllabusResult(await getAIService().extractSyllabus(input), input);
+  const service = getAIService();
+  assertAISourceProfile(input, 'syllabus', service.sourceProfile);
+  return validateInstitutionSyllabusResult(await service.extractSyllabus(input), input);
+}
+
+export async function recoverValidatedFlashcards(error: AIRequestError, input: AIGenerationInput): Promise<GeneratedFlashcard[]> {
+  validateInput(input, 'flashcards');
+  if (!error.matches('flashcards', input)) throw new AIResponseError('This saved request belongs to a different source or course.');
+  return validateInstitutionFlashcardResult(validateCards(await error.checkSavedResult(), input), input);
+}
+
+export async function recoverValidatedSyllabus(error: AIRequestError, input: AIGenerationInput): Promise<SyllabusExtraction> {
+  validateInput(input, 'syllabus');
+  if (!error.matches('syllabus', input)) throw new AIResponseError('This saved request belongs to a different source or course.');
+  return validateInstitutionSyllabusResult(await error.checkSavedResult(), input);
 }
 
 function appendDocument(form: FormData, document: AIDocumentAsset) {
   appendMultipartAsset(form, 'document', document);
 }
 
+function generationForm(task: AIRequestTask, input: AIGenerationInput) {
+  const form = new FormData();
+  form.append('task', task);
+  form.append('promptVersion', task === 'flashcards' ? FLASHCARD_PROMPT_VERSION : SYLLABUS_PROMPT_VERSION);
+  if (input.courseId) form.append('courseId', input.courseId);
+  form.append('courseTitle', input.courseTitle || '');
+  form.append('locale', input.locale || 'en');
+  if (task === 'flashcards') form.append('requestedCardCount', String(input.requestedCardCount ?? 30));
+  if (input.sourceText?.trim()) form.append('sourceText', input.sourceText.trim());
+  if (input.document) { form.append('sourceKind', inferAIDocumentKind(input.document)); appendDocument(form, input.document); }
+  return form;
+}
+
 export class InstitutionAIService implements AIService {
+  readonly requestHistory?: AIRequestHistory;
+  readonly sourceProfile?: 'text-v1';
   private readonly fetchImpl: typeof fetch;
   private readonly localDevelopment: boolean;
   private readonly baseUrl: string;
+  private readonly config: AIServiceConfig;
 
-  constructor(private readonly config: AIServiceConfig) {
+  constructor(config: AIServiceConfig) {
+    this.config = { ...config };
+    if (config.sourceProfile !== undefined && config.sourceProfile !== 'text-v1') throw new AIConfigurationError('Unsupported AI source profile.');
+    this.sourceProfile = config.sourceProfile;
+    if (config.authentication !== undefined && config.authentication !== 'bearer' && config.authentication !== 'same-origin-cookie') {
+      throw new AIConfigurationError('Unsupported AI authentication mode.');
+    }
     const validatedUrl = safeBaseUrl(config.baseUrl);
-    this.localDevelopment = validatedUrl.localDevelopment;
+    this.localDevelopment = validatedUrl.localDevelopment && config.authentication !== 'same-origin-cookie';
     this.baseUrl = validatedUrl.url;
-    if (!this.localDevelopment && !config.getAccessToken) {
+    if (config.requestRecovery !== undefined && (!['status-v1', 'history-v1'].includes(config.requestRecovery) || this.localDevelopment)) {
+      throw new AIConfigurationError('Saved-result recovery requires an authenticated gateway with the status-v1 or history-v1 contract.');
+    }
+    this.validateCookieOrigin();
+    if (config.authentication !== 'same-origin-cookie' && !this.localDevelopment && !config.getAccessToken) {
       throw new AIConfigurationError('Remote AI services require an authenticated access-token provider.');
     }
-    this.fetchImpl = config.fetchImpl || fetch;
+    // Browser fetch requires its global receiver when stored as a class method.
+    this.fetchImpl = (config.fetchImpl || fetch).bind(globalThis);
+    if (config.requestRecovery === 'history-v1') this.requestHistory = Object.freeze({
+      list: async (task: AIRequestTask, courseId: string, cursor?: string) => {
+        this.validateHistoryScope(task, courseId, cursor);
+        const query = new URLSearchParams({ courseId, task, ...(cursor ? { cursor } : {}) });
+        return readAIHistoryPage(await this.readSavedPayload(`/lms/v1/ai/requests?${query}`, undefined, 64_000), task, courseId);
+      },
+      recover: async (task: AIRequestTask, input: AIGenerationInput, requestId: string) => {
+        this.validateHistoryScope(task, input.courseId, requestId);
+        if (!requestId) throw new AIResponseError('Select a valid saved request.');
+        validateInput(input, task);
+        assertAISourceProfile(input, task, this.sourceProfile);
+        const source = { ...input, document: input.document ? { ...input.document } : undefined };
+        return this.checkSavedRequest(task, source, requestId, true);
+      },
+    });
   }
 
-  private async request(task: 'flashcards' | 'syllabus', input: AIGenerationInput) {
+  private validateHistoryScope(task: AIRequestTask, courseId?: string, cursor?: string) {
+    const validId = (value: unknown) => typeof value === 'string' && /^[A-Za-z0-9][A-Za-z0-9._:-]{0,127}$/.test(value);
+    if (!['flashcards', 'syllabus'].includes(task) || !validId(courseId) || cursor !== undefined && !validId(cursor)) throw new AIResponseError('Select a valid course and saved request.');
+  }
+
+  private validateCookieOrigin() {
+    if (this.config.authentication !== 'same-origin-cookie') return;
+    if (typeof window === 'undefined' || window.location?.origin !== this.baseUrl || !this.baseUrl.startsWith('https://') || this.config.getAccessToken !== undefined) {
+      throw new AIConfigurationError('AI cookie sessions require the exact HTTPS browser origin and no token callback.');
+    }
+  }
+
+  private async authentication(signal: AbortSignal) {
+    this.validateCookieOrigin();
+    const cookieAuthentication = this.config.authentication === 'same-origin-cookie';
+    const token = cookieAuthentication ? undefined : (await awaitWithAbort(signal, async () => this.config.getAccessToken?.()))?.trim();
+    this.validateCookieOrigin(); signal.throwIfAborted();
+    if (!cookieAuthentication && !this.localDevelopment && !token) throw new AIConfigurationError('An authenticated AI session is required.');
+    if (token && (token.length > 8_192 || /[\u0000-\u001f\u007f]/.test(token))) throw new AIConfigurationError('The AI service access token is invalid.');
+    return { credentials: cookieAuthentication ? 'same-origin' as const : 'omit' as const, headers: { Accept: 'application/json', ...(token ? { Authorization: `Bearer ${token}` } : {}) } };
+  }
+
+  private generationFailure(task: AIRequestTask, input: AIGenerationInput, attempt: { requestId: string; sent: boolean }, error: unknown): unknown {
+    if (this.localDevelopment || !attempt.sent) return error;
+    return new AIRequestError(error instanceof Error ? error.message : 'The AI request did not complete.', attempt.requestId, task, input,
+      this.config.requestRecovery ? async () => {
+        try { return await this.checkSavedRequest(task, input, attempt.requestId); }
+        catch (failure) { throw this.generationFailure(task, input, attempt, failure); }
+      } : undefined);
+  }
+
+  private async fetchResponse(url: string, init: RequestInit & { signal: AbortSignal }) {
+    let received: Response | undefined;
+    try {
+      const response = await awaitWithAbort(init.signal, async () => {
+        received = await this.fetchImpl(url, init);
+        // A transport that ignores cancellation may deliver a body after timeout.
+        if (init.signal.aborted) { void received.body?.cancel().catch(() => undefined); init.signal.throwIfAborted(); }
+        return received;
+      });
+      init.signal.throwIfAborted();
+      return response;
+    } catch (error) {
+      void received?.body?.cancel().catch(() => undefined);
+      throw error;
+    }
+  }
+
+  private async checkSavedRequest(task: AIRequestTask, input: AIGenerationInput, requestId: string, matchSource = false) {
+    const payload = await this.readSavedPayload(`/lms/v1/ai/requests/${encodeURIComponent(requestId)}${matchSource ? '/recover' : ''}`, matchSource ? generationForm(task, input) : undefined);
+    const result = readRecoveredAIResult(payload, task, input, requestId);
+    if (task === 'flashcards') validateCards(result, input); else validateSyllabus(result, input);
+    return result;
+  }
+
+  private async readSavedPayload(path: string, body?: FormData, maxBytes = 2_064_000) {
+    const controller = new AbortController();
+    const timeout = setTimeout(() => controller.abort(), 30_000);
+    try {
+      const authentication = await this.authentication(controller.signal);
+      const response = await this.fetchResponse(`${this.baseUrl}${path}`, {
+        ...authentication, method: body ? 'POST' : 'GET', ...(body ? { body } : {}), redirect: 'error', cache: 'no-store', signal: controller.signal,
+      });
+      const text = await readBoundedResponseText(response, maxBytes, () => new AIResponseError('The saved AI request exceeded its response limit.'), controller.signal);
+      if (response.status === 404) throw new AIResponseError(path.includes('?') ? 'This history page has expired or is unavailable. Refresh the saved request history.' : 'No saved request is available. It may have expired or never reached the service. Starting again can create another charge.');
+      if (response.status === 409 && body) throw new AIResponseError('The selected source or settings do not match this saved request. Reselect the original file or text and use its original card count and language. No new generation was requested.');
+      if (response.status === 401 || response.status === 403) throw new AIResponseError('Your session or course access no longer permits recovery. Sign in again or contact your administrator.');
+      if (!response.ok) throw new AIResponseError(`The saved AI request could not be checked (${response.status}).`);
+      if (!/^application\/(?:[a-z0-9.+-]*\+)?json\b/i.test(response.headers.get('Content-Type') || '')) throw new AIResponseError('The saved AI request returned an unexpected content type.');
+      let payload: unknown;
+      try { payload = JSON.parse(text); } catch { throw new AIResponseError('The saved AI request returned malformed JSON.'); }
+      return payload;
+    } catch (error) {
+      if (error instanceof AIResponseError || error instanceof AIConfigurationError) throw error;
+      throw new AIResponseError(controller.signal.aborted ? 'Checking the saved result timed out. You can check again without starting another generation.' : 'The saved result could not be checked. No new generation was requested.');
+    } finally { clearTimeout(timeout); }
+  }
+
+  private async request(task: 'flashcards' | 'syllabus', input: AIGenerationInput, attempt: { requestId: string; sent: boolean }) {
     validateInput(input, task);
+    assertAISourceProfile(input, task, this.sourceProfile);
+    this.validateCookieOrigin();
+    if (!this.localDevelopment && !input.courseId) throw new AIConfigurationError('Select a course before using the authenticated AI service.');
     const controller = new AbortController();
     const timeout = setTimeout(() => controller.abort(), REQUEST_TIMEOUT_MS);
     try {
-      const token = (await this.config.getAccessToken?.())?.trim();
-      if (!this.localDevelopment && !token) throw new AIConfigurationError('An authenticated AI session is required.');
-      if (token && (token.length > 8_192 || /[\u0000-\u001f\u007f]/.test(token))) {
-        throw new AIConfigurationError('The AI service access token is invalid.');
-      }
-      const form = new FormData();
-      form.append('task', task);
-      form.append('promptVersion', task === 'flashcards' ? FLASHCARD_PROMPT_VERSION : SYLLABUS_PROMPT_VERSION);
-      form.append('courseTitle', input.courseTitle || '');
-      form.append('locale', input.locale || 'en');
-      if (task === 'flashcards') form.append('requestedCardCount', String(input.requestedCardCount ?? 30));
-      if (input.sourceText?.trim()) form.append('sourceText', input.sourceText.trim());
-      if (input.document) {
-        form.append('sourceKind', inferAIDocumentKind(input.document));
-        appendDocument(form, input.document);
-      }
-      const requestId = createEntityId('ai-request');
-      const response = await this.fetchImpl(`${this.baseUrl}/lms/v1/ai/generate`, {
+      const authentication = await this.authentication(controller.signal);
+      const form = generationForm(task, input);
+      const requestId = attempt.requestId;
+      attempt.sent = true;
+      const response = await this.fetchResponse(`${this.baseUrl}/lms/v1/ai/generate`, {
         method: 'POST',
         // Do not replay learner source material or bearer credentials to a
         // redirect target controlled outside the configured AI origin.
         redirect: 'error',
+        credentials: authentication.credentials,
         headers: {
-          ...(token ? { Authorization: `Bearer ${token}` } : {}),
+          ...authentication.headers,
           'Idempotency-Key': requestId,
           'X-Request-Id': requestId,
         },
@@ -517,7 +335,7 @@ export class InstitutionAIService implements AIService {
         signal: controller.signal,
       });
       const text = await readBoundedResponseText(response, MAX_RESPONSE_BYTES, () =>
-        new AIResponseError('The AI service response exceeded the 2 MB limit.'));
+        new AIResponseError('The AI service response exceeded the 2 MB limit.'), controller.signal);
       if (!response.ok) {
         let payload: unknown;
         try {
@@ -544,6 +362,9 @@ export class InstitutionAIService implements AIService {
       if (!this.localDevelopment && attestation?.requestId !== requestId) {
         throw new AIResponseError('The AI service response was not bound to this request identifier.');
       }
+      if (response.headers.get('X-LMS-AI-Review-Notices') === 'present' && !attestation?.sourceReviewNotices?.length) {
+        throw new AIResponseError('Source processing notes are missing from the saved result. Ask your administrator to retrieve it before starting a new generation.');
+      }
       return payload;
     } catch (error) {
       if (error instanceof Error && error.name === 'AbortError') throw new Error('The AI request timed out. Try a smaller document.');
@@ -557,15 +378,32 @@ export class InstitutionAIService implements AIService {
   }
 
   async generateFlashcards(input: AIGenerationInput) {
-    return validateCards(await this.request('flashcards', input), input);
+    const source = { ...input, document: input?.document ? { ...input.document } : undefined };
+    const attempt = { requestId: createEntityId('ai-request'), sent: false };
+    try { return validateCards(await this.request('flashcards', source, attempt), source); }
+    catch (error) { throw this.generationFailure('flashcards', source, attempt, error); }
   }
 
   async extractSyllabus(input: AIGenerationInput) {
-    return validateSyllabus(await this.request('syllabus', input), input);
+    const source = { ...input, document: input?.document ? { ...input.document } : undefined };
+    const attempt = { requestId: createEntityId('ai-request'), sent: false };
+    try { return validateSyllabus(await this.request('syllabus', source, attempt), source); }
+    catch (error) { throw this.generationFailure('syllabus', source, attempt, error); }
   }
 }
 
 let configuredService: AIService | null = null;
+
+/** Display guidance only; server validation and authorization remain authoritative. */
+export function getAISourceSupport(task: AIRequestTask) {
+  let profile: AIService['sourceProfile'];
+  try { profile = getAIService().sourceProfile; } catch { /* Unconfigured services must not imply format support. */ }
+  return { description: sourceProfileDescription(task, profile, isPreparedAIDemo()), pickerTypes: sourceProfilePickerTypes(task, profile), profile };
+}
+
+export function assertConfiguredAISource(input: AIGenerationInput, task: AIRequestTask) {
+  assertAISourceProfile(input, task, getAISourceSupport(task).profile);
+}
 
 export function configureAIService(service: AIService | null) {
   configuredService = service;
@@ -573,7 +411,7 @@ export function configureAIService(service: AIService | null) {
 
 export function getAIService(): AIService {
   if (configuredService) return configuredService;
-  const baseUrl = process.env.EXPO_PUBLIC_LMS_AI_BASE_URL?.trim();
+  const baseUrl = preparedDemoBaseUrl() || process.env.EXPO_PUBLIC_LMS_AI_BASE_URL?.trim();
   const isDevelopmentBuild = typeof __DEV__ !== 'undefined' && __DEV__;
   if (!baseUrl || !isDevelopmentBuild) {
     throw new AIConfigurationError(

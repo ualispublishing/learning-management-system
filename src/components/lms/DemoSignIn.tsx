@@ -16,12 +16,14 @@ import branding from '../../lib/branding.generated.json';
 import { InstitutionBrand, InstitutionColorBar } from '../ui/InstitutionBrand';
 
 interface DemoSignInProps {
+  onShowAI?: () => void;
+  onShowGuide?: () => void;
   busyEmail: string | null;
   error: string | null;
   onSignIn: (email: string) => Promise<void>;
 }
 
-export function DemoSignIn({ busyEmail, error, onSignIn }: DemoSignInProps) {
+export function DemoSignIn({ busyEmail, error, onSignIn, onShowAI, onShowGuide }: DemoSignInProps) {
   const colors = useThemeColors();
 
   return (
@@ -35,6 +37,11 @@ export function DemoSignIn({ busyEmail, error, onSignIn }: DemoSignInProps) {
         <View style={{ marginTop: 20, marginBottom: 20 }}><InstitutionColorBar /></View>
         <Text accessibilityRole="header" style={[styles.title, { color: colors.text }]}>Explore the learning demo</Text>
         <Text style={[styles.subtitle, { color: colors.textSecondary }]}>{branding.tagline} Choose a role below to explore courses, assessments and conversations.</Text>
+        {onShowAI ? <Pressable onPress={onShowAI} accessibilityRole="button" style={[styles.notice, { borderColor: colors.primary, backgroundColor: colors.background }]}>
+          <Text style={{ color: colors.primary, fontWeight: '800' }}>Open AI before & after demo →</Text>
+          <Text style={{ color: colors.textSecondary, marginTop: 4 }}>Compare a syllabus and lesson files with their prepared results. No course setup needed.</Text>
+        </Pressable> : null}
+        {onShowGuide ? <Pressable onPress={onShowGuide} accessibilityRole="button" accessibilityLabel="Open Demo guide" style={{ paddingVertical: 14 }}><Text style={{ color: colors.primary, fontWeight: '700' }}>Explore all demo features →</Text></Pressable> : null}
         <View style={[styles.notice, { backgroundColor: colors.background, borderColor: colors.border }]}>
           <Text style={{ color: colors.text, fontWeight: '700' }}>Demo accounts</Text>
           <Text style={{ color: colors.textSecondary, marginTop: 3 }}>No password needed. These sample accounts use fictional data. Open another tab to try a different role. Refreshing signs you out.</Text>

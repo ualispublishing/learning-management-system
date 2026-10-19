@@ -4,6 +4,8 @@ import {
   DEFAULT_SHARED_DEMO_RESET_KEY,
   listenSharedDemoServer,
 } from '../src/lib/testing/sharedDemoServer';
+import { createPreparedAIDemo } from '../src/lib/testing/preparedAIDemoServer';
+import path from 'node:path';
 
 const parsePort = (value: string | undefined, fallback: number) => {
   if (!value) return fallback;
@@ -19,7 +21,8 @@ const port = parsePort(process.env.LMS_DEMO_SERVER_PORT, DEFAULT_SHARED_DEMO_POR
 const resetKey = process.env.LMS_DEMO_RESET_KEY?.trim() || DEFAULT_SHARED_DEMO_RESET_KEY;
 
 const main = async () => {
-  const server = await listenSharedDemoServer({ host, port, resetKey });
+  const handlePreparedAI = await createPreparedAIDemo(path.resolve('demo/ai'));
+  const server = await listenSharedDemoServer({ host, port, resetKey, handlePreparedAI, launchId: process.env.LMS_DEMO_LAUNCH_ID });
   console.log(`Shared LMS demo server ready at http://${host}:${port}`);
   console.log('Loopback-only, in-memory test data. Press Ctrl+C to stop and erase the session.');
 

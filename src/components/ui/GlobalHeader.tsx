@@ -6,7 +6,9 @@
  *   and commenting standard that applies to this module.
  */
 import React, { useState, useEffect } from 'react';
-import { View, Text, StyleSheet, Pressable, Modal } from 'react-native';
+import { View, Text, StyleSheet, Pressable, Modal, Platform } from 'react-native';
+import { router } from 'expo-router';
+import { isPreparedAIDemo } from '../../lib/ai/preparedDemo';
 import { useThemeColors } from '../../lib/useThemeColors';
 import { useSettingsStore } from '../../lib/store/useSettingsStore';
 import { useLMSStore } from '../../lib/store/useLMSStore';
@@ -89,6 +91,10 @@ export function GlobalHeader() {
       </View>
 
       <InstitutionColorBar />
+      {Platform.OS === 'web' && isPreparedAIDemo() ? <Pressable accessibilityRole="button" onPress={() => router.push('/ai-demo')} style={{ paddingHorizontal: 20, paddingVertical: 10 }}>
+        <Text style={{ color: colors.primary, fontWeight: '700' }}>Open AI before & after demo →</Text>
+      </Pressable> : null}
+      {Platform.OS === 'web' && isPreparedAIDemo() ? <Pressable accessibilityRole="button" accessibilityLabel="Open Demo guide" onPress={() => router.push('/demo')} style={{ paddingHorizontal: 20, paddingBottom: 10 }}><Text style={{ color: colors.primary, fontWeight: '700' }}>Demo guide →</Text></Pressable> : null}
 
       {dataError && (
         <Pressable onPress={dismissDataError} accessibilityRole="button" accessibilityLabel={`Changes were not saved: ${dataError}. Dismiss error.`} style={[styles.errorBanner, { backgroundColor: colors.error }]}> 

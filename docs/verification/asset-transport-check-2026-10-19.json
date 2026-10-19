@@ -1,0 +1,69 @@
+{
+  "date": "2026-10-19",
+  "scope": "HTTP asset client cookie authentication, immutable upload inputs, complete operation deadlines and response cleanup",
+  "source_sha256": {
+    "src/lib/integration/assetService.ts": "4106024f4f58f78e0ad01aac6006ef68be103b5a70a38bb745f517ba8142c075",
+    "tests/asset-auth-transport.test.ts": "2270a56cd247f27d35c3fadd665e23a1473605dea0a58ac0ba93ade425a17185"
+  },
+  "stages": [
+    {
+      "command": ["npm", "run", "check"],
+      "exit_code": 0,
+      "cutoff": null,
+      "elapsed_seconds": 36.5,
+      "peak_group_rss_mib": 1752.6
+    },
+    {
+      "command": ["npm", "--prefix", "server", "run", "check"],
+      "exit_code": 0,
+      "cutoff": null,
+      "elapsed_seconds": 2.4,
+      "peak_group_rss_mib": 386.9
+    },
+    {
+      "command": ["npm", "run", "build:web"],
+      "exit_code": 0,
+      "cutoff": null,
+      "elapsed_seconds": 15.2,
+      "peak_group_rss_mib": 877.1
+    },
+    {
+      "command": ["npm", "run", "verify:web-build"],
+      "exit_code": 0,
+      "cutoff": null,
+      "elapsed_seconds": 0.3,
+      "peak_group_rss_mib": 0.8
+    }
+  ],
+  "app_tests": 556,
+  "new_asset_transport_tests": 13,
+  "server_tests": 54,
+  "synthetic_journeys": 270,
+  "synthetic_steps": 1620,
+  "exported_files": 30,
+  "peak_group_rss_mib": 1752.6,
+  "rss_sampling_interval_ms": 250,
+  "limit_mib": 3072,
+  "time_limit_seconds": 300,
+  "elapsed_seconds": 54.4,
+  "node_heap_mib": 1536,
+  "test_heap_mib": 512,
+  "paid_provider_calls": 0,
+  "new_browser_visual_check": false,
+  "coverage": [
+    "Exact HTTPS origin, browser-only cookies, rejected mixed credentials and immutable configuration.",
+    "Multipart bytes and explicit scope for course content, assessment submissions and chat attachments.",
+    "Bearer cookie omission, invalid inputs rejected before authentication and no mutation during pending credentials.",
+    "Redacted authentication failures without retry or fallback.",
+    "Mock-time stalled credential, fetch, stream and non-stream deadlines; late-response cancellation and stream cleanup.",
+    "Real loopback HTTP multipart success and 307 redirect rejection without forwarding file or bearer token."
+  ],
+  "limitations": [
+    "Cookie transport assertions use an injected browser origin and fetch; they do not establish real browser cookie delivery or deployed SSO acceptance.",
+    "The real HTTP test uses synthetic data and bearer authentication on a development loopback server, not a production asset backend.",
+    "The reference asset server route, scoped retrieval, durable storage/idempotency, scanning and retention remain unimplemented.",
+    "Deadline expiry cannot prove server rollback or stop underlying custom credential/transport work that ignores cancellation.",
+    "RSS is sampled process-group memory for these checks, not a whole-system measurement, long-running load test or leak-free guarantee.",
+    "No live issuer, native-device trial, paid provider request, deployment or institution acceptance was performed; production gates remain open."
+  ]
+}

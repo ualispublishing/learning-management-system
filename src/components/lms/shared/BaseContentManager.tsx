@@ -21,7 +21,7 @@ import { FlashcardReviewModal } from '../FlashcardReviewModal';
 import { UnifiedContentCreator, ContentType, AddFormData } from './UnifiedContentCreator';
 import { createEntityId } from '../../../lib/id';
 import { assertAssetMatchesAIProvenance, getAssetService, StoredAsset } from '../../../lib/integration/assetService';
-import { attachAIProcessingAttestation, FLASHCARD_PROMPT_VERSION } from '../../../lib/ai';
+import { assertConfiguredAISource, attachAIProcessingAttestation, FLASHCARD_PROMPT_VERSION } from '../../../lib/ai';
 import { buildSequentialModuleScheduleChanges } from '../../../lib/coursePresentationBuckets';
 import { restoreWithdrawnAnnouncementAsContent } from '../../../lib/chat/announcements';
 import { getCourseVideoAlternatives, getCourseVideoAsset, isCourseVideoMimeType } from '../../../lib/coursePresentation';
@@ -313,8 +313,9 @@ export const BaseContentManager = ({ courseId, renderContent }: BaseContentManag
         throw new Error('Select a supported document, note, caption, audio, or video file before enabling File to Cards.');
       }
       if (hasDocument && !AI_SOURCE_EXTENSION.test(currentForm.fileName || '')) {
-        throw new Error('File to Cards supports PDF, DOCX, PPTX, TXT, Markdown, RTF, VTT/SRT captions, MP3/M4A/WAV audio, and MP4/MOV/WebM video.');
+        throw new Error('This file is not an accepted AI source format. Check the connected service’s supported formats.');
       }
+      assertConfiguredAISource({ sourceText, ...(hasDocument ? { document: { uri: currentForm.fileUri!, name: currentForm.fileName || '', size: currentForm.fileSize, mimeType: currentForm.fileMimeType, file: currentForm.file } } : {}) }, 'flashcards');
       setFlashcardReviewVisible(true);
       return;
     }
@@ -739,7 +740,7 @@ export const BaseContentManager = ({ courseId, renderContent }: BaseContentManag
       {/* Add Content Modal */}
       {addCategory && (
         <UnifiedContentCreator 
-          visible={!!addCategory} 
+          visible={!!addCategory && !flashcardReviewVisible}
           category={addCategory} 
           courseId={courseId} 
           isEditing={!!editingItemId}
@@ -869,6 +870,7 @@ export const BaseContentManager = ({ courseId, renderContent }: BaseContentManag
           file: addForm.file,
           kind: aiSourceKind(addForm.fileName, addForm.fileMimeType),
         } : undefined}
+        courseId={courseId}
         courseTitle={courseTitle}
         requestedCardCount={addForm.flashcardCount || 30}
         onApprove={async (cards, sourceAttestation) => {

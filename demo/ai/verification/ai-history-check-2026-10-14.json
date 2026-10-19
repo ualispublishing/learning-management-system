@@ -1,0 +1,73 @@
+{
+  "stages": [
+    {
+      "command": [
+        "npm",
+        "run",
+        "check"
+      ],
+      "exit_code": 0,
+      "cutoff": null
+    },
+    {
+      "command": [
+        "npm",
+        "--prefix",
+        "server",
+        "run",
+        "check"
+      ],
+      "exit_code": 0,
+      "cutoff": null
+    },
+    {
+      "command": [
+        "npm",
+        "run",
+        "build:web"
+      ],
+      "exit_code": 0,
+      "cutoff": null
+    },
+    {
+      "command": [
+        "npm",
+        "run",
+        "verify:web-build"
+      ],
+      "exit_code": 0,
+      "cutoff": null
+    }
+  ],
+  "peak_group_rss_mib": 1787.9,
+  "limit_mib": 3072,
+  "time_limit_seconds": 300,
+  "elapsed_seconds": 55.8,
+  "date": "2026-10-14",
+  "scope": "Principal/course/task-scoped AI request history and source-matched recovery after reload",
+  "app_tests": 535,
+  "server_tests": 54,
+  "synthetic_journeys": 270,
+  "synthetic_steps": 1620,
+  "exported_files": 30,
+  "node_heap_mib": 1536,
+  "test_heap_mib": 512,
+  "paid_provider_calls": 0,
+  "new_browser_visual_check": false,
+  "server_marker_scan": {
+    "bundles_checked": 2,
+    "markers": [
+      "api.openai.com/v1/responses",
+      "text-source.v1",
+      "gateway_ai_jobs",
+      "ai_storage_capacity_reached"
+    ],
+    "matches": []
+  },
+  "limitations": [
+    "History requires an authenticated history-v1 gateway and institution bootstrap.",
+    "Reselect the original source and use matching settings; original-source download and unsaved reviewer edit recovery are not implemented.",
+    "Prepared local playback does not opt into live request history.",
+    "Synthetic provider responses only; no live SSO, provider or deployment acceptance."
+  ]
+}

@@ -1,4 +1,23 @@
 import { institution, type Institution } from './gateway-validation.ts';
+import type { OpenAIProviderOptions } from '../src/lib/ai/openaiProvider.server.ts';
+import type { AIJobPolicy } from './ai-policy.ts';
+
+export interface AIConfig { provider: 'openai'; model: string; apiKey: string; maxOutputTokens: number; reasoningEffort?: OpenAIProviderOptions['reasoningEffort']; policy: AIJobPolicy }
+/** Explicit opt-in, with an operator-selected model, output budget and retention. */
+export function readAIConfig(env: NodeJS.ProcessEnv): AIConfig | undefined {
+  if (!Object.keys(env).some(key => key.startsWith('LMS_AI_') && env[key] !== undefined)) return undefined;
+  if (required(env, 'LMS_AI_PROVIDER') !== 'openai') throw new Error('The reference service currently configures the OpenAI connector only. Other providers require an AIProvider implementation.');
+  const number = (name: string, min: number, max: number) => {
+    const raw = required(env, name); const value = Number(raw);
+    if (!/^\d+$/.test(raw) || !Number.isInteger(value) || value < min || value > max) throw new Error(`${name} is outside the supported range.`);
+    return value;
+  };
+  const effort = env.LMS_AI_REASONING_EFFORT;
+  if (effort !== undefined && !['none', 'minimal', 'low', 'medium', 'high', 'xhigh'].includes(effort)) throw new Error('Unsupported LMS_AI_REASONING_EFFORT.');
+  return { provider: 'openai', model: required(env, 'LMS_AI_MODEL'), apiKey: required(env, 'LMS_AI_OPENAI_API_KEY'),
+    maxOutputTokens: number('LMS_AI_MAX_OUTPUT_TOKENS', 1, 200_000), reasoningEffort: effort as AIConfig['reasoningEffort'],
+    policy: { retentionHours: number('LMS_AI_RETENTION_HOURS', 24, 720), dailyRequestLimit: number('LMS_AI_DAILY_REQUEST_LIMIT', 1, 1000) } };
+}
 
 export interface AuthConfig {
   origin: string;

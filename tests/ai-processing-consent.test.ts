@@ -85,8 +85,8 @@ test('flashcard review UI gates generation and persists the acknowledgement thro
     readFile(new URL('../src/components/lms/shared/BaseContentManager.tsx', import.meta.url), 'utf8'),
   ]);
 
-  assert.match(modalSource, /runAttestedAIRequest\(attestation, \(\) => generateValidatedFlashcards\(generationInput\)\)/);
-  assert.match(modalSource, /if \(!visible \|\| !sourceRightsConfirmed\) return;/);
+  // The rendered recovery tests exercise the actual consent gate for generation
+  // and saved-result review; avoid coupling that behavior to one callback shape.
   assert.match(modalSource, /onApprove\(publishableCards, sourceAttestation\)/);
   assert.match(managerSource, /onApprove=\{async \(cards, sourceAttestation\) =>/);
   assert.match(managerSource, /ai: attachAIProcessingAttestation\(\{/);

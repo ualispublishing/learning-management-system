@@ -1,0 +1,100 @@
+{
+  "version": 1,
+  "generation": {
+    "authoringTool": "Codex",
+    "preparedOn": "2026-10-06",
+    "model": "gpt-6-astra",
+    "reasoningEffort": "xhigh",
+    "contextMode": "isolated-agent"
+  },
+  "integratedOn": "2026-10-07",
+  "method": "Codex temporary agent with fork_turns=none; newly generated candidate files promoted unchanged after source/schema validation.",
+  "modelEvidence": {
+    "kind": "configured-agent-model",
+    "model": "gpt-6-astra",
+    "reasoningEffort": "xhigh",
+    "inheritedConversation": false
+  },
+  "apiResponseId": null,
+  "apiEquivalenceVerified": false,
+  "independentInstructorApproval": false,
+  "request": {
+    "path": "generation/2026-10-06-isolated/request.json",
+    "sha256": "1134c5db1237e1499fa9dead559cddbeda2a5c64c0321d951acad9ae7473b4b8"
+  },
+  "files": [
+    {
+      "id": "syllabus",
+      "source": "sources/mit-6.0001-syllabus.txt",
+      "sourceSha256": "1883fc146153aad9f413938d10496559938155e175c02bd3817744a72d397e15",
+      "extracted": "extracted/syllabus.json",
+      "extractedSha256": "1e1b28298adf10fcdf42efc6a1223d9ae245735a1d8922d3b8a2835aea94af67",
+      "candidate": "generation/2026-10-06-isolated/candidate/syllabus.json",
+      "result": "results/syllabus.json",
+      "resultSha256": "e1563fb0f2e39432e56f8cf3bdb4412a6935da63a8c8157141f6ea793f44a32b",
+      "editsAfterGeneration": []
+    },
+    {
+      "id": "slides-pdf",
+      "source": "sources/mit-6.0001-lecture1-slides.pdf",
+      "sourceSha256": "fe1207e81d17dd465dd65fec8b550f17248646d5b2d6b8372912557bd57c39fb",
+      "extracted": "extracted/slides-pdf.json",
+      "extractedSha256": "bda54c8cf4ae3a67558138a4c6f9c4a5dddba1142b71c08caf2e1542bfc29b65",
+      "candidate": "generation/2026-10-06-isolated/candidate/slides-pdf.json",
+      "result": "results/slides-pdf.json",
+      "resultSha256": "b481a32b164cf72c7eb1314a214f0b4ed8f8aa565acafc10881ca60336c26e2a",
+      "editsAfterGeneration": []
+    },
+    {
+      "id": "slides-pptx",
+      "source": "sources/mit-6.0001-lecture1-adapted.pptx",
+      "sourceSha256": "78294440e01c74aa3d794754703a8a111d24a8bb74f7ddfb1c8911a93052ba72",
+      "extracted": "extracted/slides-pptx.json",
+      "extractedSha256": "e9b4aa92223d93c6af0a5e123e45ac3987a6e9b48fcd9fde65eb18e11b26d39e",
+      "candidate": "generation/2026-10-06-isolated/candidate/slides-pptx.json",
+      "result": "results/slides-pptx.json",
+      "resultSha256": "6db08873f563d9ef9083159274cf80711064ce679a750eee51dc20bde8f3c5c6",
+      "editsAfterGeneration": []
+    },
+    {
+      "id": "lecture-video",
+      "source": "sources/mit-6.0001-lecture1-excerpt.mp4",
+      "sourceSha256": "78df14e66172d210e2912e0047d40568b398ef66e6d2fcf1f698a24cb795d92d",
+      "extracted": "extracted/lecture-media.json",
+      "extractedSha256": "0e02b7b3f598663e9fbe30b4841ea872cba2728254b5aee830bae32a31aca7ac",
+      "candidate": "generation/2026-10-06-isolated/candidate/lecture-media.json",
+      "result": "results/lecture-media.json",
+      "resultSha256": "bd94bb06bf504e9cb7f468e634f614866a54ba3e2c299f68ce35fc6057de7719",
+      "editsAfterGeneration": []
+    },
+    {
+      "id": "lecture-audio",
+      "source": "sources/mit-6.0001-lecture1-excerpt.m4a",
+      "sourceSha256": "853d6bb99f7bd0d46a36e75a66b8963650b5607f54fe6d47f2eeeb1eda348441",
+      "extracted": "extracted/lecture-media.json",
+      "extractedSha256": "0e02b7b3f598663e9fbe30b4841ea872cba2728254b5aee830bae32a31aca7ac",
+      "candidate": "generation/2026-10-06-isolated/candidate/lecture-media.json",
+      "result": "results/lecture-media.json",
+      "resultSha256": "bd94bb06bf504e9cb7f468e634f614866a54ba3e2c299f68ce35fc6057de7719",
+      "editsAfterGeneration": []
+    },
+    {
+      "id": "lecture-captions",
+      "source": "sources/mit-6.0001-lecture1-captions.vtt",
+      "sourceSha256": "7fd275e0ae70364fda46e228a6c11dbf1396844d0f6835be316f271a5fbbe377",
+      "extracted": "extracted/lecture-media.json",
+      "extractedSha256": "0e02b7b3f598663e9fbe30b4841ea872cba2728254b5aee830bae32a31aca7ac",
+      "candidate": "generation/2026-10-06-isolated/candidate/lecture-media.json",
+      "result": "results/lecture-media.json",
+      "resultSha256": "bd94bb06bf504e9cb7f468e634f614866a54ba3e2c299f68ce35fc6057de7719",
+      "editsAfterGeneration": []
+    }
+  ],
+  "limitations": [
+    "Configured model identity is recorded from the agent dispatch; no standalone API generation receipt exists.",
+    "Source extraction was prepared earlier; media results use the supplied transcript, not a fresh audio/video transcription.",
+    "Exact quotations and schema checks do not establish educational accuracy or completeness.",
+    "A fresh API call may differ. A saved replay preserves the accepted content."
+  ],
+  "privacyNote": "Internal conversation and agent task identifiers removed; model configuration and source/result evidence retained."
+}

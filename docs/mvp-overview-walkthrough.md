@@ -6,15 +6,25 @@ It uses synthetic data only and takes about 10–15 minutes.
 ## Start
 
 ```sh
-npm run web -- --port 4178
+npm run web
 ```
 
-Open `http://127.0.0.1:4178`. The local demo is ready for a product overview;
+Open `http://127.0.0.1:4178` and choose a demo role. The prepared AI before-and-after
+showcase is available from the sign-in screen or directly at `/ai-demo`.
+For a complete feature map, open **Explore all demo features** or `/demo`.
+Selecting a course or learning feature there prompts for a role if needed and
+continues to that destination. Returning from AI to the LMS keeps a signed-in
+session; refreshing the browser still intentionally signs it out.
+The local demo is ready for a product overview;
 it is not an institution-production deployment. Production still requires the
 gateway, SSO, durable services, approved integrations, signed builds, and the
 manual accessibility/device acceptance recorded in the release documents.
 
 ## Recommended review order
+
+Use **Demo guide** in the header to move between areas, including from course,
+deck, review and statistics screens. AI, institution colour preview and the
+institution setup walkthrough can also be opened directly from the guide.
 
 1. **Courses → Institution & business activation → Open activation journey**
    - Complete the six sequential deployment-owner stages: organization, identity,

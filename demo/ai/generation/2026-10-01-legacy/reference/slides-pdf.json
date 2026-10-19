@@ -1,0 +1,70 @@
+{
+  "cards": [
+    {
+      "front": "What does declarative knowledge consist of?",
+      "back": "Statements of fact.",
+      "sourceExcerpt": "declarative knowledge is statements of fact.",
+      "sourceLocation": "PDF page 2 (original lecture slide 10)",
+      "confidence": 1,
+      "tags": [
+        "computation",
+        "algorithms"
+      ]
+    },
+    {
+      "front": "What form does imperative knowledge take?",
+      "back": "A recipe or sequence of steps describing how to do something.",
+      "sourceExcerpt": "imperative knowledge is a recipe or “how-to”.",
+      "sourceLocation": "PDF page 2 (original lecture slide 10)",
+      "confidence": 1,
+      "tags": [
+        "computation",
+        "algorithms"
+      ]
+    },
+    {
+      "front": "In the square-root recipe, what value starts the process?",
+      "back": "An initial guess, g.",
+      "sourceExcerpt": "1) Start with a guess, g",
+      "sourceLocation": "PDF page 3 (original lecture slide 11)",
+      "confidence": 1,
+      "tags": [
+        "computation",
+        "algorithms"
+      ]
+    },
+    {
+      "front": "When does the square-root recipe stop and return g?",
+      "back": "When g*g is close enough to x.",
+      "sourceExcerpt": "2) If g*g is close enough to x, stop and say g is the answer",
+      "sourceLocation": "PDF page 3 (original lecture slide 11)",
+      "confidence": 1,
+      "tags": [
+        "computation",
+        "algorithms"
+      ]
+    },
+    {
+      "front": "How does the square-root recipe calculate a new guess when the current guess is not close enough?",
+      "back": "Average g and x/g: the new guess is (g + x/g) / 2.",
+      "sourceExcerpt": "3) Otherwise make a new guess by averaging g and x/g",
+      "sourceLocation": "PDF page 3 (original lecture slide 11)",
+      "confidence": 1,
+      "tags": [
+        "computation",
+        "algorithms"
+      ]
+    },
+    {
+      "front": "What three parts make up an algorithm in this lesson?",
+      "back": "A sequence of simple steps, a flow of control specifying when steps execute, and a way to determine when to stop.",
+      "sourceExcerpt": "1) sequence of simple steps 2) flow of control process that specifies when each step is executed 3) a means of determining when to stop 1+2+3 = an algorithm!",
+      "sourceLocation": "PDF page 4 (original lecture slide 12)",
+      "confidence": 1,
+      "tags": [
+        "computation",
+        "algorithms"
+      ]
+    }
+  ]
+}

@@ -1,0 +1,21 @@
+{
+  "text": "Statements and instructions Declarative knowledge is statements of fact. Imperative knowledge is a recipe or “how-to”. A fact describes what is true. A recipe specifies steps to follow. MIT OCW 6.0001 / Lecture 1  /  1\n\nA recipe for the square root of x 1. Start with a guess, g. 2. If g*g is close enough to x, stop and say g is the answer. 3. Otherwise make a new guess by averaging g and x/g. 4. Using the new guess, repeat until close enough. MIT OCW 6.0001 / Lecture 1  /  2\n\nThe parts of an algorithm A sequence of simple steps. A flow of control that specifies when each step is executed. A means of determining when to stop. These three parts form an algorithm. MIT OCW 6.0001 / Lecture 1  /  3\n\nSource and licence MIT OpenCourseWare · 6.0001 · Fall 2016 Ana Bell, Eric Grimson, John Guttag Lecture 1: What is Computation? · slides 10–12 CC BY-NC-SA 4.0 · No MIT endorsement. Text adapted; layout recreated. Commercial permission is not included. MIT OCW 6.0001 / Lecture 1  /  4",
+  "segments": [
+    {
+      "location": "Adapted PowerPoint slide 1 (MIT lecture slide 10)",
+      "text": "Statements and instructions Declarative knowledge is statements of fact. Imperative knowledge is a recipe or “how-to”. A fact describes what is true. A recipe specifies steps to follow. MIT OCW 6.0001 / Lecture 1  /  1"
+    },
+    {
+      "location": "Adapted PowerPoint slide 2 (MIT lecture slide 11)",
+      "text": "A recipe for the square root of x 1. Start with a guess, g. 2. If g*g is close enough to x, stop and say g is the answer. 3. Otherwise make a new guess by averaging g and x/g. 4. Using the new guess, repeat until close enough. MIT OCW 6.0001 / Lecture 1  /  2"
+    },
+    {
+      "location": "Adapted PowerPoint slide 3 (MIT lecture slide 12)",
+      "text": "The parts of an algorithm A sequence of simple steps. A flow of control that specifies when each step is executed. A means of determining when to stop. These three parts form an algorithm. MIT OCW 6.0001 / Lecture 1  /  3"
+    },
+    {
+      "location": "Adapted PowerPoint slide 4 / attribution",
+      "text": "Source and licence MIT OpenCourseWare · 6.0001 · Fall 2016 Ana Bell, Eric Grimson, John Guttag Lecture 1: What is Computation? · slides 10–12 CC BY-NC-SA 4.0 · No MIT endorsement. Text adapted; layout recreated. Commercial permission is not included. MIT OCW 6.0001 / Lecture 1  /  4"
+    }
+  ]
+}

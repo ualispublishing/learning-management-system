@@ -1,0 +1,109 @@
+{
+  "date": "2026-10-17",
+  "scope": "Local prepared AI demo and actual teacher-to-learner course publication in the in-app browser",
+  "status": "passed_for_recorded_flows",
+  "runtime": {
+    "command": "npm run web",
+    "app_port": 4178,
+    "api_port": 4180,
+    "node_heap_mib": 1536,
+    "server_group_limit_mib": 3072,
+    "sessions": [
+      {
+        "command": "npm run web",
+        "limit_mib": 3072,
+        "time_limit_seconds": 1200,
+        "peak_group_rss_mib": 977.2,
+        "current_group_rss_mib": 475.8,
+        "elapsed_seconds": 1201.1,
+        "stop_reason": "time cutoff",
+        "exit_code": -15
+      },
+      {
+        "command": "npm run web",
+        "limit_mib": 3072,
+        "time_limit_seconds": 1200,
+        "peak_group_rss_mib": 623.8,
+        "current_group_rss_mib": 434.7,
+        "elapsed_seconds": 302.9,
+        "stop_reason": "requested verification shutdown",
+        "exit_code": -15
+      }
+    ],
+    "peak_server_group_rss_mib": 977.2,
+    "browser_memory_included": false
+  },
+  "flows": [
+    {
+      "name": "PowerPoint file chooser",
+      "result": "Bundled PPTX selected from disk, recognized by its contents, and returned six cards."
+    },
+    {
+      "name": "Prepared lesson formats",
+      "result": "PDF, PowerPoint, audio, video and captions each returned six cards with passed source checks."
+    },
+    {
+      "name": "Flashcard controls",
+      "result": "Answer reveal, quotation/location display, and Got it / Next worked. Video evidence included clip and original timestamps."
+    },
+    {
+      "name": "Syllabus side preview",
+      "result": "Shared course-info view showed three objectives, two meeting entries, twelve session topics and recorded authoring attribution. Updated syllabus and field mapping rendered."
+    },
+    {
+      "name": "Course mapping export preview",
+      "result": "Parsed the displayed JSON: humanReview pending, three objectives, two meetings, 36 citations and gpt-6-astra attribution. Save-file link present."
+    },
+    {
+      "name": "Evaluation",
+      "result": "Research figures remained separate from explicitly unmeasured app-specific savings and educational accuracy."
+    },
+    {
+      "name": "Teacher syllabus publication",
+      "result": "Actual review and apply flow populated the course. Existing dates 2026-09-17 through 2027-01-15 and grading weights 40/30/30 were preserved."
+    },
+    {
+      "name": "Independent Student A session",
+      "result": "Student A saw the published syllabus fields and authoring metadata while the other tab remained Teacher."
+    },
+    {
+      "name": "Course lesson publication",
+      "result": "Prepared PDF plus six study cards published together. Publish remained disabled after five acknowledgements and enabled after six."
+    },
+    {
+      "name": "Learner course player",
+      "result": "Student A opened the new study set; answer, PDF page/slide evidence, source filename and gpt-6-astra/xhigh authoring record were visible."
+    },
+    {
+      "name": "Navigation",
+      "result": "Teacher could return from the course to the dashboard, open AI before/after, and return to LMS without losing the account or published course."
+    }
+  ],
+  "console": {
+    "errors_in_teacher_tab": 0,
+    "errors_in_student_tab": 0,
+    "warnings": [
+      "React Native Web shadow/textShadow/ pointerEvents deprecations",
+      "Expo push-token-change listener is unsupported on web"
+    ]
+  },
+  "screenshots": [
+    {
+      "path": "video-cards-browser-2026-10-17.jpg",
+      "sha256": "10e158217c2df4289118db756708facc0e6b4f9d829d65a5b6093c6199294a78"
+    },
+    {
+      "path": "learner-attribution-browser-2026-10-17.jpg",
+      "sha256": "a9ef76714a99731b7b62fd3fdcdf7d83fd696dc78545e37d959910845715e6d6"
+    }
+  ],
+  "cleanup": "Both temporary browser tabs closed and the owned verification server stopped; in-memory publication fixtures were discarded.",
+  "limitations": [
+    "Review acknowledgements were synthetic workflow testing, not independent instructor certification.",
+    "Prepared results replay saved outputs; no live provider calls, API-equivalence claim or production SSO acceptance.",
+    "No full manual device/accessibility matrix, native playback or long-duration browser-memory test.",
+    "This pass checked the export preview and download link, not a newly saved download.",
+    "The file-chooser tool took longer than its requested timeout; the first server session stopped at its 20-minute safety cutoff and was restarted. Do not interpret that tool wait as measured application processing time.",
+    "No application code changes or automated-suite rerun in this pass; the latest full suite remains the October 16 attribution run."
+  ]
+}

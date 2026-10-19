@@ -203,6 +203,40 @@ Graded `external-link` items may omit synthetic questions when they provide `met
 
 ## Assets
 
+`HttpAssetService` supports bearer authentication by default and explicitly omits
+browser cookies in that mode. An HTTPS web deployment with an implemented asset
+gateway at the app's origin can instead use its HttpOnly session cookie:
+
+```ts
+const assets = new HttpAssetService({
+  baseUrl: window.location.origin,
+  authentication: 'same-origin-cookie',
+});
+```
+
+Cookie mode requires the exact HTTPS browser origin, with no path prefix or
+`getAccessToken` callback. Cross-origin, HTTP, native and server-side cookie
+configurations fail closed. The browser supplies the cookie and Origin; do not
+copy cookies or CSRF state into a bearer-token callback. Cookie requests use
+[`credentials: 'same-origin'`](https://developer.mozilla.org/en-US/docs/Web/API/Request/credentials)
+and `mode: 'same-origin'`. Both modes reject redirects and disable request caching.
+These client controls do not replace server authentication, exact Origin/CSRF
+checks, or authorization for the current tenant, course and conversation.
+
+The client captures the file metadata, browser Blob, destination, purpose and
+request key before credential lookup. It rejects invalid inputs before accessing
+credentials. A 120-second deadline covers credential lookup, upload and response
+reading; oversized or unfinished response streams are cancelled. Native URI
+contents remain the native transport's responsibility. A timeout does not prove
+that the server discarded an upload: retain the logical operation's idempotency
+key for reconciliation or an explicit retry. The client does not retry or fall
+back automatically. A token provider or custom transport that ignores cancellation
+cannot keep the caller waiting, but its own underlying work must be bounded too.
+
+The reference server does not yet implement this asset route or storage. Do not
+enable production uploads until the following contract and operating controls
+are implemented and verified against the configured deployment.
+
 `POST /lms/v1/assets` accepts multipart form data with `asset`, `purpose`, and optional `courseId`/`threadId`. The server must:
 
 - authorize the purpose and course;
@@ -217,9 +251,34 @@ Course-content and assessment-submission uploads require `courseId`; direct-mess
 
 ## AI generation
 
-`POST /lms/v1/ai/generate` accepts multipart form data containing `task`, an allow-listed prompt-version request (`flashcards.v1.5.0` or `syllabus.v1.4.0`), `locale`, `courseTitle`, and either `sourceText` or the selected source bytes in `document`. Flashcard requests also send `requestedCardCount` (1–100). File requests send an explicit `sourceKind` of `document`, `captions`, `audio`, or `video`; the gateway must verify that value against the uploaded file rather than trusting it. The client deliberately does not send a system prompt or response schema; neither is an authoritative client-controlled input.
+`POST /lms/v1/ai/generate` accepts multipart form data containing `task`, an allow-listed prompt-version request (`flashcards.v1.5.0` or `syllabus.v1.5.0`), `courseId`, `locale`, `courseTitle`, and either `sourceText` or the selected source bytes in `document`. Flashcard requests also send `requestedCardCount` (1–100). File requests send an explicit `sourceKind` of `document`, `captions`, `audio`, or `video`; the gateway must verify that value against the uploaded file rather than trusting it. The client deliberately does not send a system prompt or response schema; neither is an authoritative client-controlled input.
 
-Flashcard generation accepts PDF, DOCX, PPTX, TXT, Markdown, RTF, VTT/SRT captions, MP3/M4A/WAV audio, and MP4/MOV/WebM video. Documents/captions are limited to 25 MB and audio/video to 50 MB; requests time out after 300 seconds. Syllabus extraction accepts pasted text or document files only and rejects captions, audio, and video. Browser uploads contain the selected `Blob` bytes—not a local URI object—and native uploads retain the platform file URI plus verified metadata.
+Remote `InstitutionAIService` requests require a stable `courseId` matching
+`[A-Za-z0-9][A-Za-z0-9._:-]{0,127}`. The course syllabus and flashcard review flows
+supply their actual course ID. The isolated local prepared showcase can omit it
+because it does not create or modify a course. Custom `AIService` implementations
+receive the optional context as well; institutions must enforce their own server
+authorization, not rely on a title, client role or the presence of this field.
+
+Bearer authentication remains the default and explicitly uses `credentials:
+'omit'`. Web deployments can opt into `authentication: 'same-origin-cookie'`
+with the exact HTTPS browser origin as `baseUrl` and no `getAccessToken` callback.
+The browser supplies its HttpOnly cookie and Origin; application JavaScript does
+not read or manufacture either header. Cookie mode rejects cross-origin URLs,
+path-prefixed bases, non-HTTPS URLs and native/server callers without a browser
+origin. Both modes reject redirects and require request-bound response provenance.
+
+The gateway must validate the current principal and installation, check the
+course's existence and the task's required staff permission before processing or
+charging, enforce exact Origin/CSRF checks for cookie requests, and recheck access
+before retaining or returning the result. The reference OIDC service now has an
+optional cookie-authenticated AI route with these permission checks, durable
+inputs/results/receipts, retained request keys and bounded reservation quotas.
+Its [narrow text/caption profile](../server/ai-contract.md) has stricter upload
+limits than the general client and does not complete app SSO bootstrap. See the
+[AI integration guide](./ai-provider-adapters.md#client-authentication-and-course-scope).
+
+The general client picker accepts PDF, DOCX, PPTX, TXT, Markdown, RTF, VTT/SRT captions, MP3/M4A/WAV audio, and MP4/MOV/WebM video. Client ceilings are 25 MB for documents/captions and 50 MB for audio/video, with a 300-second timeout; these are not a guarantee of backend support. The reference route currently handles only pasted text, TXT, Markdown and VTT/SRT, with a 2,064,000-byte whole-request ceiling and 120-second provider deadline. Syllabus extraction rejects captions, audio and video. Browser uploads contain selected `Blob` bytes, while native uploads retain the platform file URI plus verified metadata.
 
 The server must select the exact allow-listed server prompt/schema for that version, reject unknown or retired versions, scan files, extract/OCR content in an isolated worker, enforce tenant data-residency/retention policy, redact sensitive data where required, and validate structured output against the server-side schema. Production JSON responses must include an attested envelope:
 
@@ -248,7 +307,43 @@ The client additionally enforces:
 - explicit per-card human source verification before saving;
 - prompt version, `sourceSha256`, `documentSha256` when applicable, request/model provenance, source, evidence, confidence, and reviewer-edit metadata.
 
+Gateway-controlled provenance may additionally include `sourceReviewNotices`,
+an array of at most 10 nonblank processing notes of 600 characters each. These
+notes are separate from model-generated syllabus `warnings`; the shared provider
+boundary receives them from the extractor and includes them in the saved output
+hash. Review views display them as plain text and retain them in publication
+metadata. A response declaring `X-LMS-AI-Review-Notices: present` must include
+inline notes or the client refuses the draft. Deploy matching clients/gateways;
+older stored results with only out-of-band notices require operator inspection.
+
 AI output is never a grade and is never published automatically.
+
+For the reference text/caption gateway, declare `sourceProfile: 'text-v1'` on
+`InstitutionAIService` or the custom `AIService`. This aligns picker guidance and
+pre-submission validation: TXT/Markdown syllabi; TXT/Markdown/VTT/SRT flashcard
+sources; 2 MB combined source bytes and up to 500,000 normalized pasted-text
+characters. Unsupported formats and oversized sources fail before credentials or
+upload. Ordinary course attachments keep their existing behavior. Undeclared
+services retain the general input contract, with institution-dependent guidance;
+there is no automatic capability discovery. Prepared demo media remain supported
+as saved playback. See the [source profile](../server/ai-contract.md#request-profile).
+
+Optional `requestRecovery: 'status-v1'` enables current-review recovery through
+`GET /lms/v1/ai/requests/{requestId}`. The response includes its job `id`, the exact
+`requestId`, `courseId`, `task`, `status` (`processing`, `uncertain` or `succeeded`),
+`createdAt`, `expiresAt`, `reviewNotices` and a `result` only on success. The result
+must carry matching request provenance and inline processing notes. The client
+rechecks credentials, source/course/task identity, size limits and result schema.
+Checking never submits another generation; a separately labelled new-generation
+action can incur another charge. This handle is held in the open review only. The
+additional `history-v1` profile provides a bounded, principal/course/task-scoped
+history and source-matched recovery after reload. It adds GET `/lms/v1/ai/requests`
+with course/task/cursor query fields and POST `/lms/v1/ai/requests/{requestId}/recover`
+with the reselected original source and settings. The recovery POST never reserves
+a job or invokes a provider, including on missing or expired requests. The UI
+requires renewed source consent and human verification. Source download and
+restoring unsaved reviewer edits remain work. See the
+[reference profile](../server/ai-contract.md#persistence-retries-and-inspection).
 
 Custom institution `AIService` implementations are also treated as runtime trust boundaries. Inputs are validated before the adapter is called; typed results are then revalidated for allowed fields, sizes, grounding, duplicate content, prompt version, and consistent provenance before review. Adapter-supplied `reviewerVerified`/`reviewerEdited` values are discarded; every generated card starts unverified and requires an explicit reviewer action. Every card produced from a document must carry the same valid source/digest attestation, document-generated syllabus results require the same provenance, and the durably retained source asset must have the same `documentSha256` before reviewed output can be published.
 

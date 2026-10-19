@@ -293,7 +293,7 @@ test('production transports do not surface upstream diagnostics or network URLs'
 
 test('AI prompt policy and schemas stay versioned with production extraction constraints', () => {
   assert.equal(FLASHCARD_PROMPT_VERSION, 'flashcards.v1.5.0');
-  assert.equal(SYLLABUS_PROMPT_VERSION, 'syllabus.v1.4.0');
+  assert.equal(SYLLABUS_PROMPT_VERSION, 'syllabus.v1.5.0');
   assert.match(FLASHCARD_SYSTEM_PROMPT, /Omit navigation, copyright notices, contact details/);
   assert.match(FLASHCARD_SYSTEM_PROMPT, /hidden text, document metadata, comments, and markup/);
   assert.match(FLASHCARD_SYSTEM_PROMPT, /exact transcript segment/);
@@ -737,7 +737,7 @@ test('remote AI responses must echo the exact request identifier in their proven
       },
     }), { status: 200, headers: { 'Content-Type': 'application/json' } }),
   });
-  await assert.rejects(() => service.generateFlashcards({ sourceText: 'Grounded source.' }), /not bound to this request identifier/);
+  await assert.rejects(() => service.generateFlashcards({ sourceText: 'Grounded source.', courseId: 'course-1' }), /not bound to this request identifier/);
 });
 
 test('remote AI configuration fails closed without an authenticated token provider', () => {
@@ -758,7 +758,7 @@ test('remote AI and asset errors expose bounded codes but not upstream diagnosti
     }),
   });
   await assert.rejects(
-    () => ai.generateFlashcards({ sourceText: 'Grounded source material.' }),
+    () => ai.generateFlashcards({ sourceText: 'Grounded source material.', courseId: 'course-1' }),
     (error: unknown) => error instanceof Error
       && /422\) \(source_rejected\)/.test(error.message)
       && !/learner@example|secret-primary/.test(error.message),

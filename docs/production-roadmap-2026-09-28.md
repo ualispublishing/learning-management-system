@@ -8,7 +8,7 @@ This is a remaining-work plan. The original review records the 28 September base
 
 ## 1. Correct starting point
 
-**Automated tests already exist.** The baseline review observed all 391 tests passing across its runs. The first implementation batch passed **412 automated tests and 270 synthetic repository/store journeys from a clean checkout**. The client now passes **435 tests**, and the reference identity/learning service adds **34 tests**. Strict TypeScript, lint, fixture checks, dependency/security checks, SBOM/notices and a CI workflow definition are also present. See sections 8–12 for the exact evidence and limits, including the corrected release-gate assertion noted in section 11.
+**Automated tests already exist.** The baseline review observed all 391 tests passing across its runs. The first implementation batch passed **412 automated tests and 270 synthetic repository/store journeys from a clean checkout**. On October 16, the app suite passed **543 tests and 270 synthetic journeys** and the separate reference identity/learning service passed **54 tests**. Strict TypeScript, lint, fixture checks, dependency/security checks, SBOM/notices and a CI workflow definition are also present. See sections 8–13 for the exact evidence and limits, including the corrected release-gate assertion noted in section 11.
 
 The missing pieces are broader maintained rendered-component coverage and browser E2E tests, real-provider integration evidence, additional failure/concurrency coverage, supported-device/accessibility acceptance, and enforced production promotion. Static source checks and synthetic journeys remain useful; they do not establish those other forms of assurance.
 
@@ -394,3 +394,178 @@ Local verification:
 This is local demo evidence, not the complete manual acceptance plan or automated browser regression coverage. Live SSO, full connected services, native acceptance and operating/release gates retain the limitations in sections 10–11. The current role picker uses fictional accounts and requires no password; the reference authentication service remains a separate foundation for a later real-data deployment.
 
 **What you can provide for the pitch:** the approved logo, exact two colours, displayed institution name/tagline, a believable synthetic demonstration course, and a short list of buyer tasks to rehearse on the presentation computer. Production remains a separate gate; the demo can support discovery conversations when the implemented, simulated and planned features are described accurately.
+
+## 13. Prepared AI demonstration and provider connection — 13 October 2026
+
+The local `npm run web` command now exposes the shared multiuser app, demo guide
+and repeatable AI before/after view. The prepared pack uses one coherent MIT OCW
+course bundle: syllabus, PDF, PowerPoint, captions and audio/video excerpts.
+The side preview uses the same source-matching/backend checks, course-field
+mapping and course-information/flashcard presentation components as the course
+flow. It does not create or overwrite a course on each demonstration. Course
+import still requires instructor review before applying fields or publishing
+materials and their study cards. Model attribution distinguishes saved agent
+generation, later exact-source enrichment and live API output. Current evidence,
+scope and material-permission limits are in the
+[demo guide](./demo-setup.md) and [verification record](../demo/ai/verification/README.md).
+
+The optional OpenAI Responses connector now implements a named API behind the
+generic server-only provider interface, including strict schema translation,
+request/response limits, cancellation, deadlines and response receipts. A run
+snapshots source input, verifies quotations and locations, and retains the
+API-reported model with source/request/output hashes. Unknown fields, invented
+approval, refusals, incomplete results and malformed responses fail validation.
+The prepared demo remains explicitly local and never falls back to a paid API.
+
+The bounded server extractor and `npm run ai:extract` command now handle UTF-8
+TXT, Markdown, WebVTT and SRT. They preserve exact wording with line/cue locations,
+record normalization and file/text/passage hashes, and reject unsupported or
+malformed inputs. The bundled syllabus produced 38 located passages; all 161
+caption cues were retained in eight timestamped passages. This is implemented
+local/server functionality, now also used by the optional authenticated AI route.
+Binary documents, OCR, transcription and verified media/caption association remain
+work. The [adapter guide](./ai-provider-adapters.md#text-and-caption-extraction)
+records supported profiles, limits and integration responsibilities.
+
+The HTTP AI client now supports explicit same-origin HTTPS cookies alongside
+bearer authentication, requires a stable course ID for remote requests, and
+snapshots request input before asynchronous credential lookup. The actual course
+syllabus and flashcard flows supply that ID. Changing course in flashcard review
+clears consent and ignores late results for the previous course. Its review
+checkboxes now expose their checked state on web. This prepares the client for
+the reference login boundary and its optional AI route.
+Existing remote integrations must add `courseId` to their generation calls.
+
+Source-processing notes now appear in the actual flashcard and syllabus review
+views and remain in published provenance. The gateway snapshots bounded notes
+from extraction before computing the result receipt hash. Notes render as plain
+text and never supply review approval. Missing declared notes or inconsistent
+per-card request/model/notice provenance fail validation; staff can also inspect
+saved syllabus notes. Older records with only out-of-band notes require operator
+inspection when consumed by the updated client.
+
+Live review now offers opt-in read-only saved-result recovery. A dropped response
+can be checked by its retained request ID without submitting another generation.
+Both editors distinguish that action from starting a potentially billable new
+request; recovered drafts still need human review. Course/task/source changes,
+current access, status metadata, provenance and notes are checked. Pending,
+uncertain, missing/expired and forbidden states never initiate another provider
+call. A 30-second recovery deadline covers credential, fetch and stream waits.
+The status handle exists only in the open review. The additional `history-v1`
+profile now supplies a server-backed history after reload, scoped to the current
+principal/course/task and bounded to 20 summaries per page. Both editors allow
+reselecting the original source and recovering through a separate endpoint that
+cannot reserve a job or invoke a provider. Original bytes, filename/MIME, pasted
+text, count, language and prompt contract must match. Expired/missing requests
+never become new generation. Recovered drafts require fresh review; unsaved edits
+are not restored. Syllabus course/visibility changes discard the prior editor.
+
+The optional reference gateway now connects authenticated course staff to the
+extractor and provider. SQLite retains original file bytes, canonical source,
+effective input, validated result and provider receipt. Permission is rechecked
+after generation; retained request keys prevent duplicate retries and preserve
+uncertain outcomes without automatic provider calls. Two concurrent jobs,
+rolling daily reservation quotas, storage bounds and configured expiry limit
+resource use. This is a single-process text/caption profile, disabled by default.
+See the [AI server contract](../server/ai-contract.md), including its retention
+window, packaging and UI limitations.
+
+Verification on October 16: `npm run check` passed 543 app tests and 270 synthetic
+journeys; `npm --prefix server run check` passed TypeScript, all 54 server tests
+and dependency metadata checks. Web export and 30-file verification also passed.
+Sixteen new server tests cover AI authorization, persistence/replay, quotas,
+invalid output, cancellation, revocation, retention and the real HTTP bridge.
+An app integration test connects the actual AI client, gateway, extractor and
+OpenAI connector using synthetic provider envelopes, verifies attribution,
+caption notes and receipt hashes, and confirms that generation leaves the course
+untouched. Seven tests cover processing-note validation, retention and rendered
+review; eleven further tests cover request recovery, authorization, timeouts and
+the actual flashcard/syllabus editors. Seven more app tests and four server tests
+cover history scoping, stable pagination, malformed pages, source/settings
+mismatches, expiry, fresh-client recovery and both actual editors after remount.
+The real HTTP bridge also checks recovery upload authorization and size limits.
+Six additional app tests cover the declared `text-v1` source profile, combined
+byte/normalized-text limits, actual Blob size, custom adapters, flashcard gating
+and syllabus drops. Existing syllabus and client-to-gateway tests now exercise
+the declared profile. A stale disabled-expression assertion was replaced with
+rendered consent evidence. The earlier source-profile run took 50.2 seconds and
+peaked at 1594.8 MiB sampled process-group RSS. See the
+[source-profile verification record](../demo/ai/verification/ai-source-profile-check-2026-10-16.json). No live
+SSO, paid model request, deployment or institution acceptance was performed.
+This advances W06; it does not complete the live AI or production gates.
+
+The source-format controls now follow an explicit integration declaration:
+`sourceProfile: 'text-v1'` enables TXT/Markdown syllabi and text/caption flashcard
+sources. Both editors show the actual declared limits and reject unsupported
+sources before credential lookup or upload; the syllabus picker filters its
+choices. Undeclared services show institution-dependent guidance. This does not
+supply automatic capability discovery or new extraction workers, and prepared
+media replay remains available.
+
+The October 16 attribution follow-up carries the hash-bound prepared authoring
+record into both actual review screens, the saved syllabus and Course Info views,
+and the course flashcard player. The model label survives publication and learner
+re-login without catalog lookup. Replay engine and authoring model remain
+distinct; older records without authoring metadata say it was not recorded.
+Live results show the service-reported model/adapter. Two new boundary tests
+cover invalid/mixed metadata and missing-model handling; expanded existing tests
+exercise literal rendered labels, review/recovery, all six prepared sources,
+portable exports and the published learner views. See the
+[attribution verification record](../demo/ai/verification/ai-attribution-check-2026-10-16.json).
+
+The October 17 browser pass also verified the PowerPoint file chooser, all five
+prepared lesson formats, syllabus mapping/export preview, actual Teacher-to-
+Student A syllabus and flashcard publication, and the learner's source/model
+footnotes. Both browser sessions remained independent and reported no console
+errors. This is targeted local browser evidence, not the full manual acceptance
+matrix or live-model evaluation. See the
+[browser verification record](../demo/ai/verification/ai-browser-check-2026-10-17.json).
+
+Remaining AI work includes app SSO/bootstrap, authenticated asset publication,
+original-source retrieval and unsaved-edit recovery, workers for binary
+documents/media, operational monitoring and billing
+reconciliation, and repeated live evaluations against instructor-reviewed
+criteria. The existing evidence and confidence
+checks do not establish educational accuracy, complete lecture coverage or
+measured instructor time savings. Operational and SSO work in sections 10–11
+remains necessary for a real-data pilot.
+
+## 14. Authenticated asset client and upload deadlines — 19 October 2026
+
+The production asset client now supports explicit same-origin HTTPS cookie
+authentication alongside the existing bearer mode. This brings uploads to the
+same web session contract as the institution and AI clients. Cookie mode requires
+the exact browser origin and no token callback; bearer mode explicitly omits
+browser cookies. Redirects are rejected, requests are not cached, and upstream
+authentication failures remain visible without automatic retries or demo
+fallback. The configuration is captured when the service is constructed.
+
+Upload inputs are captured before asynchronous authentication so a changed draft
+cannot substitute another file, course, conversation, purpose or request key.
+The 120-second deadline now includes credential lookup, the transport and response
+reading. Previously, a stalled credential callback could wait indefinitely before
+the upload timeout even started. Late responses are discarded and their bodies
+cancelled; streamed response bytes remain limited to 1 MB. Native URI contents
+still depend on the native transport. Timed-out uploads can have an uncertain
+server outcome; callers must retain their request key for reconciliation or an
+explicit retry, and custom callbacks must bound their own underlying work.
+
+The [asset integration contract](./institution-integration.md#assets) documents
+configuration and the server obligations. This is a client increment, not an
+implemented asset backend or an end-to-end SSO release. The reference server
+still needs the authenticated asset route, scoped retrieval, durable idempotency,
+quarantine/scanning and retention. Complete app authentication/bootstrap, real
+issuer/HTTPS acceptance and the operational gates remain open. No production
+upload service was enabled and no live institution data was used.
+
+Verification passed: `npm run check` (lint, TypeScript, fixture/security/notices
+checks, **556 app tests**, **270 synthetic journeys / 1,620 steps**),
+`npm --prefix server run check` (**54 tests**, type checks and dependency
+metadata), web export and verification of **30 files**. Thirteen new asset tests
+cover the authentication modes, all three upload purposes, immutable inputs,
+authentication failures, stalled credentials/transports/streams, late-response
+cleanup and real HTTP multipart upload/redirect rejection. Cookie assertions use
+an injected browser origin and transport; they do not prove deployed cookie or
+SSO behavior. The bounded serial run took 54.4 seconds and peaked at **1,752.6 MiB
+sampled process-group RSS**, below the 3,072 MiB cutoff. See the
+[verification record](./verification/asset-transport-check-2026-10-19.json).

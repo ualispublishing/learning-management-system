@@ -6,8 +6,9 @@
  *   and commenting standard that applies to this module.
  */
 import { AIDocumentAsset, AIProvenance } from '../ai/types';
+import { isPreparedAIDemo, preparedDemoAssetService } from '../ai/preparedDemo';
 import { createEntityId } from '../id';
-import { readBoundedResponseText, readRemoteErrorDetail } from './httpResponse';
+import { awaitWithAbort, readBoundedResponseText, readRemoteErrorDetail } from './httpResponse';
 import { canonicalSafeHttpsUrl } from '../safeUrl';
 import { appendMultipartAsset, isPickerOwnedAssetUri, validateMultipartAssetBytes } from './multipartAsset';
 
@@ -34,6 +35,15 @@ export interface AssetService {
 
 export class AssetServiceError extends Error {}
 
+export type HttpAssetServiceConfig = {
+  baseUrl: string;
+  fetchImpl?: typeof fetch;
+  maxBytes?: number;
+} & (
+  | { authentication?: 'bearer'; getAccessToken: () => Promise<string | null> }
+  | { authentication: 'same-origin-cookie'; getAccessToken?: never }
+);
+
 export const assertAssetMatchesAIProvenance = (asset: StoredAsset, provenance?: AIProvenance): void => {
   if (!provenance?.documentSha256) {
     throw new AssetServiceError('AI provenance is missing the uploaded document digest. Regenerate from the source document.');
@@ -50,13 +60,14 @@ export class HttpAssetService implements AssetService {
   private readonly localDevelopment: boolean;
   private readonly baseUrl: string;
   private readonly maxBytes: number;
+  private readonly options: HttpAssetServiceConfig;
+  private readonly fetchImpl: typeof fetch;
 
-  constructor(private readonly options: {
-    baseUrl: string;
-    getAccessToken: () => Promise<string | null>;
-    fetchImpl?: typeof fetch;
-    maxBytes?: number;
-  }) {
+  constructor(options: HttpAssetServiceConfig) {
+    this.options = { ...options };
+    if (options.authentication !== undefined && options.authentication !== 'bearer' && options.authentication !== 'same-origin-cookie') {
+      throw new AssetServiceError('Unsupported asset authentication mode.');
+    }
     let url: URL;
     try {
       url = new URL(options.baseUrl);
@@ -64,22 +75,69 @@ export class HttpAssetService implements AssetService {
       throw new AssetServiceError('Asset storage URL is invalid.');
     }
     const developmentBuild = typeof __DEV__ !== 'undefined' ? __DEV__ : process.env.NODE_ENV !== 'production';
-    this.localDevelopment = developmentBuild && ['localhost', '127.0.0.1', '::1'].includes(url.hostname);
-    if (url.protocol !== 'https:' && !this.localDevelopment) {
+    this.localDevelopment = developmentBuild && ['localhost', '127.0.0.1', '[::1]'].includes(url.hostname) && options.authentication !== 'same-origin-cookie';
+    if (url.protocol !== 'https:' && !(url.protocol === 'http:' && this.localDevelopment)) {
       throw new AssetServiceError('Asset storage must use HTTPS outside local development.');
     }
     if (url.username || url.password || url.search || url.hash) {
       throw new AssetServiceError('Asset storage URL cannot contain credentials, a query, or a fragment.');
     }
     this.baseUrl = url.toString().replace(/\/+$/, '');
+    this.validateCookieOrigin();
+    if (options.authentication !== 'same-origin-cookie' && typeof options.getAccessToken !== 'function') {
+      throw new AssetServiceError('Asset storage requires an authenticated access-token provider.');
+    }
     const maxBytes = options.maxBytes ?? 50 * 1024 * 1024;
     if (!Number.isSafeInteger(maxBytes) || maxBytes < 1 || maxBytes > 500 * 1024 * 1024) {
       throw new AssetServiceError('Asset size limit must be a positive whole number no greater than 500 MB.');
     }
     this.maxBytes = maxBytes;
+    this.fetchImpl = (options.fetchImpl || fetch).bind(globalThis);
+  }
+
+  private validateCookieOrigin(): void {
+    if (this.options.authentication !== 'same-origin-cookie') return;
+    if (typeof window === 'undefined' || window.location?.origin !== this.baseUrl || !this.baseUrl.startsWith('https://') || this.options.getAccessToken !== undefined) {
+      throw new AssetServiceError('Asset cookie sessions require the exact HTTPS browser origin and no token callback.');
+    }
+  }
+
+  private async authentication(signal: AbortSignal) {
+    this.validateCookieOrigin();
+    const cookie = this.options.authentication === 'same-origin-cookie';
+    const value = cookie ? null : await awaitWithAbort(signal, () => this.options.getAccessToken!());
+    this.validateCookieOrigin(); signal.throwIfAborted();
+    if (!cookie && (typeof value !== 'string' || !value.trim())) throw new AssetServiceError('Authenticated institutional asset storage is not configured.');
+    const token = value?.trim();
+    if (token && (token.length > 8_192 || /[\u0000-\u001f\u007f]/.test(token))) throw new AssetServiceError('The asset service access token is invalid.');
+    return {
+      credentials: cookie ? 'same-origin' as const : 'omit' as const,
+      ...(cookie ? { mode: 'same-origin' as const } : {}),
+      headers: { Accept: 'application/json', ...(token ? { Authorization: `Bearer ${token}` } : {}) },
+    };
+  }
+
+  private async fetchResponse(url: string, init: RequestInit & { signal: AbortSignal }): Promise<Response> {
+    let received: Response | undefined;
+    try {
+      const response = await awaitWithAbort(init.signal, async () => {
+        received = await this.fetchImpl(url, init);
+        // A custom transport may deliver its body after the caller has timed out.
+        if (init.signal.aborted) { void received.body?.cancel().catch(() => undefined); init.signal.throwIfAborted(); }
+        return received;
+      });
+      init.signal.throwIfAborted();
+      return response;
+    } catch (error) {
+      void received?.body?.cancel().catch(() => undefined);
+      throw error;
+    }
   }
 
   async upload(asset: AIDocumentAsset, context: AssetUploadContext): Promise<StoredAsset> {
+    // Preserve the validated source and destination across asynchronous authentication.
+    asset = { ...asset };
+    context = { ...context };
     const maxBytes = this.maxBytes;
     if (!asset.uri || !asset.name) throw new AssetServiceError('The selected file is invalid.');
     if (!isPickerOwnedAssetUri(asset.uri)) throw new AssetServiceError('The selected file URI is not supported.');
@@ -113,31 +171,32 @@ export class HttpAssetService implements AssetService {
     )) {
       throw new AssetServiceError('The asset upload idempotency key is invalid.');
     }
-    const token = (await this.options.getAccessToken())?.trim();
-    if (!token) throw new AssetServiceError('Authenticated institutional asset storage is not configured.');
-    if (token.length > 8_192 || /[\u0000-\u001f\u007f]/.test(token)) throw new AssetServiceError('The asset service access token is invalid.');
-    const form = new FormData();
-    if (context.courseId) form.append('courseId', context.courseId);
-    if (context.threadId) form.append('threadId', context.threadId);
-    form.append('purpose', context.purpose);
-    appendMultipartAsset(form, 'asset', asset);
     const controller = new AbortController();
     const timeout = setTimeout(() => controller.abort(), 120_000);
     try {
-      const response = await (this.options.fetchImpl || fetch)(`${this.baseUrl}/lms/v1/assets`, {
+      const authentication = await this.authentication(controller.signal);
+      const form = new FormData();
+      if (context.courseId) form.append('courseId', context.courseId);
+      if (context.threadId) form.append('threadId', context.threadId);
+      form.append('purpose', context.purpose);
+      appendMultipartAsset(form, 'asset', asset);
+      this.validateCookieOrigin(); controller.signal.throwIfAborted();
+      const response = await this.fetchResponse(`${this.baseUrl}/lms/v1/assets`, {
+        ...authentication,
         method: 'POST',
         // A redirected multipart request could disclose learner files or
         // assessment content to an origin other than the configured service.
         redirect: 'error',
+        cache: 'no-store',
         headers: {
-          Authorization: `Bearer ${token}`,
+          ...authentication.headers,
           'Idempotency-Key': context.idempotencyKey?.trim() || createEntityId('asset-upload'),
         },
         body: form,
         signal: controller.signal,
       });
       const text = await readBoundedResponseText(response, 1_000_000, () =>
-        new AssetServiceError('Asset service response exceeded the 1 MB limit.'));
+        new AssetServiceError('Asset service response exceeded the 1 MB limit.'), controller.signal);
       if (!response.ok) {
         let payload: unknown;
         try {
@@ -189,7 +248,7 @@ export class HttpAssetService implements AssetService {
         sha256,
       };
     } catch (error) {
-      if (error instanceof Error && error.name === 'AbortError') throw new AssetServiceError('Asset upload timed out.');
+      if (controller.signal.aborted || error instanceof Error && error.name === 'AbortError') throw new AssetServiceError('Asset upload timed out.');
       if (error instanceof AssetServiceError) throw error;
       throw new AssetServiceError(
         this.localDevelopment && error instanceof Error ? error.message : 'Asset upload could not be completed.',
@@ -207,6 +266,7 @@ export const configureAssetService = (service: AssetService | null) => {
 };
 
 export const getAssetService = (): AssetService => {
+  if (!configuredAssetService && isPreparedAIDemo()) return preparedDemoAssetService;
   if (!configuredAssetService) throw new AssetServiceError('Institutional asset storage is not configured. Inject an AssetService before enabling uploads.');
   return configuredAssetService;
 };

@@ -140,7 +140,7 @@ for (const variant of variants) {
     // not reset approval. This also covers changing the contents of an editor preview.
     const aliasCard = { ...card, depthLayers: [variant.content('https://MEDIA-A.example:443/first'), variant.content(b)] };
     view.rerender(React.createElement(CardDisplay, { ...props, card: aliasCard, depthIndex: 0 }));
-    assert.equal(ui.screen.queryByRole('button', { name: /Load remote/ }), null);
+    assert.equal(ui.screen.queryByRole('button', { name: /Load remote/ }) === null, true);
 
     // A new URL at the same part index must reset synchronously, before a media
     // adapter sees it; checking only the eventual prompt would miss an effect-reset leak.
@@ -206,7 +206,7 @@ for (const fullscreen of [false, true]) {
     state.failPlay = false;
     view.rerender(React.createElement(CardDisplay, { ...props, card: { ...card, back: content(b) } }));
     ui.fireEvent.click(ui.screen.getByRole('button', { name: 'Load remote video from media-b.example' }));
-    assert.equal(ui.screen.queryByRole('alert'), null);
+    assert.equal(ui.screen.queryByRole('alert') === null, true);
     assert.ok(ui.screen.getByRole('button', { name: fullscreen ? 'Play fullscreen card video' : 'Play card video' }));
   });
 }

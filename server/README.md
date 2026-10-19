@@ -10,6 +10,13 @@ A supervised demonstration with synthetic data can use the current demo account 
 
 Authentication proves who signed in. The written-assessment gateway enforces course membership, staff permissions, one-attempt limits, term dates, grade release and installation scope. Asset access and other unsupported service permissions remain work. An identity provider's email or arbitrary role claim is never automatically treated as an LMS administrator assignment.
 
+An optional [AI gateway](./ai-contract.md) connects authenticated course staff to
+the shared text/caption extractor and provider interface. It stores artifacts
+and validated results, protects retries, and enforces bounded quotas. It remains
+disabled unless private AI configuration is complete. The local demo continues
+to replay prepared results without model charges. Preserve the repository's
+shared `src/lib/ai/` modules when packaging the server; see the contract for details.
+
 ## Implemented behavior
 
 - One configured issuer and customer installation per service/database. A separate installation can be operated by the publisher without an application fork.
@@ -69,7 +76,7 @@ LMS IDs must meet the bounded identifier contract in the gateway guide; display 
 
 1. Connect an actual customer test issuer and verify success, cancellation, callback rejection, reload, expiry, sign-out and deprovisioning in supported browsers. Test provider redirects against the page's CSP. The current tests replace provider HTTP transport, not the OIDC implementation.
 2. Extend the [implemented narrow gateway](./gateway-contract.md) to the agreed pilot feature profile; keep verified sessions and object/tenant/course authorization on every API and subscription. Session lookup alone must never authorize arbitrary records.
-3. Wire the tested `HttpInstitutionAdapter` same-origin cookie mode into app authentication and route bootstrap. Asset and AI transports remain bearer-only. Do **not** fill a `getAccessToken` callback with cookie contents or CSRF state. Wire real app sign-in only when the services required by `configureInstitutionLMS` are available, or deliberately version/test a narrower capability profile. Durable client retry/outbox behavior remains work.
+3. Wire the tested `HttpInstitutionAdapter`, `InstitutionAIService` and `HttpAssetService` same-origin cookie modes into app authentication and route bootstrap. The optional [AI route](./ai-contract.md) now enforces staff/course scope and retains text-generation jobs, and shows extraction notes during review. Opt-in recovery contracts support the current review and a bounded request history after reload, using the reselected original source without generating again. App-wide SSO, original-source download and the asset server route/storage remain work; the [asset client contract](../docs/institution-integration.md#assets) does not provide those services. Do **not** fill a `getAccessToken` callback with cookie contents or CSRF state. Wire real app sign-in only when the services required by `configureInstitutionLMS` are available, or deliberately version/test a narrower capability profile. Durable client retry/outbox behavior remains work.
 4. Add the native authentication transport, app-owned redirect scheme/universal links and secure credential handling. HttpOnly web cookies are not a cross-platform credential strategy. Native OAuth testing requires an Expo development build rather than Expo Go. See [Expo's authentication guide](https://docs.expo.dev/guides/authentication/).
 5. Agree session lifetime, identity-provider deprovisioning propagation, MFA/conditional-access rules, support access and audit retention. MFA/password recovery remain provider responsibilities. Disabling an IdP account alone does not immediately revoke this eight-hour local application session; add the agreed revalidation/revocation mechanism before promising that behavior.
 6. Add operator-visible, redacted authentication/security events, request correlation, health/readiness monitoring, alert delivery and key/secret-rotation procedures. Configure startup supervision and graceful termination on the actual host.

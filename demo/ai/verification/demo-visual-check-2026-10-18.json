@@ -1,0 +1,69 @@
+{
+  "date": "2026-10-18",
+  "scope": "Local demo workspace interactions and prepared syllabus visual walkthrough",
+  "status": "passed_for_recorded_flows",
+  "runtime": {
+    "command": "npm run web",
+    "app_port": 4178,
+    "api_port": 4180,
+    "node_heap_mib": 1536,
+    "server_group_limit_mib": 3072,
+    "time_limit_seconds": 1200,
+    "peak_group_rss_mib": 1007.2,
+    "elapsed_seconds": 154.5,
+    "browser_memory_included": false,
+    "stop_reason": "requested verification shutdown",
+    "exit_code": -15
+  },
+  "flows": [
+    {
+      "name": "Workspace navigation",
+      "result": "Demo guide retained the selected c4 destination through Teacher sign-in. Student Preview opened Algorithm Studio; closing the workspace returned to the same course."
+    },
+    {
+      "name": "Code-lab completion and reset",
+      "result": "Pasting the visible reference solution into the actual editor and checking produced Pattern complete. Reset restored starter text and removed the previous result. This verifies static pattern feedback, not code execution."
+    },
+    {
+      "name": "Code-lab incomplete feedback and hint",
+      "checked_on": "2026-10-17",
+      "result": "The preceding session showed Keep iterating, two missing patterns, and a visible hint for the starter code."
+    },
+    {
+      "name": "Visualization",
+      "result": "Generate sample changed chart and accessible text values together from 24/48/76/63/35 to 37/74/24/24/9 for Uniform/Bursty/Alternating/Random/Sorted. Values are deterministic samples."
+    },
+    {
+      "name": "Dashboard progress",
+      "result": "After visiting the lab and visualization and resetting the code solution, Dashboard showed 57%, four of seven activities explored."
+    },
+    {
+      "name": "Syllabus comparison",
+      "result": "Prepared processing returned passed source checks. Course information, formatted syllabus and field mapping rendered; absent term dates and unconfigured grading weights remained identified for review."
+    },
+    {
+      "name": "Evaluation",
+      "result": "The expanded panel separated published teacher-workload research from explicitly unmeasured app-specific time savings and educational accuracy, and retained instructor-review requirements."
+    }
+  ],
+  "console_errors": [],
+  "screenshots": [
+    "workspace-code-lab-browser-2026-10-18.jpg",
+    "workspace-visualization-browser-2026-10-18.jpg",
+    "syllabus-course-info-browser-2026-10-18.jpg",
+    "syllabus-result-browser-2026-10-18.jpg",
+    "syllabus-mapping-browser-2026-10-18.jpg",
+    "syllabus-draft-browser-2026-10-18.jpg",
+    "evaluation-browser-2026-10-18.jpg"
+  ],
+  "earlier_walkthrough_screenshots": [
+    "demo-guide-browser-2026-10-17.jpg",
+    "workspace-dashboard-browser-2026-10-17.jpg"
+  ],
+  "cleanup": "The temporary browser tab was closed and the owned verification server was stopped.",
+  "limitations": [
+    "No application code changes or automated-suite rerun; the latest full suite remains the October 16 attribution run.",
+    "No new file-upload, teacher-to-student publication or export-download acceptance in this follow-up; those flows have separate dated records.",
+    "No live provider request, production SSO, new research validation, complete device/accessibility matrix or long-duration memory test."
+  ]
+}

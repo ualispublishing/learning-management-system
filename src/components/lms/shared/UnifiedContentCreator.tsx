@@ -9,6 +9,8 @@ import React, { useRef, useState } from 'react';
 import { View, Text, StyleSheet, ScrollView, TouchableOpacity, TextInput, Modal, Switch } from 'react-native';
 import Ionicons from '@expo/vector-icons/Ionicons';
 import * as DocumentPicker from 'expo-document-picker';
+import { PreparedSourcePicker } from '../PreparedSourcePicker';
+import { getAISourceSupport } from '../../../lib/ai/service';
 import { useThemeColors } from '../../../lib/useThemeColors';
 import { userAlert as Alert } from '../../../lib/userAlert';
 import { ContentCategory, CourseGroupSet, CourseVideoCaptionTrack } from '../../../types/lms';
@@ -76,6 +78,7 @@ export const UnifiedContentCreator: React.FC<UnifiedContentCreatorProps> = ({
   visible, category, courseId, isEditing = false, initialType, initialData, gradingCategories = [], groupSets = [], onClose, onSave, allowFlashcardGeneration = true
 }) => {
   const colors = useThemeColors();
+  const aiSourceSupport = getAISourceSupport('flashcards');
   const [initialTypeValue] = useState<ContentType | null>(initialType || null);
   const [initialFormValue] = useState<AddFormData>(() => ({
     ...defaultForm,
@@ -466,6 +469,14 @@ export const UnifiedContentCreator: React.FC<UnifiedContentCreatorProps> = ({
                         </TouchableOpacity>
                       )}
 
+                      <PreparedSourcePicker task="flashcards" onSelect={(asset, sample) => setAddForm(previous => ({
+                        ...previous, fileName: asset.name, fileUri: asset.uri, fileMimeType: asset.mimeType || 'application/octet-stream', fileSize: asset.size, file: asset.file, url: asset.uri,
+                        title: previous.title || sample?.title || asset.name,
+                        ...(sample ? { generateFlashcards: true, mediaToCards: true, contentToCards: false, flashcardCount: 6,
+                          videoTranscriptText: sample.kind === 'video' ? sample.transcript || '' : '', videoTranscriptUrl: '', videoTranscriptLabel: '', videoCaptionTracks: sample.captionSha256 ? [{ url: `https://prepared-demo.invalid/files/${sample.captionSha256}`, language: 'en', label: 'English · MIT OCW', format: 'text/vtt' as const, isDefault: true }] : [],
+                        } : {}),
+                      }))} />
+
                       <View style={{ marginTop: 20, padding: 16, borderWidth: 1, borderColor: colors.border, borderRadius: 12, backgroundColor: colors.card }}>
                         <Text accessibilityRole="header" style={{ color: colors.text, fontWeight: 'bold', fontSize: 16 }}>Video accessibility alternatives</Text>
                         <Text style={{ color: colors.textSecondary, fontSize: 12, marginTop: 5 }}>
@@ -641,7 +652,7 @@ export const UnifiedContentCreator: React.FC<UnifiedContentCreatorProps> = ({
                   <View style={{ flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between' }}>
                     <View style={{ flex: 1, marginRight: 10 }}>
                       <Text style={{ color: colors.text, fontWeight: 'bold', fontSize: 16 }}>Generate Flashcards</Text>
-                      <Text style={{ color: colors.textSecondary, fontSize: 12 }}>Generate source-grounded cards from the material description/notes, documents, captions, audio, or a short video.</Text>
+                      <Text style={{ color: colors.textSecondary, fontSize: 12 }}>Generate source-grounded cards from supported material, then review before publishing.</Text>
                     </View>
                     <Switch 
                       accessibilityLabel="Generate a reviewed flashcard set"
@@ -666,7 +677,7 @@ export const UnifiedContentCreator: React.FC<UnifiedContentCreatorProps> = ({
                       <View style={{ flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between' }}>
                         <View style={{ flex: 1, paddingRight: 12 }}>
                           <Text style={{ color: colors.text }}>File to Cards</Text>
-                          <Text style={{ color: colors.textSecondary, fontSize: 12 }}>Documents, notes, captions, audio, or video (50 MB media limit)</Text>
+                          <Text style={{ color: colors.textSecondary, fontSize: 12 }}>{aiSourceSupport.description}</Text>
                         </View>
                         <Switch 
                           accessibilityLabel="Convert document to flashcards"

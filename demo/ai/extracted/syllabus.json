@@ -1,0 +1,153 @@
+{
+  "text": "Course info / title\n6.0001 Introduction to Computer Science and Programming in Python\n\nCourse info / instructors\nDr. Ana Bell; Prof. Eric Grimson; Prof. John Guttag\n\nSyllabus / Course Meeting Times / paragraph 1\nLectures: 2 sessions / week, 1 hour / session\n\nSyllabus / Course Meeting Times / paragraph 2\nRecitations: 1 sessions / week, 1 hour / session\n\nSyllabus / Course Information / paragraph 3\n6.0001 Introduction to Computer Science and Programming in Python is intended for students with little or no programming experience. It aims to provide students with an understanding of the role computation can play in solving problems and to help students, regardless of their major, feel justifiably confident of their ability to write small programs that allow them to accomplish useful goals. The class will use the Python 3.5 programming language.\n\nSyllabus / Course Information / paragraph 4\nThis is a half-semester course. Students who successfully complete 6.0001 may continue into 6.0002 Introduction to Computational Thinking and Data Science , which is taught in the second half of the semester.\n\nSyllabus / Goals / paragraph 5\nProvide an understanding of the role computation can play in solving problems.\n\nSyllabus / Goals / paragraph 6\nHelp students, including those who do not plan to major in Computer Science and Electrical Engineering, feel confident of their ability to write small programs that allow them to accomplish useful goals.\n\nSyllabus / Goals / paragraph 7\nPosition students so that they can compete for research projects and excel in subjects with programming components.\n\nSyllabus / Textbook / paragraph 8\nThe textbook is Buy at MIT Press Guttag, John. Introduction to Computation and Programming Using Python: With Application to Understanding Data Second Edition . MIT Press, 2016. ISBN: 9780262529624. The book and the course lectures parallel each other, though there is more detail in the book about some topics. It is available both in hard copy and as an e-book.\n\nSyllabus / Lecture and Recitation Attendance / paragraph 9\nA significant portion of the material for this course will presented only in lecture, so students are expected to regularly attend lectures.\n\nSyllabus / Lecture and Recitation Attendance / paragraph 10\nRecitations give students a chance to ask questions about the lecture material or the problem set for the given week. Sometimes, new material may be covered in recitation. Recitation attendance is encouraged but not required.\n\nSyllabus / Problem Sets and Quizzes / paragraph 11\nEach problem set will involve programming in Python. There will be 6 problem sets in the course. There will be two quizzes. All quizzes will be closed-book, though you will be allowed to bring one page of notes to the first quiz and two pages of notes to the second quiz. Pages must be letter-sized, double-sided, either handwritten or typed.\n\nSyllabus / Grading Policy / paragraph 12\nGrades will be roughly computed as follows:\n\nSyllabus / Grading Policy / paragraph 13\nACTIVITIES PERCENTAGES\n\nSyllabus / Grading Policy / paragraph 14\nProblem sets 30%\n\nSyllabus / Grading Policy / paragraph 15\nCompletion of mandatory finger exercises 10%\n\nSyllabus / Grading Policy / paragraph 16\nMidterm Quiz 20%\n\nSyllabus / Grading Policy / paragraph 17\nFinal Quiz 40%\n\nSyllabus / Grading Policy / paragraph 18\nProblem sets will be graded out of 10 points. Submissions that do not run will receive at most 20% of the points. Please contact your Teaching Assistant if you have a problem understanding your problem set grade.\n\nSyllabus / Grading Policy / paragraph 19\nNote: Quizzes and finger exercises are not available on OpenCourseWare.\n\nSyllabus / Extension and Dropping Problem Sets Policy / paragraph 20\nWe do not grant any extensions. Instead, we offer late days and the option of rolling at most 2 problem set grades into the final quiz score.\n\nSyllabus / Late Days / paragraph 21\nAt the beginning of the term, students are given two late days that they can use on problem sets. Starting with Problem Set 1, additional late days can be accumulated for each assignment, one late day for each day the assignment is turned in ahead of the deadline. Up to three late days may be accumulated in this fashion in this course, i.e you can only have a maximum of 3 late days at any point in time. Late days are discrete (a student cannot use half a late day). The staff will keep track of late days and feedback for each problem set will include the number of late days the student has remaining. Any additional late work beyond these late days will not be accepted. To avoid surprises, we suggest that after you submit your problem set, you double check to make sure the submission was uploaded correctly.\n\nSyllabus / Rolling Over Problem Sets / paragraph 22\nBefore the final quiz, we will send out an announcement in which you can choose at most 2 problem sets that you can drop. If dropped, the percent that the problem sets are worth will be rolled into the final quiz score. We strongly urge you to see the late days and dropping the problem sets as backup in case of an emergency. Your best strategy is to do the problem sets early before work starts to pile up.\n\nSyllabus / Calendar / paragraph 23\nSES # TOPICS ASSIGNMENTS\n\nSyllabus / Calendar / paragraph 24\n1 What is computation? Pset 0 released\n\nSyllabus / Calendar / paragraph 25\n2 Branching and Iteration Pset 1 released\n\nSyllabus / Calendar / paragraph 26\n3 String Manipulation, Guess and Check, Approximations, Bisection Pset 0 due\n\nSyllabus / Calendar / paragraph 27\n4 Decomposition, Abstractions, Functions Pset 2 released\n\nSyllabus / Calendar / paragraph 28\n5 Tuples, Lists, Aliasing, Mutability, Cloning Pset 1 due\n\nSyllabus / Calendar / paragraph 29\n6 Recursion, Dictionaries Pset 3 released\n\nSyllabus / Calendar / paragraph 30\n7 Testing, Debugging, Exceptions, Assertions Pset 2 due; Quiz 1\n\nSyllabus / Calendar / paragraph 31\n8 Object Oriented Programming\n\nSyllabus / Calendar / paragraph 32\n9 Python Classes and Inheritance Pset 3 due; Pset 4 released\n\nSyllabus / Calendar / paragraph 33\n10 Understanding Program Efficiency, Part 1 Pset 4 due; Pset 5 released\n\nSyllabus / Calendar / paragraph 34\n11 Understanding Program Efficiency, Part 2\n\nSyllabus / Calendar / paragraph 35\n12 Searching and Sorting Pset 5 due; Final Quiz\n\nSource: https://ocw.mit.edu/courses/6-0001-introduction-to-computer-science-and-programming-in-python-fall-2016/pages/syllabus/\nMIT OpenCourseWare, 6.0001, Fall 2016. Ana Bell, Eric Grimson, John Guttag. CC BY-NC-SA 4.0: https://creativecommons.org/licenses/by-nc-sa/4.0/ . No MIT endorsement. Adapted for local educational demonstration; commercial permission is not included.\nChanges: HTML converted to plain text; navigation removed. Historical Fall 2016 course.\n",
+  "segments": [
+    {
+      "location": "Course info / title",
+      "text": "6.0001 Introduction to Computer Science and Programming in Python"
+    },
+    {
+      "location": "Course info / instructors",
+      "text": "Dr. Ana Bell; Prof. Eric Grimson; Prof. John Guttag"
+    },
+    {
+      "location": "Syllabus / Course Meeting Times / paragraph 1",
+      "text": "Lectures: 2 sessions / week, 1 hour / session"
+    },
+    {
+      "location": "Syllabus / Course Meeting Times / paragraph 2",
+      "text": "Recitations: 1 sessions / week, 1 hour / session"
+    },
+    {
+      "location": "Syllabus / Course Information / paragraph 3",
+      "text": "6.0001 Introduction to Computer Science and Programming in Python is intended for students with little or no programming experience. It aims to provide students with an understanding of the role computation can play in solving problems and to help students, regardless of their major, feel justifiably confident of their ability to write small programs that allow them to accomplish useful goals. The class will use the Python 3.5 programming language."
+    },
+    {
+      "location": "Syllabus / Course Information / paragraph 4",
+      "text": "This is a half-semester course. Students who successfully complete 6.0001 may continue into 6.0002 Introduction to Computational Thinking and Data Science , which is taught in the second half of the semester."
+    },
+    {
+      "location": "Syllabus / Goals / paragraph 5",
+      "text": "Provide an understanding of the role computation can play in solving problems."
+    },
+    {
+      "location": "Syllabus / Goals / paragraph 6",
+      "text": "Help students, including those who do not plan to major in Computer Science and Electrical Engineering, feel confident of their ability to write small programs that allow them to accomplish useful goals."
+    },
+    {
+      "location": "Syllabus / Goals / paragraph 7",
+      "text": "Position students so that they can compete for research projects and excel in subjects with programming components."
+    },
+    {
+      "location": "Syllabus / Textbook / paragraph 8",
+      "text": "The textbook is Buy at MIT Press Guttag, John. Introduction to Computation and Programming Using Python: With Application to Understanding Data Second Edition . MIT Press, 2016. ISBN: 9780262529624. The book and the course lectures parallel each other, though there is more detail in the book about some topics. It is available both in hard copy and as an e-book."
+    },
+    {
+      "location": "Syllabus / Lecture and Recitation Attendance / paragraph 9",
+      "text": "A significant portion of the material for this course will presented only in lecture, so students are expected to regularly attend lectures."
+    },
+    {
+      "location": "Syllabus / Lecture and Recitation Attendance / paragraph 10",
+      "text": "Recitations give students a chance to ask questions about the lecture material or the problem set for the given week. Sometimes, new material may be covered in recitation. Recitation attendance is encouraged but not required."
+    },
+    {
+      "location": "Syllabus / Problem Sets and Quizzes / paragraph 11",
+      "text": "Each problem set will involve programming in Python. There will be 6 problem sets in the course. There will be two quizzes. All quizzes will be closed-book, though you will be allowed to bring one page of notes to the first quiz and two pages of notes to the second quiz. Pages must be letter-sized, double-sided, either handwritten or typed."
+    },
+    {
+      "location": "Syllabus / Grading Policy / paragraph 12",
+      "text": "Grades will be roughly computed as follows:"
+    },
+    {
+      "location": "Syllabus / Grading Policy / paragraph 13",
+      "text": "ACTIVITIES PERCENTAGES"
+    },
+    {
+      "location": "Syllabus / Grading Policy / paragraph 14",
+      "text": "Problem sets 30%"
+    },
+    {
+      "location": "Syllabus / Grading Policy / paragraph 15",
+      "text": "Completion of mandatory finger exercises 10%"
+    },
+    {
+      "location": "Syllabus / Grading Policy / paragraph 16",
+      "text": "Midterm Quiz 20%"
+    },
+    {
+      "location": "Syllabus / Grading Policy / paragraph 17",
+      "text": "Final Quiz 40%"
+    },
+    {
+      "location": "Syllabus / Grading Policy / paragraph 18",
+      "text": "Problem sets will be graded out of 10 points. Submissions that do not run will receive at most 20% of the points. Please contact your Teaching Assistant if you have a problem understanding your problem set grade."
+    },
+    {
+      "location": "Syllabus / Grading Policy / paragraph 19",
+      "text": "Note: Quizzes and finger exercises are not available on OpenCourseWare."
+    },
+    {
+      "location": "Syllabus / Extension and Dropping Problem Sets Policy / paragraph 20",
+      "text": "We do not grant any extensions. Instead, we offer late days and the option of rolling at most 2 problem set grades into the final quiz score."
+    },
+    {
+      "location": "Syllabus / Late Days / paragraph 21",
+      "text": "At the beginning of the term, students are given two late days that they can use on problem sets. Starting with Problem Set 1, additional late days can be accumulated for each assignment, one late day for each day the assignment is turned in ahead of the deadline. Up to three late days may be accumulated in this fashion in this course, i.e you can only have a maximum of 3 late days at any point in time. Late days are discrete (a student cannot use half a late day). The staff will keep track of late days and feedback for each problem set will include the number of late days the student has remaining. Any additional late work beyond these late days will not be accepted. To avoid surprises, we suggest that after you submit your problem set, you double check to make sure the submission was uploaded correctly."
+    },
+    {
+      "location": "Syllabus / Rolling Over Problem Sets / paragraph 22",
+      "text": "Before the final quiz, we will send out an announcement in which you can choose at most 2 problem sets that you can drop. If dropped, the percent that the problem sets are worth will be rolled into the final quiz score. We strongly urge you to see the late days and dropping the problem sets as backup in case of an emergency. Your best strategy is to do the problem sets early before work starts to pile up."
+    },
+    {
+      "location": "Syllabus / Calendar / paragraph 23",
+      "text": "SES # TOPICS ASSIGNMENTS"
+    },
+    {
+      "location": "Syllabus / Calendar / paragraph 24",
+      "text": "1 What is computation? Pset 0 released"
+    },
+    {
+      "location": "Syllabus / Calendar / paragraph 25",
+      "text": "2 Branching and Iteration Pset 1 released"
+    },
+    {
+      "location": "Syllabus / Calendar / paragraph 26",
+      "text": "3 String Manipulation, Guess and Check, Approximations, Bisection Pset 0 due"
+    },
+    {
+      "location": "Syllabus / Calendar / paragraph 27",
+      "text": "4 Decomposition, Abstractions, Functions Pset 2 released"
+    },
+    {
+      "location": "Syllabus / Calendar / paragraph 28",
+      "text": "5 Tuples, Lists, Aliasing, Mutability, Cloning Pset 1 due"
+    },
+    {
+      "location": "Syllabus / Calendar / paragraph 29",
+      "text": "6 Recursion, Dictionaries Pset 3 released"
+    },
+    {
+      "location": "Syllabus / Calendar / paragraph 30",
+      "text": "7 Testing, Debugging, Exceptions, Assertions Pset 2 due; Quiz 1"
+    },
+    {
+      "location": "Syllabus / Calendar / paragraph 31",
+      "text": "8 Object Oriented Programming"
+    },
+    {
+      "location": "Syllabus / Calendar / paragraph 32",
+      "text": "9 Python Classes and Inheritance Pset 3 due; Pset 4 released"
+    },
+    {
+      "location": "Syllabus / Calendar / paragraph 33",
+      "text": "10 Understanding Program Efficiency, Part 1 Pset 4 due; Pset 5 released"
+    },
+    {
+      "location": "Syllabus / Calendar / paragraph 34",
+      "text": "11 Understanding Program Efficiency, Part 2"
+    },
+    {
+      "location": "Syllabus / Calendar / paragraph 35",
+      "text": "12 Searching and Sorting Pset 5 due; Final Quiz"
+    }
+  ]
+}

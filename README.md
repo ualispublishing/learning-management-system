@@ -1,5 +1,8 @@
 # LMS app
 
+For the complete local demo, run `npm run web` and open
+<http://127.0.0.1:4178/demo>. Follow the [demo presentation runbook](./docs/demo-setup.md).
+
 For a focused product review, follow the
 [`MVP overview walkthrough`](./docs/mvp-overview-walkthrough.md). It separates
 the demo-ready experience from the institution-production launch gates.
@@ -26,17 +29,53 @@ palette button for quick two-colour previews and light/dark appearance.
 See the [branding and demo setup guide](./docs/institution-branding.md) for exact
 file requirements, refresh behavior and a presentation checklist.
 
-## Local single-user development
+## Prepared AI lesson demo
+
+Start with the **Demo guide** at `http://127.0.0.1:4178/demo`, or choose
+**Explore all demo features** on the role picker. It links to every main demo
+area: AI, branding, institution setup, all four course presentations, Learn,
+review, statistics, deck creation and Chat. The guide preserves the selected
+destination through sign-in and is available from the app and deep-screen headers.
+
+For a repeatable before-and-after presentation, run `npm run web` and
+open **http://127.0.0.1:4178/ai-demo**. The same import backend displays syllabus
+fields and flashcards beside their sources, without creating or changing courses.
+Use **Reset preview** between presentations. The sign-in screen also links here.
+
+The shared demo includes one coherent MIT OCW syllabus/lecture bundle with
+PDF, editable PowerPoint, audio, video and captions. Choose or drop these files
+to replay pre-generated syllabus extraction and study cards, inspect source
+checks, and review before publishing. Run `npm run demo:ai:check` to verify it.
+See the [prepared bundle guide](./demo/ai/README.md) and
+[server AI provider adapters](./docs/ai-provider-adapters.md).
+The OCW pack has a noncommercial licence; obtain permission or replace it before
+a sales presentation or commercial release.
+
+## Start the complete web demo
 
 ```bash
 npm run web
 ```
 
-## Shared multi-user acceptance mode
+`npm run web` starts both the shared backend and the web app with the role picker
+and prepared AI pages enabled. `npm run demo:multiuser` is an equivalent command.
+Keep the terminal open. Both commands use port **4178**, not Expo's default 8081.
+An older browser tab on 8081 will still show the old standalone mode until you
+open the URL printed by this launcher.
+
+Starting the command again reuses a verified running demo without resetting it.
+If a port belongs to an older launcher or another service, the command explains
+the conflict instead of silently opening an incomplete demo. Stop that older
+process with Ctrl+C in its terminal and retry. For a second independent demo:
 
 ```bash
-npm run demo:multiuser
+LMS_DEMO_APP_PORT=4190 LMS_DEMO_SERVER_PORT=4191 npm run web
 ```
+
+You can also pass `-- --port 4190` to change the web port, or `-- --clear` to
+clear Metro's cache on a fresh start. Use a separate backend port for each demo.
+
+## Shared multi-user acceptance mode
 
 Open `http://127.0.0.1:4178` in two or three browser tabs/windows and sign in as
 a different synthetic learner, staff member, IT user, or Administrator in each.
@@ -72,6 +111,12 @@ erases its state when stopped. Production integration requirements are in
 privacy, retention, and cross-origin behavior is recorded in
 [`docs/saved-state-and-activity-audit.md`](./docs/saved-state-and-activity-audit.md).
 
+## Frontend-only development
+
+`npm run web:standalone` runs Expo without the shared backend. It uses the local
+single-user fixture mode and does not enable demo sign-in or the prepared AI
+showcase. Use `npm run web` for presentations and multi-user testing.
+
 ## Checks
 
 Install the app and separate reference service dependency graphs:
@@ -88,6 +133,12 @@ npm test
 npm run check:server
 npm run check:release
 ```
+
+App tests run one file at a time with a 512 MiB V8 old-space limit per process
+and a 30-second test timeout. This limits test heap growth, not total system RSS.
+TypeScript and lint can require more memory than an individual test. See the
+[memory investigation](./docs/memory-investigation-2026-10-05.md) for measured
+budgets, assertion guidance and the recent file-retention fix.
 
 The [reference service](./server/README.md) provides OIDC authentication, durable
 sessions and an optional [written-assessment gateway](./server/gateway-contract.md).

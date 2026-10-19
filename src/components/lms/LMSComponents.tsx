@@ -14,6 +14,9 @@ import { LinearGradient } from 'expo-linear-gradient';
 import * as DocumentPicker from 'expo-document-picker';
 import Ionicons from '@expo/vector-icons/Ionicons';
 import { Course } from '../../types/lms';
+import { PreparedSourcePicker, PreparedAccuracyNotice } from './PreparedSourcePicker';
+import { isPreparedAIDemo, resolvePreparedDemoUrl } from '../../lib/ai/preparedDemo';
+import { mapSyllabusToCourse } from '../../lib/ai/syllabusCourseMapping';
 import { useThemeColors } from '../../lib/useThemeColors';
 import { userAlert as Alert } from '../../lib/userAlert';
 import { useLMSStore } from '../../lib/store/useLMSStore';
@@ -22,7 +25,7 @@ import { router } from 'expo-router';
 import { AssessmentGrader } from './AssessmentGrader';
 import { PollResults } from './PollResults';
 import { ExternalGradeCreator } from './ExternalGradeCreator';
-import { AIDocumentAsset, extractValidatedSyllabus, isValidISODate, SyllabusExtraction, SYLLABUS_PROMPT_VERSION } from '../../lib/ai';
+import { AIDocumentAsset, AIRequestError, assertConfiguredAISource, getAISourceSupport, extractValidatedSyllabus, recoverValidatedSyllabus, isValidISODate, SyllabusExtraction, SYLLABUS_PROMPT_VERSION } from '../../lib/ai';
 import { hasCoursePermission } from '../../lib/authorization/coursePermissions';
 import { getAssessmentMaxScore } from '../../lib/assessment/engine';
 import { useCourseRole } from '../../lib/store/selectors';
@@ -31,7 +34,13 @@ import { createEntityId } from '../../lib/id';
 import { calculateCourseAnalytics } from '../../lib/analytics/courseAnalytics';
 import { userBelongsToSubmissionGroup } from '../../lib/groups/courseGroups';
 import { assertAssetMatchesAIProvenance, getAssetService, StoredAsset } from '../../lib/integration/assetService';
-import { canonicalSafeHttpsUrl } from '../../lib/safeUrl';
+import { getSavedSyllabusDetails } from '../../lib/ai/savedSyllabusDetails';
+import { CourseInformationView, SyllabusAdditionalFields } from './CourseInformationView';
+import { SyllabusLineListInput } from './SyllabusLineListInput';
+import { AISourceReviewNotice } from './AISourceReviewNotice';
+import { AIGenerationAttribution } from './AIGenerationAttribution';
+import { AIRequestRecoveryActions } from './AIRequestRecoveryActions';
+import { AIRequestHistoryPicker } from './AIRequestHistoryPicker';
 import { buildCourseAnnouncementChatRoute, selectCourseAnnouncementThread, selectNewestVisibleCoursePopupAnnouncement } from '../../lib/chat/announcements';
 import { getCourseCardActionDescriptors } from '../../lib/courseCardActions';
 
@@ -44,53 +53,6 @@ const groupDraftsForCourse = (course: Course): Record<string, Record<string, str
   )]),
 );
 
-interface SavedSyllabusDetails {
-  sourceAsset?: { name: string; url: string };
-  instructorNames: string[];
-  schedule: { date?: string; topic: string }[];
-  requiredMaterials: string[];
-  policies: { name: string; text: string }[];
-  warnings: string[];
-  humanReviewedAt?: string;
-}
-
-const getSavedSyllabusDetails = (course: Course): SavedSyllabusDetails | null => {
-  const raw = course.metadata?.syllabus;
-  if (!raw || typeof raw !== 'object' || Array.isArray(raw)) return null;
-  const record = raw as Record<string, unknown>;
-  const strings = (value: unknown, limit: number, maxLength: number) => Array.isArray(value)
-    ? value.filter((entry): entry is string => typeof entry === 'string' && Boolean(entry.trim()) && entry.length <= maxLength).slice(0, limit)
-    : [];
-  const schedule = Array.isArray(record.schedule) ? record.schedule.flatMap(entry => {
-    if (!entry || typeof entry !== 'object' || Array.isArray(entry)) return [];
-    const value = entry as Record<string, unknown>;
-    if (typeof value.topic !== 'string' || !value.topic.trim() || value.topic.length > 600) return [];
-    return [{ topic: value.topic, date: typeof value.date === 'string' && isValidISODate(value.date) ? value.date : undefined }];
-  }).slice(0, 500) : [];
-  const policies = Array.isArray(record.policies) ? record.policies.flatMap(entry => {
-    if (!entry || typeof entry !== 'object' || Array.isArray(entry)) return [];
-    const value = entry as Record<string, unknown>;
-    if (typeof value.name !== 'string' || typeof value.text !== 'string' || !value.name.trim() || value.name.length > 160 || !value.text.trim() || value.text.length > 4000) return [];
-    return [{ name: value.name, text: value.text }];
-  }).slice(0, 100) : [];
-  let sourceAsset: SavedSyllabusDetails['sourceAsset'];
-  if (record.sourceAsset && typeof record.sourceAsset === 'object' && !Array.isArray(record.sourceAsset)) {
-    const value = record.sourceAsset as Record<string, unknown>;
-    const safeUrl = typeof value.url === 'string' ? canonicalSafeHttpsUrl(value.url) : null;
-    if (typeof value.name === 'string' && value.name.trim() && value.name.length <= 1_024 && safeUrl) {
-      sourceAsset = { name: value.name, url: safeUrl };
-    }
-  }
-  return {
-    sourceAsset,
-    instructorNames: strings(record.instructorNames, 30, 200),
-    schedule,
-    requiredMaterials: strings(record.requiredMaterials, 100, 600),
-    policies,
-    warnings: strings(record.warnings, 100, 600),
-    humanReviewedAt: typeof record.humanReviewedAt === 'string' && Number.isFinite(Date.parse(record.humanReviewedAt)) ? record.humanReviewedAt : undefined,
-  };
-};
 export const useModalLoader = (visible: boolean, delayMs: number = 20) => {
   void delayMs;
   return visible;
@@ -193,9 +155,14 @@ export const AnnouncementPopup = ({ courseId }: { courseId: string }) => {
 };
 
 // 2. Modals (Syllabus, Analytics, Settings, Info)
-export const SyllabusModal = ({ visible, onClose, course }: { visible: boolean, onClose: () => void, course: Course }) => {
+type SyllabusModalProps = { visible: boolean; onClose: () => void; course: Course };
+export const SyllabusModal = (props: SyllabusModalProps) => <SyllabusEditor key={`${props.course.id}:${props.visible}`} {...props} />;
+
+// A course/visibility change discards the editor and its pending recovery callbacks.
+const SyllabusEditor = ({ visible, onClose, course }: SyllabusModalProps) => {
   const colors = useThemeColors();
   const updateCourse = useLMSStore(state => state.updateCourse);
+  const sourceSupport = getAISourceSupport('syllabus');
   const currentUserRole = useCourseRole(course.id) ?? 'student';
   const canImport = hasCoursePermission(currentUserRole, 'manageCourse');
   const contentItems = useLMSStore(state => state.contentItems);
@@ -206,6 +173,7 @@ export const SyllabusModal = ({ visible, onClose, course }: { visible: boolean, 
   const [document, setDocument] = useState<AIDocumentAsset | null>(null);
   const [extraction, setExtraction] = useState<SyllabusExtraction | null>(null);
   const [extracting, setExtracting] = useState(false);
+  const [analysisFailure, setAnalysisFailure] = useState<AIRequestError | null>(null);
   const [applying, setApplying] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const [sourceRightsConfirmed, setSourceRightsConfirmed] = useState(false);
@@ -265,41 +233,41 @@ export const SyllabusModal = ({ visible, onClose, course }: { visible: boolean, 
     editExtraction(`gradingWeights.${label}`, { gradingWeights: { ...current, [label]: 0 } });
   };
 
+  const acceptSyllabus = (asset: AIDocumentAsset) => {
+    try { assertConfiguredAISource({ document: asset }, 'syllabus'); }
+    catch (selectionError) { setError(selectionError instanceof Error ? selectionError.message : 'This source is not supported by the AI service.'); return; }
+    analysisRevision.current += 1;
+    setError(null);
+    setAnalysisFailure(null);
+    setDocument(asset);
+    setExtraction(null);
+    setExtracting(false);
+    setStoredSourceAsset(null);
+    setSourceUploadKey(createEntityId('syllabus-source'));
+    setSourceRightsConfirmed(false);
+    setReviewConfirmed(false);
+    setReviewerEditedFields([]);
+    setGradingWeightNameDrafts({});
+  };
+
   const selectSyllabus = async () => {
     setError(null);
     try {
       const result = await DocumentPicker.getDocumentAsync({
         copyToCacheDirectory: true,
         multiple: false,
-        type: [
-          'application/pdf',
-          'application/vnd.openxmlformats-officedocument.wordprocessingml.document',
-          'application/vnd.openxmlformats-officedocument.presentationml.presentation',
-          'text/plain',
-          'text/markdown',
-          'application/rtf',
-          'text/rtf',
-        ],
+        type: sourceSupport.pickerTypes,
       });
       if (result.canceled) return;
       const asset = result.assets[0];
       if (!asset) throw new Error('The selected syllabus could not be read.');
-      analysisRevision.current += 1;
-      setDocument({ uri: asset.uri, name: asset.name, mimeType: asset.mimeType, size: asset.size, file: asset.file });
-      setExtraction(null);
-      setExtracting(false);
-      setStoredSourceAsset(null);
-      setSourceUploadKey(createEntityId('syllabus-source'));
-      setSourceRightsConfirmed(false);
-      setReviewConfirmed(false);
-      setReviewerEditedFields([]);
-      setGradingWeightNameDrafts({});
+      acceptSyllabus({ uri: asset.uri, name: asset.name, mimeType: asset.mimeType, size: asset.size, file: asset.file });
     } catch (selectionError) {
       setError(selectionError instanceof Error ? selectionError.message : 'The syllabus picker could not be opened.');
     }
   };
 
-  const analyzeSyllabus = async () => {
+  const analyzeSyllabus = async (recovery?: AIRequestError) => {
     const analysisKey = sourceUploadKey;
     if (!document || analysisInFlightFor.current === analysisKey) return;
     if (!sourceRightsConfirmed) {
@@ -311,9 +279,12 @@ export const SyllabusModal = ({ visible, onClose, course }: { visible: boolean, 
     const selectedDocument = document;
     setExtracting(true);
     setError(null);
+    if (!recovery) setAnalysisFailure(null);
     try {
-      const result = await extractValidatedSyllabus({ document: selectedDocument, courseTitle: course.title });
+      const input = { document: selectedDocument, courseId: course.id, courseTitle: course.title };
+      const result = recovery ? await recoverValidatedSyllabus(recovery, input) : await extractValidatedSyllabus(input);
       if (analysisRevision.current === revision) {
+        setAnalysisFailure(null);
         setExtraction(result);
         setReviewConfirmed(false);
         setReviewerEditedFields([]);
@@ -322,6 +293,7 @@ export const SyllabusModal = ({ visible, onClose, course }: { visible: boolean, 
     } catch (analysisError) {
       if (analysisRevision.current === revision) {
         setError(analysisError instanceof Error ? analysisError.message : 'Syllabus analysis failed.');
+        setAnalysisFailure(analysisError instanceof AIRequestError ? analysisError : null);
       }
     } finally {
       if (analysisInFlightFor.current === analysisKey) analysisInFlightFor.current = null;
@@ -350,6 +322,13 @@ export const SyllabusModal = ({ visible, onClose, course }: { visible: boolean, 
     }
     if (extraction.schedule?.some(entry => entry.date && !isValidISODate(entry.date))) {
       setError('Every reviewed schedule date must be a valid YYYY-MM-DD calendar date.');
+      return;
+    }
+    if ([['learningObjectives', 50], ['meetingTimes', 30]].some(([field, limit]) => {
+      const values = extraction[field as 'learningObjectives' | 'meetingTimes'];
+      return (values?.length || 0) > Number(limit) || values?.some(value => !value.trim() || value.length > 600);
+    })) {
+      setError('Use at most 50 learning objectives and 30 meeting-time entries, each non-empty and no longer than 600 characters.');
       return;
     }
     if ((extraction.instructorNames?.length || 0) > 30 || extraction.instructorNames?.some(name => !name.trim() || name.length > 200)) {
@@ -398,16 +377,11 @@ export const SyllabusModal = ({ visible, onClose, course }: { visible: boolean, 
         return;
       }
     }
+    const mapped = mapSyllabusToCourse(extraction, course);
     const syllabusAuditWithoutAsset = {
       promptVersion: SYLLABUS_PROMPT_VERSION,
       sourceFileName: document.name,
-      instructorNames: extraction.instructorNames,
-      schedule: extraction.schedule,
-      requiredMaterials: extraction.requiredMaterials,
-      policies: extraction.policies,
-      evidence: extraction.evidence,
-      warnings: extraction.warnings,
-      provenance: extraction.provenance,
+      ...mapped.syllabusDetails,
       reviewerEditedFields,
       sourceRightsAttested: true,
     };
@@ -433,13 +407,7 @@ export const SyllabusModal = ({ visible, onClose, course }: { visible: boolean, 
           promptVersion: SYLLABUS_PROMPT_VERSION,
           sourceFileName: document.name,
           sourceAsset,
-          instructorNames: extraction.instructorNames,
-          schedule: extraction.schedule,
-          requiredMaterials: extraction.requiredMaterials,
-          policies: extraction.policies,
-          evidence: extraction.evidence,
-          warnings: extraction.warnings,
-          provenance: extraction.provenance,
+          ...mapped.syllabusDetails,
           reviewerEditedFields,
           sourceRightsAttestedAt: reviewedAt,
           humanReviewedAt: reviewedAt,
@@ -450,14 +418,11 @@ export const SyllabusModal = ({ visible, onClose, course }: { visible: boolean, 
         throw new Error('The reviewed syllabus and source reference exceed the course metadata limit. Shorten the reviewed details before retrying.');
       }
       await updateCourse(course.id, {
-        title: extraction.title || course.title,
-        description: extraction.description || course.description,
-        termStart: extraction.termStart ? Date.parse(`${extraction.termStart}T00:00:00Z`) : course.termStart,
-        termEnd: extraction.termEnd ? Date.parse(`${extraction.termEnd}T23:59:59Z`) : course.termEnd,
-        gradingWeights: extraction.gradingWeights || course.gradingWeights,
+        ...mapped.courseFields,
         metadata,
       });
       setDocument(null);
+      setAnalysisFailure(null);
       setExtraction(null);
       setStoredSourceAsset(null);
       setSourceRightsConfirmed(false);
@@ -484,6 +449,7 @@ export const SyllabusModal = ({ visible, onClose, course }: { visible: boolean, 
       { text: 'Discard', style: 'destructive', onPress: () => {
         analysisRevision.current += 1;
         setDocument(null);
+        setAnalysisFailure(null);
         setExtraction(null);
         setExtracting(false);
         setStoredSourceAsset(null);
@@ -511,6 +477,7 @@ export const SyllabusModal = ({ visible, onClose, course }: { visible: boolean, 
       {savedSyllabus && (
         <View style={{ marginTop: 18, paddingTop: 16, borderTopWidth: 1, borderColor: colors.border }}>
           <Text style={{ color: colors.text, fontWeight: 'bold', fontSize: 18 }}>Reviewed syllabus details</Text>
+          <SyllabusAdditionalFields details={savedSyllabus} />
           {!!savedSyllabus.instructorNames.length && <Text style={{ color: colors.text, marginTop: 10 }}><Text style={{ fontWeight: 'bold' }}>Instructor{savedSyllabus.instructorNames.length === 1 ? '' : 's'}: </Text>{savedSyllabus.instructorNames.join(', ')}</Text>}
           {!!savedSyllabus.requiredMaterials.length && (
             <View style={{ marginTop: 12 }}>
@@ -537,7 +504,7 @@ export const SyllabusModal = ({ visible, onClose, course }: { visible: boolean, 
           )}
           {savedSyllabus.sourceAsset && (
             <TouchableOpacity
-              onPress={() => void Linking.openURL(savedSyllabus.sourceAsset!.url).catch(() => Alert.alert('Unable to open syllabus', 'The authorized syllabus link could not be opened.'))}
+              onPress={() => void Linking.openURL(resolvePreparedDemoUrl(savedSyllabus.sourceAsset!.url)).catch(() => Alert.alert('Unable to open syllabus', 'The authorized syllabus link could not be opened.'))}
               style={{ marginTop: 14, flexDirection: 'row', alignItems: 'center' }}
               accessibilityRole="link"
             >
@@ -547,19 +514,22 @@ export const SyllabusModal = ({ visible, onClose, course }: { visible: boolean, 
           )}
           {savedSyllabus.humanReviewedAt && <Text style={{ color: colors.textSecondary, fontSize: 11, marginTop: 8 }}>Human reviewed {new Date(savedSyllabus.humanReviewedAt).toLocaleString()}</Text>}
           {canImport && savedSyllabus.warnings.map((warning, index) => <Text key={`${warning}-${index}`} style={{ color: '#C47F00', marginTop: 5 }}>⚠ {warning}</Text>)}
+          {canImport && <AISourceReviewNotice notices={savedSyllabus.sourceReviewNotices} reviewed />}
+          <AIGenerationAttribution provenance={savedSyllabus.provenance} sourceName={savedSyllabus.sourceAsset?.name || savedSyllabus.sourceFileName} />
         </View>
       )}
       {canImport && (
         <View style={{ marginTop: 24, paddingTop: 20, borderTopWidth: 1, borderColor: colors.border }}>
           <Text style={{ color: colors.text, fontWeight: 'bold', fontSize: 18 }}>Import syllabus with AI</Text>
-          <Text style={{ color: colors.textSecondary, marginTop: 5, marginBottom: 14 }}>Upload a PDF, DOCX, PPTX, TXT, Markdown, or RTF syllabus. The source is integrity-checked and retained with the import; extracted fields are never applied until you review and confirm them.</Text>
+          <Text style={{ color: colors.textSecondary, marginTop: 5, marginBottom: 14 }}>{sourceSupport.description} The source is integrity-checked and retained with the import; extracted fields are never applied until you review and confirm them.</Text>
           <TouchableOpacity disabled={applying} onPress={() => void selectSyllabus()} style={{ borderWidth: 1, borderStyle: 'dashed', borderColor: applying ? colors.border : colors.primary, borderRadius: 8, padding: 14, alignItems: 'center' }} accessibilityRole="button" accessibilityState={{ disabled: applying }}>
             <Text style={{ color: colors.primary, fontWeight: 'bold' }}>{document ? `Selected: ${document.name}` : 'Select syllabus document'}</Text>
           </TouchableOpacity>
+          <PreparedSourcePicker task="syllabus" disabled={applying || extracting} onSelect={acceptSyllabus} />
           {document && !extraction && (
             <View>
               <Text style={{ color: colors.textSecondary, fontSize: 12, marginTop: 12 }}>
-                Analysis sends this syllabus to the institution-configured AI service. Vendor, retention, training use, deletion, and data residency are governed by your institution&apos;s policy. Do not include learner personal data unless your institution authorizes it.
+                {isPreparedAIDemo() ? 'Prepared demo: this file stays on the local demo server and is matched to a saved result. No external AI provider is contacted.' : 'Analysis sends this syllabus to the institution-configured AI service. Vendor, retention, training use, deletion, and data residency are governed by your institution’s policy. Do not include learner personal data unless your institution authorizes it.'}
               </Text>
               <TouchableOpacity
                 onPress={() => {
@@ -568,13 +538,14 @@ export const SyllabusModal = ({ visible, onClose, course }: { visible: boolean, 
                 }}
                 accessibilityRole="checkbox"
                 accessibilityState={{ checked: sourceRightsConfirmed, disabled: extracting }}
+                aria-checked={sourceRightsConfirmed}
                 disabled={extracting}
                 style={{ flexDirection: 'row', alignItems: 'center', minHeight: 44, marginTop: 8 }}
               >
                 <Ionicons name={sourceRightsConfirmed ? 'checkbox' : 'square-outline'} size={22} color={sourceRightsConfirmed ? colors.primary : colors.textSecondary} />
                 <Text style={{ color: colors.text, marginLeft: 8, flex: 1 }}>I am authorized to process this syllabus and understand that it will be sent to the configured AI service.</Text>
               </TouchableOpacity>
-              <TouchableOpacity
+              {!analysisFailure && <TouchableOpacity
                 disabled={extracting || !sourceRightsConfirmed}
                 onPress={() => void analyzeSyllabus()}
                 style={{ backgroundColor: extracting || !sourceRightsConfirmed ? colors.border : colors.primary, borderRadius: 8, padding: 14, marginTop: 8, alignItems: 'center' }}
@@ -585,12 +556,16 @@ export const SyllabusModal = ({ visible, onClose, course }: { visible: boolean, 
                 {extracting
                   ? <ActivityIndicator color={colors.textSecondary} />
                   : <Text style={{ color: sourceRightsConfirmed ? colors.buttonText : colors.textSecondary, fontWeight: 'bold' }}>Analyze document</Text>}
-              </TouchableOpacity>
+              </TouchableOpacity>}
+              <AIRequestHistoryPicker key={sourceUploadKey} task="syllabus" input={{ document, courseId: course.id, courseTitle: course.title }} disabled={!visible || extracting || !sourceRightsConfirmed} onSelect={request => void analyzeSyllabus(request)} />
             </View>
           )}
           {error && <Text style={{ color: colors.error, marginTop: 12 }}>{error}</Text>}
+          {analysisFailure && <AIRequestRecoveryActions failure={analysisFailure} busy={extracting} disabled={!sourceRightsConfirmed} onCheck={() => void analyzeSyllabus(analysisFailure)} onNew={() => void analyzeSyllabus()} />}
           {extraction && (
             <View style={{ marginTop: 16 }} pointerEvents={applying ? 'none' : 'auto'}>
+              <PreparedAccuracyNotice provenance={extraction.provenance} />
+              <AIGenerationAttribution provenance={extraction.provenance} />
               <Text style={{ color: colors.text, fontWeight: 'bold', marginBottom: 8 }}>Review and edit proposed changes</Text>
               <Text style={{ color: colors.textSecondary, fontSize: 12, marginBottom: 5 }}>Course title</Text>
               <TextInput
@@ -600,6 +575,14 @@ export const SyllabusModal = ({ visible, onClose, course }: { visible: boolean, 
                 onChangeText={title => editExtraction('title', { title })}
                 maxLength={300}
               />
+              {([{ key: 'courseCode', label: 'Course code', limit: 80 }, { key: 'courseDuration', label: 'Course duration', limit: 300 }, { key: 'intendedAudience', label: 'Intended audience', limit: 1000 }] as const).map(field => <View key={field.key}>
+                <Text style={{ color: colors.textSecondary, fontSize: 12 }}>{field.label}</Text>
+                <TextInput accessibilityLabel={`Extracted ${field.label.toLowerCase()}`} style={[styles.input, { borderColor: colors.border, color: colors.text, marginBottom: 10 }]} value={extraction[field.key] || ''} onChangeText={value => editExtraction(field.key, { [field.key]: value })} maxLength={field.limit} />
+              </View>)}
+              {([{ key: 'learningObjectives', label: 'Learning objectives', limit: 50 }, { key: 'meetingTimes', label: 'Meeting times', limit: 30 }] as const).map(field => <View key={field.key}>
+                <Text style={{ color: colors.textSecondary, fontSize: 12 }}>{field.label} · one per line</Text>
+                <SyllabusLineListInput accessibilityLabel={`Extracted ${field.label.toLowerCase()}`} style={[styles.input, { borderColor: colors.border, color: colors.text, minHeight: 70, marginBottom: 10 }]} values={extraction[field.key] || []} onChangeValues={values => editExtraction(field.key, { [field.key]: values })} maxLength={field.limit * 601} />
+              </View>)}
               <Text style={{ color: colors.textSecondary, fontSize: 12, marginBottom: 5 }}>Course description</Text>
               <TextInput
                 accessibilityLabel="Extracted course description"
@@ -660,12 +643,12 @@ export const SyllabusModal = ({ visible, onClose, course }: { visible: boolean, 
                   <Text style={{ color: colors.textSecondary, textAlign: 'right' }}>Total: {Object.values(extraction.gradingWeights || {}).reduce((sum, weight) => sum + weight, 0)}%</Text>
                 </View>
               <Text style={{ color: colors.text, fontWeight: 'bold', marginTop: 10, marginBottom: 5 }}>Instructor names</Text>
-              <TextInput
+              <SyllabusLineListInput
                 accessibilityLabel="Extracted instructor names"
                 style={[styles.input, { borderColor: colors.border, color: colors.text, minHeight: 70, textAlignVertical: 'top', marginBottom: 10 }]}
-                value={(extraction.instructorNames || []).join('\n')}
-                onChangeText={value => editExtraction('instructorNames', {
-                  instructorNames: value.split('\n').map(name => name.trim()).filter(Boolean),
+                values={extraction.instructorNames || []}
+                onChangeValues={values => editExtraction('instructorNames', {
+                  instructorNames: values,
                 })}
                 placeholder="One instructor per line"
                 placeholderTextColor={colors.textSecondary}
@@ -673,12 +656,12 @@ export const SyllabusModal = ({ visible, onClose, course }: { visible: boolean, 
                 maxLength={6000}
               />
               <Text style={{ color: colors.text, fontWeight: 'bold', marginTop: 4, marginBottom: 5 }}>Required materials</Text>
-              <TextInput
+              <SyllabusLineListInput
                 accessibilityLabel="Extracted required materials"
                 style={[styles.input, { borderColor: colors.border, color: colors.text, minHeight: 90, textAlignVertical: 'top', marginBottom: 10 }]}
-                value={(extraction.requiredMaterials || []).join('\n')}
-                onChangeText={value => editExtraction('requiredMaterials', {
-                  requiredMaterials: value.split('\n').map(material => material.trim()).filter(Boolean),
+                values={extraction.requiredMaterials || []}
+                onChangeValues={values => editExtraction('requiredMaterials', {
+                  requiredMaterials: values,
                 })}
                 placeholder="One material per line"
                 placeholderTextColor={colors.textSecondary}
@@ -785,6 +768,7 @@ export const SyllabusModal = ({ visible, onClose, course }: { visible: boolean, 
                 </View>
               ))}
               {extraction.warnings.map((warning, index) => <Text key={`${warning}-${index}`} style={{ color: '#C47F00', marginTop: 6 }}>⚠ {warning}</Text>)}
+              <AISourceReviewNotice notices={extraction.provenance?.sourceReviewNotices} />
               <Text style={{ color: colors.text, fontWeight: 'bold', marginTop: 16 }}>Source evidence ({extraction.evidence.length})</Text>
               {extraction.evidence.map((entry, index) => (
                 <View key={`${entry.field}-${index}`} style={{ borderLeftWidth: 3, borderLeftColor: colors.primary, paddingLeft: 10, marginTop: 8 }}>
@@ -796,6 +780,7 @@ export const SyllabusModal = ({ visible, onClose, course }: { visible: boolean, 
                 onPress={() => setReviewConfirmed(confirmed => !confirmed)}
                 accessibilityRole="checkbox"
                 accessibilityState={{ checked: reviewConfirmed }}
+                aria-checked={reviewConfirmed}
                 style={{ flexDirection: 'row', alignItems: 'center', marginTop: 16, paddingVertical: 8 }}
               >
                 <Ionicons name={reviewConfirmed ? 'checkbox' : 'square-outline'} size={22} color={reviewConfirmed ? colors.primary : colors.textSecondary} />
@@ -1551,24 +1536,12 @@ export const StudentInfoModal = ({ visible, onClose, course, onOpenSettings }: {
 
   return (
     <BaseModal visible={visible} onClose={onClose} title={`Course Info: ${course.title}`} isLoading={!isReady}>
-      <View style={{ marginBottom: 20 }}>
-        <Text style={{ color: colors.textSecondary, marginBottom: 15 }}>{course.description || ''}</Text>
-      </View>
-
-      <View style={styles.infoRow}><Text style={{ color: colors.textSecondary }}>Course Items</Text><Text style={{ color: colors.text, fontWeight: 'bold' }}>{courseItemCount}</Text></View>
-      <View style={styles.infoRow}><Text style={{ color: colors.textSecondary }}>Participants</Text><Text style={{ color: colors.text, fontWeight: 'bold' }}>{participantCount}</Text></View>
+      <CourseInformationView course={course} courseItemCount={courseItemCount} participantCount={participantCount} />
       {canManageCourse && onOpenSettings && (
         <TouchableOpacity onPress={onOpenSettings} style={[styles.primaryBtn, { backgroundColor: colors.primary, marginTop: 16 }]} accessibilityRole="button">
           <Text style={[styles.primaryBtnText, { color: colors.buttonText }]}>Open course settings</Text>
         </TouchableOpacity>
       )}
-      <Text style={{ color: colors.text, fontWeight: 'bold', fontSize: 18, marginTop: 20, marginBottom: 10 }}>Grading Breakdown</Text>
-      {Object.entries(course.gradingWeights || {}).map(([key, val], idx) => (
-        <View key={idx} style={{ flexDirection: 'row', justifyContent: 'space-between', paddingVertical: 8, borderBottomWidth: 1, borderBottomColor: 'rgba(150,150,150,0.1)' }}>
-          <Text style={{ color: colors.textSecondary }}>{key}</Text>
-          <Text style={{ color: colors.text, fontWeight: 'bold' }}>{val}%</Text>
-        </View>
-      ))}
     </BaseModal>
   );
 };

@@ -1,6 +1,7 @@
 # Third-party license review
 
 Lockfile workflow reviewed: 2026-08-27
+Installed inventory refreshed: 2026-10-10 after compatible Expo SDK 57 updates.
 
 This is an engineering inventory, not a legal opinion or a substitute for the
 license text shipped by each package.
@@ -25,10 +26,10 @@ or provide patent clearance.
 
 | SPDX expression reported in exact production SBOM | Packages |
 | --- | ---: |
-| MIT | 459 |
+| MIT | 451 |
 | ISC | 19 |
 | BSD-2-Clause | 11 |
-| BSD-3-Clause | 10 |
+| BSD-3-Clause | 8 |
 | Apache-2.0 | 10 |
 | BlueOak-1.0.0 | 5 |
 | MIT OR CC0-1.0 | 2 |
@@ -60,9 +61,9 @@ Packages requiring explicit release-owner review include:
 
 ## Official-source resolution status
 
-The current exact production graph contains 544 unique runtime package
-versions. Of the 66 packages encountered without a recognized bundled license
-file in the current and immediately preceding reviewed graphs:
+The current exact production graph contains 519 unique runtime package
+versions. The generated notices identify 49 resolved from pinned official
+sources and 12 without bundled or pinned full text:
 
 - 49 now use checked-in text copied from exact official publisher commits:
   13 current React Native packages, 30 Metro package versions across the two
@@ -70,7 +71,7 @@ file in the current and immediately preceding reviewed graphs:
   DotSlash, and `bplist-parser`.
 - `stream-buffers@2.2.0` is resolved from its already bundled `UNLICENSE`; the
   scanner now recognizes that standard filename.
-- 16 remain unresolved. No generic SPDX template, mirror, license-summary
+- 12 remain unresolved. No generic SPDX template, mirror, license-summary
   website, similarly named sibling package, or current-branch text was used to
   fill these gaps.
 
@@ -85,16 +86,12 @@ section:
 
 | Package | Evidence gap that prevents an engineering resolution |
 | --- | --- |
-| `@expo/devcert@1.2.1` | The exact official artifact/commit has no full license file; its README gives only an MIT label and copyright shorthand. |
 | `@expo/sdk-runtime-versions@1.0.0` | The official npm metadata/artifact declares MIT but supplies neither a repository/revision binding nor full text. |
-| `@expo/ws-tunnel@2.0.0` | The official npm metadata has a gitHead but no repository binding, and the artifact has no full text. |
-| `@expo/xcpretty@4.4.4` | The artifact omits BSD-3-Clause text and its npm gitHead is not retrievable from the declared archived repository. |
 | `badgin@1.2.3` | The exact artifact/official commit gives an MIT label but no full terms. |
 | `boolbase@1.0.0` | The artifact declares ISC but has no text or exact official revision binding. |
 | `bser@2.1.1` | The artifact declares Apache-2.0 and has only a short source header, not the full terms; npm supplies no exact gitHead. |
 | `client-only@0.0.1` | The artifact contains only an MIT metadata declaration and no repository/revision or license text. |
 | `fb-watchman@2.0.2` | Metadata declares Apache-2.0 while the shipped source header points to an absent MIT root license; no exact gitHead resolves the conflict. |
-| `jimp-compact@0.16.1` | The exact artifact/commit contains only an MIT label and a link to another project's moving license, not exact package terms. |
 | `react-remove-scroll-bar@2.3.8` | The artifact README says only MIT; no full text is bundled and its npm gitHead is not retrievable from the declared repository. |
 | `server-only@0.0.1` | The artifact contains only an MIT metadata declaration and no repository/revision or license text. |
 | `standard-navigation@0.0.5` | The exact artifact/official commit declares MIT but contains no full license text. |
@@ -111,7 +108,7 @@ official evidence.
 
 1. Regenerate and archive the CycloneDX SBOM from the exact release lockfile.
 2. Run `npm run notices:generate`, then resolve or obtain a documented
-   counsel-approved disposition for all 16 packages in its unresolved section.
+   counsel-approved disposition for all 12 packages in its unresolved section.
    Validate every pinned official URL, exact revision, publisher/version
    binding, and digest. `notices:check` proves freshness and integrity, not
    legal completeness.

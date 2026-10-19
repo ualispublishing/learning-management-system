@@ -1,0 +1,72 @@
+{
+  "stages": [
+    {
+      "command": [
+        "npm",
+        "run",
+        "check"
+      ],
+      "exit_code": 0,
+      "cutoff": null
+    },
+    {
+      "command": [
+        "npm",
+        "--prefix",
+        "server",
+        "run",
+        "check"
+      ],
+      "exit_code": 0,
+      "cutoff": null
+    },
+    {
+      "command": [
+        "npm",
+        "run",
+        "build:web"
+      ],
+      "exit_code": 0,
+      "cutoff": null
+    },
+    {
+      "command": [
+        "npm",
+        "run",
+        "verify:web-build"
+      ],
+      "exit_code": 0,
+      "cutoff": null
+    }
+  ],
+  "peak_group_rss_mib": 1626.2,
+  "limit_mib": 3072,
+  "time_limit_seconds": 300,
+  "elapsed_seconds": 52.2,
+  "date": "2026-10-13",
+  "app_tests": 510,
+  "server_tests": 50,
+  "synthetic_journeys": 270,
+  "synthetic_steps": 1620,
+  "exported_files": 30,
+  "node_heap_mib": 1536,
+  "test_heap_mib": 512,
+  "paid_provider_calls": 0,
+  "new_browser_visual_check": false,
+  "server_marker_scan": {
+    "bundles_checked": 2,
+    "markers": [
+      "api.openai.com/v1/responses",
+      "text-source.v1",
+      "gateway_ai_jobs",
+      "ai_storage_capacity_reached"
+    ],
+    "matches": []
+  },
+  "final_storage_refinement": {
+    "change": "Retain task and prompt version for processing and uncertain jobs",
+    "server_typecheck": "passed",
+    "direct_ai_handler_tests_passed": 15,
+    "client_gateway_integration_tests_passed": 1
+  }
+}

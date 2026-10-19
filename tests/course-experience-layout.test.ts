@@ -33,7 +33,7 @@ test('course presentation source preserves compact chrome, no-scroll site mode, 
     readFile(new URL('../src/components/lms/ExternalSiteFrame.tsx', import.meta.url), 'utf8'),
   ]);
   assert.match(layout, /pathname\.includes\('\/admin\/course\/'\)/);
-  assert.match(layout, /maxWidth: isCourseScreen && Platform\.OS === 'web' \? undefined : appCanvasMaxWidth/);
+  assert.match(layout, /maxWidth: isDemoPage \|\| \(isCourseScreen && Platform\.OS === 'web'\) \? undefined : appCanvasMaxWidth/);
   assert.match(courseRoute, /isPresentationView[\s\S]*styles\.presentationHeader/);
   assert.match(courseRoute, /canEdit && teacherMode === 'edit'[\s\S]*CourseSetupReviewPanel/);
   assert.match(feed, /if \(singleEmbeddedSiteItem && !isItemLocked\(singleEmbeddedSiteItem\)\)[\s\S]*fillViewport/);

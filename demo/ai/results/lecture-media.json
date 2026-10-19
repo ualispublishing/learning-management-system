@@ -1,0 +1,46 @@
+{
+  "cards": [
+    {
+      "front": "What is declarative knowledge?",
+      "back": "Statements of fact.",
+      "sourceExcerpt": "The first type of knowledge is declarative knowledge. And those are things like statements of fact.",
+      "sourceLocation": "Clip 00:00:04.320–00:00:10.730 (original 00:08:44.320–00:08:50.730)",
+      "confidence": 1
+    },
+    {
+      "front": "What is imperative knowledge?",
+      "back": "A recipe, how-to, or sequence of steps.",
+      "sourceExcerpt": "That's where imperative knowledge comes in. Imperative knowledge is the recipe, or the how-to, or the sequence of steps.",
+      "sourceLocation": "Clip 00:00:55.459–00:01:02.230 (original 00:09:35.459–00:09:42.230)",
+      "confidence": 1
+    },
+    {
+      "front": "How does the demonstrated square-root algorithm begin?",
+      "back": "With a guess, g.",
+      "sourceExcerpt": "this algorithm, it's going to start with a guess, g, let's say, 3.",
+      "sourceLocation": "Clip 00:04:43.070–00:04:48.620 (original 00:13:23.070–00:13:28.620)",
+      "confidence": 1
+    },
+    {
+      "front": "When does the square-root algorithm accept the current guess g as its answer?",
+      "back": "When g times g is close enough to x.",
+      "sourceExcerpt": "And we're going to ask is if g times g is close enough to x, then stop and say, g is the answer.",
+      "sourceLocation": "Clip 00:04:54.320–00:04:59.670 (original 00:13:34.320–00:13:39.670)",
+      "confidence": 1
+    },
+    {
+      "front": "How does the square-root algorithm update g when the current guess is not close enough?",
+      "back": "By averaging g and x over g.",
+      "sourceExcerpt": "If it's not close enough, then I'm going to make a new guess by averaging g and x over g.",
+      "sourceLocation": "Clip 00:05:07.130–00:05:12.920 (original 00:13:47.130–00:13:52.920)",
+      "confidence": 1
+    },
+    {
+      "front": "What role does flow of control play in the demonstrated recipe?",
+      "back": "It governs decisions and repetition of steps.",
+      "sourceExcerpt": "What were the three parts of the recipe? One was a simple sequence of steps. There were four steps. The other was a flow of control, so there were parts where we made decisions. Are we close enough? There were parts where we repeated some steps. At the end, we said, repeat steps 1, 2, 3. That's the flow of control. And the last part of the recipe was a way to stop.",
+      "sourceLocation": "Clip 00:05:51.604–00:06:18.340 (original 00:14:31.604–00:14:58.340)",
+      "confidence": 1
+    }
+  ]
+}

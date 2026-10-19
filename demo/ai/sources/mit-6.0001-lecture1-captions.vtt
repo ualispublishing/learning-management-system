@@ -1,0 +1,650 @@
+WEBVTT
+
+NOTE
+MIT OpenCourseWare, 6.0001, Fall 2016. Ana Bell, Eric Grimson, John Guttag. CC BY-NC-SA 4.0: https://creativecommons.org/licenses/by-nc-sa/4.0/ . No MIT endorsement. Adapted for local educational demonstration; commercial permission is not included.
+Excerpt of Lecture 1, original 00:08:40.000–00:15:34.000. Cue times shifted by 520 seconds.
+
+1
+00:00:00.059 --> 00:00:04.320
+Let's go into the types of knowledge.
+
+2
+00:00:04.320 --> 00:00:08.220
+The first type of knowledge is declarative knowledge.
+
+3
+00:00:08.220 --> 00:00:10.730
+And those are things like statements of fact.
+
+4
+00:00:10.730 --> 00:00:13.080
+And this is where my email came into play.
+
+5
+00:00:13.080 --> 00:00:15.500
+If you read it all the way to the bottom,
+
+6
+00:00:15.500 --> 00:00:17.960
+you would have entered a raffle.
+
+7
+00:00:17.960 --> 00:00:19.890
+So a statement of fact for today's lecture
+
+8
+00:00:19.890 --> 00:00:23.280
+is, someone will win a prize before class ends.
+
+9
+00:00:23.280 --> 00:00:26.820
+And the prize was a Google Cardboard.
+
+10
+00:00:26.820 --> 00:00:29.890
+Google state-of-the-art virtual reality glasses.
+
+11
+00:00:29.890 --> 00:00:31.474
+And I have them right here.
+
+12
+00:00:34.400 --> 00:00:35.950
+Yea.
+
+13
+00:00:35.950 --> 00:00:38.650
+I delivered on my promise.
+
+14
+00:00:38.650 --> 00:00:40.770
+That's a statement of fact.
+
+15
+00:00:40.770 --> 00:00:42.600
+So pretend I'm a machine.
+
+16
+00:00:42.600 --> 00:00:43.480
+OK?
+
+17
+00:00:43.480 --> 00:00:46.990
+I don't know anything except what you tell me.
+
+18
+00:00:46.990 --> 00:00:48.100
+I don't know.
+
+19
+00:00:48.100 --> 00:00:50.320
+I know that you tell me this statement.
+
+20
+00:00:50.320 --> 00:00:51.847
+I'm like, OK.
+
+21
+00:00:51.847 --> 00:00:53.930
+But how is someone going to win a Google Cardboard
+
+22
+00:00:53.930 --> 00:00:55.459
+before class ends, right?
+
+23
+00:00:55.459 --> 00:00:57.250
+That's where imperative knowledge comes in.
+
+24
+00:00:57.250 --> 00:00:59.530
+Imperative knowledge is the recipe, or the how-to,
+
+25
+00:00:59.530 --> 00:01:02.230
+or the sequence of steps.
+
+26
+00:01:02.230 --> 00:01:03.780
+Sorry.
+
+27
+00:01:03.780 --> 00:01:07.210
+That's just my funny for that one.
+
+28
+00:01:07.210 --> 00:01:13.530
+So the sequence of steps is imperative knowledge.
+
+29
+00:01:13.530 --> 00:01:17.930
+If I'm a machine, you need to tell me
+
+30
+00:01:17.930 --> 00:01:20.910
+how someone will win a Google Cardboard before class.
+
+31
+00:01:20.910 --> 00:01:22.680
+If I follow these steps, then technically,
+
+32
+00:01:22.680 --> 00:01:26.460
+I should reach a conclusion.
+
+33
+00:01:26.460 --> 00:01:28.950
+Step one, I think we've already done that.
+
+34
+00:01:28.950 --> 00:01:31.590
+Whoever wanted to sign up has signed up.
+
+35
+00:01:31.590 --> 00:01:33.180
+Now I'm going to open my IDE.
+
+36
+00:01:33.180 --> 00:01:34.680
+I'm just basically being a machine
+
+37
+00:01:34.680 --> 00:01:37.740
+and following the steps that you've told me.
+
+38
+00:01:37.740 --> 00:01:41.631
+The IDE that we're using in this class is called Anaconda.
+
+39
+00:01:41.631 --> 00:01:45.330
+I'm just scrolling down to the bottom.
+
+40
+00:01:45.330 --> 00:01:48.660
+Hopefully, you've installed it in problem set zero.
+
+41
+00:01:48.660 --> 00:01:50.610
+I've opened my IDE.
+
+42
+00:01:50.610 --> 00:01:54.012
+I'm going to follow the next set of instructions.
+
+43
+00:01:54.012 --> 00:01:56.220
+I'm going to choose a random number between the first
+
+44
+00:01:56.220 --> 00:01:59.460
+and the nth responder.
+
+45
+00:01:59.460 --> 00:02:02.340
+Now, I'm going to actually use Python to do this .
+
+46
+00:02:02.340 --> 00:02:04.620
+And this is also an example of how just
+
+47
+00:02:04.620 --> 00:02:06.310
+a really simple task in your life,
+
+48
+00:02:06.310 --> 00:02:08.742
+you can use computers or programming to do that.
+
+49
+00:02:08.742 --> 00:02:10.200
+Because if I chose a random number,
+
+50
+00:02:10.200 --> 00:02:11.824
+I might be biased because, for example,
+
+51
+00:02:11.824 --> 00:02:13.860
+I might like the number 8.
+
+52
+00:02:13.860 --> 00:02:17.399
+To choose a random number, I'm going to go and say, OK,
+
+53
+00:02:17.399 --> 00:02:18.690
+where's the list of responders?
+
+54
+00:02:18.690 --> 00:02:19.800
+It starts at 15.
+
+55
+00:02:19.800 --> 00:02:23.070
+Actually, it starts at 16 because that's me.
+
+56
+00:02:23.070 --> 00:02:25.440
+We're going to choose a random number between 16
+
+57
+00:02:25.440 --> 00:02:29.210
+and the end person 266.
+
+58
+00:02:29.210 --> 00:02:31.190
+Oh, we just got-- oh.
+
+59
+00:02:31.190 --> 00:02:33.070
+OK.
+
+60
+00:02:33.070 --> 00:02:33.570
+OK.
+
+61
+00:02:33.570 --> 00:02:35.028
+I'm going to cut it off right here.
+
+62
+00:02:35.028 --> 00:02:35.541
+271.
+
+63
+00:02:35.541 --> 00:02:36.040
+OK.
+
+64
+00:02:36.040 --> 00:02:38.490
+16 and 271.
+
+65
+00:02:38.490 --> 00:02:39.330
+Perfect.
+
+66
+00:02:39.330 --> 00:02:40.380
+OK.
+
+67
+00:02:40.380 --> 00:02:41.880
+I'm going to choose a random number.
+
+68
+00:02:41.880 --> 00:02:42.900
+I'm going to go to my IDE.
+
+69
+00:02:42.900 --> 00:02:44.490
+And you don't need to know how to do this yet,
+
+70
+00:02:44.490 --> 00:02:46.115
+but by the end of this class, you will.
+
+71
+00:02:46.115 --> 00:02:49.191
+I'm just going to use Python.
+
+72
+00:02:49.191 --> 00:02:51.690
+I'm just going to get the random number package that's going
+
+73
+00:02:51.690 --> 00:02:52.950
+to give me a random number.
+
+74
+00:02:52.950 --> 00:02:55.820
+I'm going to say random.randint.
+
+75
+00:02:55.820 --> 00:03:00.510
+And I'm going to choose a random number between 16 and 272,
+
+76
+00:03:00.510 --> 00:03:01.380
+OK.
+
+77
+00:03:01.380 --> 00:03:02.440
+75.
+
+78
+00:03:02.440 --> 00:03:03.690
+OK.
+
+79
+00:03:03.690 --> 00:03:04.800
+Great.
+
+80
+00:03:04.800 --> 00:03:05.880
+I chose a random number.
+
+81
+00:03:05.880 --> 00:03:08.557
+And I'm going to find the number in the responder's sheet.
+
+82
+00:03:08.557 --> 00:03:09.640
+What was the number again?
+
+83
+00:03:09.640 --> 00:03:11.040
+Sorry.
+
+84
+00:03:11.040 --> 00:03:12.000
+75.
+
+85
+00:03:12.000 --> 00:03:14.020
+OK.
+
+86
+00:03:14.020 --> 00:03:16.080
+Up we go.
+
+87
+00:03:16.080 --> 00:03:17.710
+There we go.
+
+88
+00:03:17.710 --> 00:03:21.300
+Lauren Z-O-V. Yeah.
+
+89
+00:03:21.300 --> 00:03:22.060
+Nice.
+
+90
+00:03:22.060 --> 00:03:22.710
+You're here.
+
+91
+00:03:34.180 --> 00:03:36.110
+Awesome.
+
+92
+00:03:36.110 --> 00:03:37.810
+All right.
+
+93
+00:03:37.810 --> 00:03:41.200
+That's an example of me being a machine and also,
+
+94
+00:03:41.200 --> 00:03:43.870
+at the same time, using Python in my everyday life,
+
+95
+00:03:43.870 --> 00:03:48.650
+just lecturing, to find a random number.
+
+96
+00:03:48.650 --> 00:03:50.350
+Try to use Python wherever you can.
+
+97
+00:03:50.350 --> 00:03:51.725
+And that just gives you practice.
+
+98
+00:03:54.580 --> 00:03:55.770
+That was fun.
+
+99
+00:03:55.770 --> 00:03:57.190
+But we're at MIT.
+
+100
+00:03:57.190 --> 00:03:59.110
+We're MIT students.
+
+101
+00:03:59.110 --> 00:04:01.900
+And we love numbers here at MIT.
+
+102
+00:04:01.900 --> 00:04:04.749
+Here's a numerical example that shows
+
+103
+00:04:04.749 --> 00:04:06.790
+the difference between declarative and imperative
+
+104
+00:04:06.790 --> 00:04:10.000
+knowledge.
+
+105
+00:04:10.000 --> 00:04:11.470
+An example of declarative knowledge
+
+106
+00:04:11.470 --> 00:04:14.530
+is the square root of a number x is y such that y times y
+
+107
+00:04:14.530 --> 00:04:17.020
+is equal to x.
+
+108
+00:04:17.020 --> 00:04:19.010
+That's just a statement of fact It's true.
+
+109
+00:04:22.300 --> 00:04:25.872
+Computers don't know what to do with that.
+
+110
+00:04:25.872 --> 00:04:27.830
+They don't know what to do with that statement.
+
+111
+00:04:27.830 --> 00:04:31.270
+But computers do know how to follow a recipe.
+
+112
+00:04:31.270 --> 00:04:33.250
+Here's a well-known algorithm.
+
+113
+00:04:33.250 --> 00:04:36.550
+To find the square root of a number x,
+
+114
+00:04:36.550 --> 00:04:43.070
+let's say x is originally 16, if a computer follows
+
+115
+00:04:43.070 --> 00:04:46.640
+this algorithm, it's going to start with a guess, g,
+
+116
+00:04:46.640 --> 00:04:48.620
+let's say, 3.
+
+117
+00:04:48.620 --> 00:04:50.940
+We're trying to find the square root of 16.
+
+118
+00:04:50.940 --> 00:04:54.320
+We're going to calculate g times g is 9.
+
+119
+00:04:54.320 --> 00:04:56.120
+And we're going to ask is if g times g
+
+120
+00:04:56.120 --> 00:04:59.670
+is close enough to x, then stop and say, g is the answer.
+
+121
+00:04:59.670 --> 00:05:02.699
+I'm not really happy with 9 being really close to 16.
+
+122
+00:05:02.699 --> 00:05:04.490
+So I'm going to say, I'm not stopping here.
+
+123
+00:05:04.490 --> 00:05:07.130
+I'm going to keep going.
+
+124
+00:05:07.130 --> 00:05:08.690
+If it's not close enough, then I'm
+
+125
+00:05:08.690 --> 00:05:12.920
+going to make a new guess by averaging g and x over g.
+
+126
+00:05:12.920 --> 00:05:14.480
+That's x over g here.
+
+127
+00:05:14.480 --> 00:05:17.150
+And that's the average over there.
+
+128
+00:05:17.150 --> 00:05:20.120
+And the new average is going to be my new guess.
+
+129
+00:05:24.320 --> 00:05:25.430
+And that's what it says.
+
+130
+00:05:25.430 --> 00:05:27.680
+And then, the last step is using the new guess,
+
+131
+00:05:27.680 --> 00:05:28.790
+repeat the process.
+
+132
+00:05:28.790 --> 00:05:31.610
+Then we go back to the beginning and repeat the whole process
+
+133
+00:05:31.610 --> 00:05:33.484
+over and over again.
+
+134
+00:05:33.484 --> 00:05:35.150
+And that's what the rest of the rows do.
+
+135
+00:05:35.150 --> 00:05:36.590
+And you keep doing this until you decide
+
+136
+00:05:36.590 --> 00:05:37.631
+that you're close enough.
+
+137
+00:05:43.340 --> 00:05:45.140
+What we saw for the imperative knowledge
+
+138
+00:05:45.140 --> 00:05:46.610
+in the previous numerical example
+
+139
+00:05:46.610 --> 00:05:51.604
+was the recipe for how to find the square root of x.
+
+140
+00:05:51.604 --> 00:05:53.270
+What were the three parts of the recipe?
+
+141
+00:05:53.270 --> 00:05:56.090
+One was a simple sequence of steps.
+
+142
+00:05:56.090 --> 00:05:59.270
+There were four steps.
+
+143
+00:05:59.270 --> 00:06:02.660
+The other was a flow of control, so there were
+
+144
+00:06:02.660 --> 00:06:05.360
+parts where we made decisions.
+
+145
+00:06:05.360 --> 00:06:06.980
+Are we close enough?
+
+146
+00:06:06.980 --> 00:06:09.320
+There were parts where we repeated some steps.
+
+147
+00:06:09.320 --> 00:06:12.890
+At the end, we said, repeat steps 1, 2, 3.
+
+148
+00:06:12.890 --> 00:06:15.320
+That's the flow of control.
+
+149
+00:06:15.320 --> 00:06:18.340
+And the last part of the recipe was a way to stop.
+
+150
+00:06:18.340 --> 00:06:20.660
+You don't want a program that keeps going and going.
+
+151
+00:06:20.660 --> 00:06:23.869
+Or for a recipe, you don't want to keep baking bread forever.
+
+152
+00:06:23.869 --> 00:06:25.160
+You want to stop at some point.
+
+153
+00:06:25.160 --> 00:06:27.800
+Like 10 breads is enough, right?
+
+154
+00:06:27.800 --> 00:06:30.230
+So you have to have a way of stopping.
+
+155
+00:06:30.230 --> 00:06:32.780
+In the previous example, the way of stopping
+
+156
+00:06:32.780 --> 00:06:35.240
+was that we decided we were close enough.
+
+157
+00:06:35.240 --> 00:06:40.261
+Close enough was maybe being within .01, .001,
+
+158
+00:06:40.261 --> 00:06:41.010
+whatever you pick.
+
+159
+00:06:43.830 --> 00:06:46.550
+This recipe is there for an algorithm.
+
+160
+00:06:46.550 --> 00:06:49.248
+In computer science speak, it's going to be an algorithm.
+
+161
+00:06:49.248 --> 00:06:51.622
+And that's what we're going to learn about in this class.
+

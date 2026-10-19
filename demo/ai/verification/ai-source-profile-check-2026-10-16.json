@@ -1,0 +1,76 @@
+{
+  "stages": [
+    {
+      "command": [
+        "npm",
+        "run",
+        "check"
+      ],
+      "exit_code": 0,
+      "cutoff": null
+    },
+    {
+      "command": [
+        "npm",
+        "--prefix",
+        "server",
+        "run",
+        "check"
+      ],
+      "exit_code": 0,
+      "cutoff": null
+    },
+    {
+      "command": [
+        "npm",
+        "run",
+        "build:web"
+      ],
+      "exit_code": 0,
+      "cutoff": null
+    },
+    {
+      "command": [
+        "npm",
+        "run",
+        "verify:web-build"
+      ],
+      "exit_code": 0,
+      "cutoff": null
+    }
+  ],
+  "peak_group_rss_mib": 1594.8,
+  "limit_mib": 3072,
+  "time_limit_seconds": 300,
+  "elapsed_seconds": 50.2,
+  "date": "2026-10-16",
+  "scope": "Declared AI source-format profile, pre-upload limits, and truthful picker/review guidance",
+  "app_tests": 541,
+  "server_tests": 54,
+  "synthetic_journeys": 270,
+  "synthetic_steps": 1620,
+  "exported_files": 30,
+  "node_heap_mib": 1536,
+  "test_heap_mib": 512,
+  "paid_provider_calls": 0,
+  "new_browser_visual_check": false,
+  "server_marker_scan": {
+    "bundles_checked": 2,
+    "markers": [
+      "api.openai.com/v1/responses",
+      "text-source.v1",
+      "gateway_ai_jobs",
+      "ai_storage_capacity_reached"
+    ],
+    "matches": []
+  },
+  "limitations": [
+    "The text-v1 profile must be declared by the integration; this is not automatic server capability discovery.",
+    "Arbitrary PDF, DOCX, PPTX, RTF, OCR and audio/video processing still need extraction workers.",
+    "Prepared demo media replay and ordinary course attachments retain their existing behavior.",
+    "No live SSO, paid provider call, deployment or institution acceptance."
+  ],
+  "verification_notes": [
+    "One stale disabled-expression source assertion failed on the first full run. Rendered tests now directly prove that consent and source compatibility prevent generation before credentials or upload. The final full run passed."
+  ]
+}

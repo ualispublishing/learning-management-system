@@ -2,20 +2,17 @@
 
 This file is generated from the installed production dependency graph. License and notice wording below is copied either from files distributed inside the corresponding installed package or from exact-commit files in the package publisher's official repository recorded in `third_party/license-sources.json`. Only a UTF-8 byte-order mark and trailing whitespace are removed for Markdown presentation. Package metadata is informational and does not replace license text.
 
-- Package-lock SHA-256: `43f173fd986ed845d22bce35b6ed1c2a4aea290e4b9015223bfe3ae3205917eb`
+- Package-lock SHA-256: `f150134210d82cfcc5dc275de80aebc06fae2c9ebcfdefad9ee15c4aecedbe40`
 - Pinned license-source manifest SHA-256: `6a5fadfb2cd8698f64b378ff214a7b887d07a6362f3c3b4a8b8f0bab69665963`
-- Unique runtime package versions: 518
+- Unique runtime package versions: 519
 - Packages resolved from pinned official upstream sources: 49
-- Packages without bundled or pinned official license text: 15
+- Packages without bundled or pinned official license text: 12
 
 Regenerate with `npm run notices:generate` after every dependency change and verify with `npm run notices:check`. Legal review must resolve every package listed in the unresolved section, validate the publisher/release binding of every pinned source, and confirm that mobile/web binary asset notices and store disclosures are complete.
 
 ## Packages without bundled or pinned official license text
 
-- @expo/devcert@1.2.1 — declared license: MIT
 - @expo/sdk-runtime-versions@1.0.0 — declared license: MIT
-- @expo/ws-tunnel@2.0.0 — declared license: MIT
-- @expo/xcpretty@4.4.5 — declared license: BSD-3-Clause
 - badgin@1.2.3 — declared license: MIT
 - boolbase@1.0.0 — declared license: ISC
 - bser@2.1.1 — declared license: Apache-2.0
@@ -1889,7 +1886,7 @@ OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 SOFTWARE.
 ```
 
-### @expo-google-fonts/material-symbols@0.4.48
+### @expo-google-fonts/material-symbols@0.4.49
 
 Declared license: MIT AND Apache-2.0
 
@@ -2128,7 +2125,7 @@ OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 SOFTWARE.
 ```
 
-### @expo/cli@57.0.27
+### @expo/cli@57.0.28
 
 Declared license: MIT
 
@@ -2190,7 +2187,7 @@ OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 SOFTWARE.
 ```
 
-### @expo/config-plugins@57.0.9
+### @expo/config-plugins@57.0.10
 
 Declared license: MIT
 
@@ -2252,7 +2249,7 @@ OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 SOFTWARE.
 ```
 
-### @expo/config@57.0.9
+### @expo/config@57.0.10
 
 Declared license: MIT
 
@@ -2263,6 +2260,38 @@ SHA-256: `16feb932ce2ba7bc7712657bb28afe409eaa4334f9f05d0e1b7a5f12bf6132f4`
 The MIT License (MIT)
 
 Copyright (c) 2015-present 650 Industries, Inc. (aka Expo)
+
+Permission is hereby granted, free of charge, to any person obtaining a copy
+of this software and associated documentation files (the "Software"), to deal
+in the Software without restriction, including without limitation the rights
+to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+copies of the Software, and to permit persons to whom the Software is
+furnished to do so, subject to the following conditions:
+
+The above copyright notice and this permission notice shall be included in all
+copies or substantial portions of the Software.
+
+THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
+SOFTWARE.
+```
+
+### @expo/devcert@1.2.2
+
+Declared license: MIT
+
+Installed source file(s): LICENSE
+SHA-256: `ddd64c9417c74998fe7d0bed6faaf7466bcbe4772bb2b52e7fc9815e33455921`
+
+```text
+The MIT License (MIT)
+
+Copyright (c) 2017 Dave Wasmer
+Copyright (c) 2021-present 650 Industries, Inc. (aka Expo)
 
 Permission is hereby granted, free of charge, to any person obtaining a copy
 of this software and associated documentation files (the "Software"), to deal
@@ -2438,6 +2467,39 @@ OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 SOFTWARE.
 ```
 
+### @expo/image-utils@0.11.6
+
+Declared license: MIT
+
+Installed copies: 4
+
+Installed source file(s): LICENSE
+SHA-256: `fb3ca4a837f5779e83cef89b78253a8949cfb9429c340309f62d0465ec6610b4`
+
+```text
+The MIT License (MIT)
+
+Copyright (c) 2015-present 650 Industries, Inc. (aka Expo)
+
+Permission is hereby granted, free of charge, to any person obtaining a copy
+of this software and associated documentation files (the "Software"), to deal
+in the Software without restriction, including without limitation the rights
+to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+copies of the Software, and to permit persons to whom the Software is
+furnished to do so, subject to the following conditions:
+
+The above copyright notice and this permission notice shall be included in all
+copies or substantial portions of the Software.
+
+THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
+SOFTWARE.
+```
+
 ### @expo/inline-modules@0.1.7
 
 Declared license: MIT
@@ -2562,7 +2624,7 @@ OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 SOFTWARE.
 ```
 
-### @expo/metro-config@57.0.12
+### @expo/metro-config@57.0.13
 
 Declared license: MIT
 
@@ -2593,7 +2655,7 @@ OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 SOFTWARE.
 ```
 
-### @expo/metro-file-map@57.0.3
+### @expo/metro-file-map@57.0.4
 
 Declared license: MIT
 
@@ -2780,7 +2842,7 @@ OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 SOFTWARE.
 ```
 
-### @expo/prebuild-config@57.0.16
+### @expo/prebuild-config@57.0.17
 
 Declared license: MIT
 
@@ -2811,7 +2873,7 @@ OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 SOFTWARE.
 ```
 
-### @expo/router-server@57.0.11
+### @expo/router-server@57.0.12
 
 Declared license: MIT
 
@@ -2904,7 +2966,7 @@ OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 SOFTWARE.
 ```
 
-### @expo/ui@57.0.21
+### @expo/ui@57.0.22
 
 Declared license: MIT
 
@@ -2974,6 +3036,69 @@ The MIT License (MIT)
 
 Copyright (c) 2015 Joel Arvidsson
 Copyright (c) 2020 650 Industries
+
+Permission is hereby granted, free of charge, to any person obtaining a copy
+of this software and associated documentation files (the "Software"), to deal
+in the Software without restriction, including without limitation the rights
+to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+copies of the Software, and to permit persons to whom the Software is
+furnished to do so, subject to the following conditions:
+
+The above copyright notice and this permission notice shall be included in all
+copies or substantial portions of the Software.
+
+THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
+SOFTWARE.
+```
+
+### @expo/ws-tunnel@2.0.1
+
+Declared license: MIT
+
+Installed source file(s): LICENSE
+SHA-256: `49c5f9c7097c9a940ff663a54c27a4c60e379df6cc2b3052df0d37a09a85df93`
+
+```text
+The MIT License (MIT)
+
+Copyright (c) 2025-present 650 Industries, Inc. (aka Expo)
+
+Permission is hereby granted, free of charge, to any person obtaining a copy
+of this software and associated documentation files (the "Software"), to deal
+in the Software without restriction, including without limitation the rights
+to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+copies of the Software, and to permit persons to whom the Software is
+furnished to do so, subject to the following conditions:
+
+The above copyright notice and this permission notice shall be included in all
+copies or substantial portions of the Software.
+
+THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
+SOFTWARE.
+```
+
+### @expo/xcpretty@4.4.6
+
+Declared license: MIT
+
+Installed source file(s): LICENSE
+SHA-256: `051e2d2738b442a8a8403194f485deeacd9a7e895c08ffbf9e600a9dae858dcc`
+
+```text
+The MIT License (MIT)
+
+Copyright (c) 2013-2016 Marin Usalj
+Copyright (c) 2021-present 650 Industries, Inc. (aka Expo)
 
 Permission is hereby granted, free of charge, to any person obtaining a copy
 of this software and associated documentation files (the "Software"), to deal
@@ -3141,7 +3266,7 @@ OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 SOFTWARE.
 ```
 
-### @radix-ui/react-collection@1.1.15
+### @radix-ui/react-collection@1.1.16
 
 Declared license: MIT
 
@@ -3234,7 +3359,7 @@ OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 SOFTWARE.
 ```
 
-### @radix-ui/react-dialog@1.1.23
+### @radix-ui/react-dialog@1.2.0
 
 Declared license: MIT
 
@@ -3265,7 +3390,7 @@ OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 SOFTWARE.
 ```
 
-### @radix-ui/react-direction@1.1.4
+### @radix-ui/react-direction@1.1.5
 
 Declared license: MIT
 
@@ -3296,7 +3421,7 @@ OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 SOFTWARE.
 ```
 
-### @radix-ui/react-dismissable-layer@1.1.19
+### @radix-ui/react-dismissable-layer@1.1.20
 
 Declared license: MIT
 
@@ -3358,7 +3483,7 @@ OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 SOFTWARE.
 ```
 
-### @radix-ui/react-focus-scope@1.1.16
+### @radix-ui/react-focus-scope@1.2.0
 
 Declared license: MIT
 
@@ -3420,7 +3545,7 @@ OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 SOFTWARE.
 ```
 
-### @radix-ui/react-portal@1.1.17
+### @radix-ui/react-portal@1.1.18
 
 Declared license: MIT
 
@@ -3451,7 +3576,7 @@ OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 SOFTWARE.
 ```
 
-### @radix-ui/react-presence@1.1.10
+### @radix-ui/react-presence@1.1.11
 
 Declared license: MIT
 
@@ -3482,7 +3607,7 @@ OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 SOFTWARE.
 ```
 
-### @radix-ui/react-primitive@2.1.10
+### @radix-ui/react-primitive@2.1.11
 
 Declared license: MIT
 
@@ -3513,7 +3638,7 @@ OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 SOFTWARE.
 ```
 
-### @radix-ui/react-roving-focus@1.1.19
+### @radix-ui/react-roving-focus@1.1.20
 
 Declared license: MIT
 
@@ -3544,7 +3669,7 @@ OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 SOFTWARE.
 ```
 
-### @radix-ui/react-slot@1.3.3
+### @radix-ui/react-slot@1.4.0
 
 Declared license: MIT
 
@@ -3575,7 +3700,7 @@ OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 SOFTWARE.
 ```
 
-### @radix-ui/react-tabs@1.1.21
+### @radix-ui/react-tabs@1.1.22
 
 Declared license: MIT
 
@@ -5140,7 +5265,7 @@ OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 SOFTWARE.
 ```
 
-### babel-plugin-react-native-web@0.21.3
+### babel-plugin-react-native-web@0.21.4
 
 Declared license: MIT
 
@@ -5233,7 +5358,7 @@ OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 SOFTWARE.
 ```
 
-### babel-preset-expo@57.0.13
+### babel-preset-expo@57.0.14
 
 Declared license: MIT
 
@@ -7609,7 +7734,7 @@ OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 SOFTWARE.
 ```
 
-### expo-asset@57.0.18
+### expo-asset@57.0.19
 
 Declared license: MIT
 
@@ -7702,7 +7827,7 @@ OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 SOFTWARE.
 ```
 
-### expo-constants@57.0.20
+### expo-constants@57.0.21
 
 Declared license: MIT
 
@@ -8043,7 +8168,7 @@ OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 SOFTWARE.
 ```
 
-### expo-linking@57.0.11
+### expo-linking@57.0.12
 
 Declared license: MIT
 
@@ -8105,7 +8230,7 @@ OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 SOFTWARE.
 ```
 
-### expo-modules-autolinking@57.0.13
+### expo-modules-autolinking@57.0.14
 
 Declared license: MIT
 
@@ -8136,7 +8261,7 @@ OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 SOFTWARE.
 ```
 
-### expo-modules-core@57.0.20
+### expo-modules-core@57.0.21
 
 Declared license: MIT
 
@@ -8198,7 +8323,7 @@ OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 SOFTWARE.
 ```
 
-### expo-notifications@57.0.21
+### expo-notifications@57.0.22
 
 Declared license: MIT
 
@@ -8229,7 +8354,7 @@ OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 SOFTWARE.
 ```
 
-### expo-router@57.0.24
+### expo-router@57.0.25
 
 Declared license: MIT
 
@@ -8564,7 +8689,7 @@ OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 SOFTWARE.
 ```
 
-### expo-sqlite@57.0.3
+### expo-sqlite@57.0.4
 
 Declared license: MIT
 
@@ -8688,7 +8813,7 @@ OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 SOFTWARE.
 ```
 
-### expo@57.0.26
+### expo@57.0.27
 
 Declared license: MIT
 
@@ -13646,7 +13771,7 @@ OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 SOFTWARE.
 ```
 
-### nanoid@3.3.19
+### nanoid@3.3.20
 
 Declared license: MIT
 
@@ -14671,7 +14796,7 @@ FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR
 OTHER DEALINGS IN THE SOFTWARE.
 ```
 
-### postcss@8.5.28
+### postcss@8.5.29
 
 Declared license: MIT
 

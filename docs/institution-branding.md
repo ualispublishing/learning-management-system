@@ -33,7 +33,7 @@ npm run demo:multiuser
 
 Open <http://127.0.0.1:4178>. Startup generates the branding, starts the shared synthetic demo backend and watches the four input files. Replacing a file while the demo is running regenerates the branding automatically. Allow a few seconds, then refresh if the page has not already updated. A refresh returns to demo sign-in. A browser may need a hard refresh to replace a cached favicon.
 
-For ordinary development, `npm run web`, `npm start`, `npm run ios` and `npm run android` also generate branding at startup. To watch changes during those sessions, run this in a separate terminal:
+`npm run web` starts the complete demo and watches branding automatically, just like `npm run demo:multiuser`. For frontend-only or native development, `npm run web:standalone`, `npm start`, `npm run ios` and `npm run android` generate branding at startup. To watch changes during those sessions, run this in a separate terminal:
 
 ```bash
 npm run brand:watch

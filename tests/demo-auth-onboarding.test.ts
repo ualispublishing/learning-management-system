@@ -72,7 +72,8 @@ test('root login, global sign-out, and replayable role-tour controls stay wired'
     readFile(new URL('../src/components/lms/RoleOnboardingModal.tsx', import.meta.url), 'utf8'),
     readFile(new URL('../src/components/lms/LMSComponents.tsx', import.meta.url), 'utf8'),
   ]);
-  assert.match(layout, /isSharedDemoMode && \(!currentUserId \|\| isSigningIn\)/);
+  assert.match(layout, /isSharedDemoMode && !isDemoPage && \(!currentUserId \|\| isSigningIn\)/);
+  assert.match(layout, /const isDemoPage = Platform\.OS === 'web' && isPreparedAIDemo\(\) && \(pathname === '\/ai-demo' \|\| pathname === '\/demo'\)/);
   assert.match(layout, /<DemoSignIn/);
   assert.match(header, /accessibilityLabel="Open account menu"/);
   assert.match(header, /accessibilityLabel="Sign out"/);
