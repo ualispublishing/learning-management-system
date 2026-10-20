@@ -6,6 +6,9 @@ flashcard components. You can compare sources with prepared results without
 modifying a course, or demonstrate an instructor publishing reviewed results and
 a learner viewing them.
 
+See [V1 status and known issues](../V1_STATUS.md) for current limits, unfinished
+production work and the distinction between open risks and repaired bugs.
+
 ## Start the demo
 
 Use Node.js 26.5.0 and npm 11.17.0 to match the repository's CI configuration.

@@ -8,7 +8,7 @@ This is a remaining-work plan. The original review records the 28 September base
 
 ## 1. Correct starting point
 
-**Automated tests already exist.** The baseline review observed all 391 tests passing across its runs. The first implementation batch passed **412 automated tests and 270 synthetic repository/store journeys from a clean checkout**. On October 16, the app suite passed **543 tests and 270 synthetic journeys** and the separate reference identity/learning service passed **54 tests**. Strict TypeScript, lint, fixture checks, dependency/security checks, SBOM/notices and a CI workflow definition are also present. See sections 8–13 for the exact evidence and limits, including the corrected release-gate assertion noted in section 11.
+**Automated tests already exist.** The baseline review observed all 391 tests passing across its runs. The first implementation batch passed **412 automated tests and 270 synthetic repository/store journeys from a clean checkout**. On October 19, the app suite passed **556 tests and 270 synthetic journeys** and the separate reference identity/learning service passed **54 tests**. Strict TypeScript, lint, fixture checks, dependency/security checks, SBOM/notices and a CI workflow definition are also present. See sections 8–14 for the exact evidence and limits, including the corrected release-gate assertion noted in section 11. The [V1 status register](../V1_STATUS.md) summarizes current limitations and remaining work.
 
 The missing pieces are broader maintained rendered-component coverage and browser E2E tests, real-provider integration evidence, additional failure/concurrency coverage, supported-device/accessibility acceptance, and enforced production promotion. Static source checks and synthetic journeys remain useful; they do not establish those other forms of assurance.
 
@@ -187,7 +187,7 @@ Extend the existing suite rather than starting from zero. Require traceability t
 
 ### W11 — Distribution, dependencies and release evidence — B
 
-- [ ] Resolve or obtain accountable disposition for the 16 unresolved notice-source entries and distributed assets/fonts/content. Keep the exact SBOM/notices current; do not treat generated inventory as legal approval.
+- [ ] Resolve or obtain accountable disposition for the unresolved notice-source entries (12 in the current inventory) and distributed assets/fonts/content. Keep the exact SBOM/notices current; do not treat generated inventory as legal approval.
 - [ ] Track the two accepted `image-size` advisories with rationale, exposure restrictions, review date and upgrade owner. Rerun the live audit on release candidates.
 - [ ] Define dependency updates and compatibility/security patch handling; test upgrades against supported targets and critical journeys.
 - [ ] Supply application identity, signing/store records and privacy disclosures for native distributions; validate the actual delivered headers/routes for web.

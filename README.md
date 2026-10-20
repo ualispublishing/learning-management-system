@@ -11,6 +11,12 @@ integration foundations. It is not approved for real learner data or a productio
 institution rollout. The demo's role picker and in-memory backend are separate
 from the reference authentication service.
 
+Read [V1 status, remaining work and known issues](./V1_STATUS.md) for the release
+scope, open risks and production checklist.
+
+See [repository privacy](./docs/repository-privacy.md) for the identifier cleanup,
+retained attribution and safe source-sharing scope.
+
 ## Quick start
 
 CI uses **Node.js 26.5.0** and **npm 11.17.0**; match those versions when reproducing

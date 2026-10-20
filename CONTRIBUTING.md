@@ -5,6 +5,9 @@ reference services and prepared demonstration. The application existed before
 the recent assisted development; this record summarizes the recent work rather
 than attributing the entire codebase to one contributor.
 
+Maintain [V1_STATUS.md](./V1_STATUS.md) alongside behavior changes: record newly
+confirmed bugs, completed verification and changes to the offered capability scope.
+
 ## Completed contributions
 
 | Area | Work completed | Evidence or guide |
@@ -18,11 +21,13 @@ than attributing the entire codebase to one contributor.
 | Identity and assessments | Reference OIDC sessions, scoped written-assessment gateway, revision/idempotency checks and cookie clients | [Server guide](./server/README.md), [assessment contract](./server/gateway-contract.md) |
 | Upload reliability | Exact-origin HTTPS cookie mode, explicit bearer cookie omission, captured upload inputs, complete deadlines and late-response cleanup | [Asset contract](./docs/institution-integration.md#assets), [13 upload tests](./tests/asset-auth-transport.test.ts) |
 | Verification and memory controls | Serial bounded tests, Metro worker limits, file-retention/failure-reporting repairs, synthetic journeys and recorded browser checks | [Memory investigation](./docs/memory-investigation-2026-10-05.md), [verification](./docs/verification/asset-transport-check-2026-10-19.json) |
+| V1 handoff and privacy | App/demo onboarding, contribution record, open-issue register, metadata cleanup and sanitized local Git history | [V1 status](./V1_STATUS.md), [privacy scope](./docs/repository-privacy.md) |
 
 The project owner supplied product direction, intended institutional use,
 deployment preferences, branding/demo requirements and iterative acceptance
 feedback. Codex assisted with code review, implementation, tests, documentation
-and recorded verification. Commit metadata and `git log` provide the code history.
+and recorded verification. `git log` records the changes; author identities were
+anonymized during the repository privacy cleanup.
 The prepared educational outputs have their own
 [generation and enrichment record](./demo/ai/generation/2026-10-07-course-mapping/README.md);
 their configured model attribution is not an API receipt or authorship claim for
