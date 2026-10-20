@@ -62,6 +62,10 @@ entire working directory: dependencies, caches, environment files, local databas
 build logs and recovery copies are not part of the reviewed source distribution.
 Git does not version filesystem owners, file creation times or macOS extended
 attributes; copies made through other tools may retain those properties.
+The working files still carry an OS-managed provenance attribute; use the source
+archive or Git checkout rather than a Finder folder copy when sharing. The clean
+archive contains no macOS attribute sidecars, local account ownership fields,
+dependencies, build output or `.git` directory.
 
 GitHub repository ownership, uploader authentication, collaborator access and
 GitHub audit records are separate from Git commit authorship. A token authenticates

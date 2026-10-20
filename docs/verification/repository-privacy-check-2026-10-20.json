@@ -1,0 +1,123 @@
+{
+  "date": "2026-10-20",
+  "scope": "V1 documentation, sanitized source/assets/prepared-demo records, and all local Git history",
+  "status": "passed_for_recorded_scope",
+  "verified_source_commit": "67120bdda3e6b08b2c370801a4de2b05c81820c8",
+  "source_identity_note": "Full app/server/build checks ran before history rewriting; rewriting changed only historical commit references in the roadmap at the tip. This verification record and final handoff documentation are added afterward.",
+  "historical_scan_before_verification_commit": {
+    "commits_audited": 13,
+    "unique_blobs_audited": 812,
+    "findings": {}
+  },
+  "private_identifier_scope": [
+    "known project-owner/account strings",
+    "personal checkout paths",
+    "internal agent/conversation identifiers",
+    "Git author/committer names and email addresses",
+    "local process IDs in verification records",
+    "common credential/private-key patterns"
+  ],
+  "git_cleanup": {
+    "original_refs_remaining": 0,
+    "unreachable_objects_after_gc": 0,
+    "remote_configured": false,
+    "anonymous_identity": "LMS Contributors <contributors@example.invalid>",
+    "commit_timestamps": "original UTC calendar date at midnight",
+    "private_recovery_bundle": "outside app repository; verified; contains unsanitized originals; do not share"
+  },
+  "binary_preservation": {
+    "images_checked": 58,
+    "images_changed": 6,
+    "pptx_checked": 1,
+    "pdf_checked": 1,
+    "media_checked": 2,
+    "prepared_content_unchanged": true
+  },
+  "image_text_scan": {
+    "images": 58,
+    "errors": [],
+    "known_personal_identifier_matches": 0,
+    "limitation": "OCR is a screening aid; it cannot prove absence of every visible identifier. Public course/instructor names and synthetic app identities remain."
+  },
+  "prepared_pack": {
+    "active_sources_checked": 6,
+    "local_sha256_references_checked": 140,
+    "remote_original_hashes_retained_not_refetched": 4,
+    "unresolved_local_references": [],
+    "live_model_calls": 0,
+    "fresh_sanitized_source_files_required_for_upload": true
+  },
+  "stages": [
+    {
+      "command": [
+        "npm",
+        "run",
+        "check"
+      ],
+      "exit_code": 0,
+      "elapsed_seconds": 33.9
+    },
+    {
+      "command": [
+        "npm",
+        "--prefix",
+        "server",
+        "run",
+        "check"
+      ],
+      "exit_code": 0,
+      "elapsed_seconds": 2.1
+    },
+    {
+      "command": [
+        "npm",
+        "run",
+        "build:web"
+      ],
+      "exit_code": 0,
+      "elapsed_seconds": 14.6
+    },
+    {
+      "command": [
+        "npm",
+        "run",
+        "verify:web-build"
+      ],
+      "exit_code": 0,
+      "elapsed_seconds": 0.1
+    }
+  ],
+  "bounded_check_run": {
+    "exit_code": 0,
+    "cutoff": null,
+    "peak_group_rss_mib": 1691.1,
+    "elapsed_seconds": 50.9,
+    "memory_cutoff_mib": 3072,
+    "time_cutoff_seconds": 300,
+    "sampling_interval_ms": 250,
+    "node_heap_mib": 1536,
+    "test_heap_mib": 512
+  },
+  "app_tests": 556,
+  "server_tests": 54,
+  "synthetic_journeys": 270,
+  "synthetic_steps": 1620,
+  "web_files_verified": 30,
+  "source_sha256": {
+    "src/lib/demoAccounts.ts": "ac2179203e86c5409a5aa701fb59397872e9950bdba3fd47bf21debab48776ed",
+    "src/assets/mock-institution/users.json": "343065475a2f9de3685c91ac078e5111f5c373e037b9d8b090893c3792d4027b",
+    "tests/prepared-demo-publication.test.ts": "dd6631119c33d3a8ac14ed594881b8502e82bf9d1cfeeab1c1b15b5252b19b36",
+    "demo/ai/manifest.json": "8223e29567f132b6689684d70affc34e303bf76eeb268958ea2ef358c25e264b",
+    "demo/ai/checks.json": "4690e3d0cac2333b6ee2a2dbdfd7dc18807a008dad9a639683284ebf4d14c847"
+  },
+  "limitations": [
+    "This is an identifier/metadata cleanup and regression check, not a complete security audit, independent educational review or production acceptance.",
+    "Legal credits, source URLs, functional identifiers, synthetic fixtures and model attribution are retained. Some positive production-gate fixtures deliberately use production-like fictional addresses.",
+    "Public sources were not downloaded again; their original upstream hashes are retained separately from sanitized distributables.",
+    "No new interactive browser, native-device, live identity-provider, paid-model or deployment acceptance was performed.",
+    "Tests are bounded samples, not a long-duration memory-stability guarantee.",
+    "OS-managed provenance attributes remain on working files; Git and the clean source archive do not include those attributes or filesystem ownership.",
+    "Private recovery bundles, previous copies, installed dependencies, browser/editor history and GitHub account/audit metadata are outside the distributed source cleanup.",
+    "The local repository has no remote and has not been uploaded by this cleanup."
+  ]
+}

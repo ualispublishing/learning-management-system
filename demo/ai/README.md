@@ -4,6 +4,12 @@ For installation and the complete presentation, see the
 [demo README](../README.md). For development workflow and completed work, see
 [the contribution guide](../../CONTRIBUTING.md).
 
+The distributed sources were sanitized during the October 20 repository privacy
+cleanup. Use fresh copies from `sources/` for uploads: older copies may have
+different metadata and will fail exact-file matching. Lesson content, prepared
+answers and citations are unchanged. Current and archived integrity records refer
+to the sanitized copies; see [privacy scope](../../docs/repository-privacy.md).
+
 All six files belong to **MIT 6.0001, Introduction to Computer Science and Programming in Python, Fall 2016**. The lesson is **Lecture 1: What is Computation?**, focused on declarative knowledge, imperative knowledge and algorithms. This is a coherent course sample, not a complete course.
 
 | File in `sources/` | Prepared result |
