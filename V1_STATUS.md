@@ -1,6 +1,6 @@
-# V1 status, remaining work and known issues
+# Learning Management System V1 status, remaining work and known issues
 
-Updated: **20 October 2026**. Application package version: **1.0.0**.
+Updated: **21 October 2026**. Application package version: **1.0.0**.
 
 **V1 is the first documented demonstration and integration baseline. It is not a
 production-approved institutional release.** The local demo is usable with
@@ -12,6 +12,10 @@ setup, the [demo README](./demo/README.md) for presentations, and the
 [production roadmap](./docs/production-roadmap-2026-09-28.md) for detailed work
 packages and acceptance criteria. `git rev-parse HEAD` identifies the exact local
 source revision; check results apply only to their recorded source and scope.
+
+The October 21 naming update uses **Learning Management System** for the default
+app name and `learning-management-system` for the package and GitHub target.
+The full local checks passed again; see the [naming verification](./docs/verification/product-name-check-2026-10-21.json).
 
 ## What V1 includes
 

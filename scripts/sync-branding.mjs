@@ -40,7 +40,7 @@ export async function syncBranding(root = projectRoot, { check = false } = {}) {
   try { configText = await readFile(configFile, 'utf8'); } catch (error) { if (error.code !== 'ENOENT') throw error; configText = '{}'; }
   const config = JSON.parse(configText);
   if (!config || Array.isArray(config) || typeof config !== 'object' || Object.keys(config).some(key => !['name', 'tagline'].includes(key))) throw new Error('institution.json supports only name and tagline.');
-  const name = config.name ?? 'LMS App', tagline = config.tagline ?? 'Learning, together.';
+  const name = config.name ?? 'Learning Management System', tagline = config.tagline ?? 'Learning, together.';
   for (const [label, value, maximum] of [['name', name, 80], ['tagline', tagline, 160]]) {
     if (typeof value !== 'string' || value.trim() !== value || !value || value.length > maximum || /[\u0000-\u001f\u007f]/.test(value)) throw new Error(`Institution ${label} must be nonempty text, at most ${maximum} characters.`);
   }

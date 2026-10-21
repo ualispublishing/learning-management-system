@@ -105,7 +105,7 @@ test('font fallback still waits for institution bootstrap and allows its retry',
   ui.render(React.createElement(Layout));
   assert.ok(ui.screen.getByLabelText('Loading learning management system'));
   await ui.act(async () => bootstrap.resolve());
-  assert.ok(ui.screen.getByText('The LMS could not load.'));
+  assert.ok(ui.screen.getByText('The app could not load.'));
   assert.equal(ui.screen.queryByText('Authenticated application') === null, true);
   state.initializationError = null;
   ui.fireEvent.click(ui.screen.getByRole('button', { name: 'Retry' }));

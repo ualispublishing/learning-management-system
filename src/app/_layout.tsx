@@ -45,9 +45,9 @@ import { isPreparedAIDemo } from '../lib/ai/preparedDemo';
 
 const safeInitializationError = (error: unknown) => {
   const message = error instanceof Error ? error.message : '';
-  if (__DEV__) return message || 'LMS initialization failed.';
+  if (__DEV__) return message || 'App initialization failed.';
   if (message.startsWith('Institution repositories are not configured.')) {
-    return 'This LMS deployment is not connected to its institution services. No learner data was loaded.';
+    return 'This app deployment is not connected to its institution services. No learner data was loaded.';
   }
   return 'Institutional data could not be securely loaded. Retry or contact your institution.';
 };
@@ -202,7 +202,7 @@ export default function Layout() {
     return (
       <View style={[styles.errorContainer, { backgroundColor: colors.background }]}>
         <View style={{ marginBottom: 20 }}><InstitutionBrand size={64} showName /></View>
-        <Text accessibilityRole="header" style={[styles.errorTitle, { color: colors.text }]}>The LMS could not load.</Text>
+        <Text accessibilityRole="header" style={[styles.errorTitle, { color: colors.text }]}>The app could not load.</Text>
         <Text style={[styles.errorSubtitle, { color: colors.textSecondary }]}>{initializationError}</Text>
         <Pressable accessibilityRole="button" style={[styles.retryButton, { backgroundColor: colors.primary }]} onPress={() => {
           setIsInitializingMocks(true);

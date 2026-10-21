@@ -4,6 +4,7 @@ import { mkdtemp, mkdir, readFile, rm, writeFile } from 'node:fs/promises';
 import { tmpdir } from 'node:os';
 import path from 'node:path';
 import test from 'node:test';
+import { fileURLToPath } from 'node:url';
 import { createSharedDemoServer } from '../src/lib/testing/sharedDemoServer';
 
 type Launcher = typeof import('../scripts/run-shared-demo.mjs');
@@ -32,7 +33,7 @@ test('both web entrypoints enable the same complete demo; standalone remains exp
   const config = demoConfig({}, []);
   assert.equal(config.appUrl, 'http://127.0.0.1:4178');
   assert.equal(config.serverUrl, 'http://127.0.0.1:4180');
-  assert.ok(config.root.endsWith(`${path.sep}lms-app${path.sep}`));
+  assert.equal(path.resolve(config.root), path.resolve(fileURLToPath(new URL('../', import.meta.url))));
   assert.equal(demoConfig({}, ['--port', '4190', '--clear']).appPort, 4190);
   assert.equal(demoConfig({ LMS_DEMO_SERVER_PORT: '4191' }, ['--port=4190']).serverPort, 4191);
   assert.throws(() => demoConfig({}, ['--port']), /whole number/);

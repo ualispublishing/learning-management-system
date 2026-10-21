@@ -387,7 +387,7 @@ export function InstitutionActivationJourney({ visible, onClose }: InstitutionAc
             <Text style={[styles.summaryLine, { color: colors.textSecondary }]}>Next gate · production evidence and institutional approvals</Text>
           </View>
           <View style={styles.completionActions}>
-            <Pressable accessibilityRole="button" onPress={onClose} style={[styles.navigationButton, { borderColor: colors.border }]}><Text style={{ color: colors.text, fontWeight: '800' }}>Return to LMS</Text></Pressable>
+            <Pressable accessibilityRole="button" onPress={onClose} style={[styles.navigationButton, { borderColor: colors.border }]}><Text style={{ color: colors.text, fontWeight: '800' }}>Return to app</Text></Pressable>
             <Pressable accessibilityRole="button" accessibilityLabel="Restart activation simulation" accessibilityState={{ disabled: saving, busy: saving }} disabled={saving} onPress={() => void reset()} style={[styles.navigationButton, { backgroundColor: colors.primary, opacity: saving ? 0.65 : 1 }]}><Text style={{ color: colors.buttonText, fontWeight: '800' }}>Start over</Text></Pressable>
           </View>
           {error ? <Text accessibilityRole="alert" style={[styles.error, { color: colors.error }]}>{error}</Text> : null}

@@ -2,7 +2,7 @@
   "$schema": "http://cyclonedx.org/schema/bom-1.5.schema.json",
   "bomFormat": "CycloneDX",
   "specVersion": "1.5",
-  "serialNumber": "urn:uuid:f1501342-10d8-5cfc-85dc-275de80aebc0",
+  "serialNumber": "urn:uuid:909cad0e-25cb-5f42-aed0-d7da73d4eafa",
   "version": 1,
   "metadata": {
     "lifecycles": [
@@ -18,12 +18,12 @@
       }
     ],
     "component": {
-      "bom-ref": "lms-app@1.0.0",
+      "bom-ref": "learning-management-system@1.0.0",
       "type": "library",
-      "name": "lms-app",
+      "name": "learning-management-system",
       "version": "1.0.0",
       "scope": "required",
-      "purl": "pkg:npm/lms-app@1.0.0",
+      "purl": "pkg:npm/learning-management-system@1.0.0",
       "properties": [
         {
           "name": "cdx:npm:package:private",
@@ -39,7 +39,7 @@
       },
       {
         "name": "lms:package-lock:sha256",
-        "value": "f150134210d82cfcc5dc275de80aebc06fae2c9ebcfdefad9ee15c4aecedbe40"
+        "value": "909cad0e25cb3f422ed0d7da73d4eafad5ab743b2da96661d85e271905c01206"
       }
     ]
   },
@@ -20579,35 +20579,7 @@
       "dependsOn": []
     },
     {
-      "ref": "leven@3.1.0",
-      "dependsOn": []
-    },
-    {
-      "ref": "lighthouse-logger@1.4.2",
-      "dependsOn": [
-        "debug@2.6.9",
-        "marky@1.3.0"
-      ]
-    },
-    {
-      "ref": "lightningcss-darwin-arm64@1.33.0",
-      "dependsOn": []
-    },
-    {
-      "ref": "lightningcss@1.33.0",
-      "dependsOn": [
-        "detect-libc@2.1.2",
-        "lightningcss-darwin-arm64@1.33.0"
-      ]
-    },
-    {
-      "ref": "linkify-it@5.0.2",
-      "dependsOn": [
-        "uc.micro@2.1.0"
-      ]
-    },
-    {
-      "ref": "lms-app@1.0.0",
+      "ref": "learning-management-system@1.0.0",
       "dependsOn": [
         "@expo-google-fonts/inter@0.4.2",
         "@expo/metro-runtime@57.0.16",
@@ -20652,6 +20624,34 @@
         "ts-fsrs@5.4.1",
         "uuid@14.0.1",
         "zustand@5.0.14"
+      ]
+    },
+    {
+      "ref": "leven@3.1.0",
+      "dependsOn": []
+    },
+    {
+      "ref": "lighthouse-logger@1.4.2",
+      "dependsOn": [
+        "debug@2.6.9",
+        "marky@1.3.0"
+      ]
+    },
+    {
+      "ref": "lightningcss-darwin-arm64@1.33.0",
+      "dependsOn": []
+    },
+    {
+      "ref": "lightningcss@1.33.0",
+      "dependsOn": [
+        "detect-libc@2.1.2",
+        "lightningcss-darwin-arm64@1.33.0"
+      ]
+    },
+    {
+      "ref": "linkify-it@5.0.2",
+      "dependsOn": [
+        "uc.micro@2.1.0"
       ]
     },
     {

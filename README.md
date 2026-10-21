@@ -1,4 +1,4 @@
-# LMS app
+# Learning Management System
 
 An Expo / React Native learning management app with course authoring, learner
 study tools, flashcards, assessments, discussions and institution branding.
@@ -185,11 +185,11 @@ npm run check:server
 npm run check:release
 ```
 
-The latest local verification on **20 October 2026** passed **556 app tests**, **54
+The latest local verification on **21 October 2026** passed **556 app tests**, **54
 server tests**, **270 synthetic journeys / 1,620 steps**, lint, both TypeScript
 checks, fixture/security/notices checks, server metadata checks, web export and
 verification of 30 exported files. See the
-[verification record](./docs/verification/repository-privacy-check-2026-10-20.json).
+[verification record](./docs/verification/product-name-check-2026-10-21.json).
 These results cover the commands in that record; they are not a fresh dependency
 audit, hosted CI result or production acceptance. `npm run check:production`
 additionally enforces institution configuration, provider acceptance and audit

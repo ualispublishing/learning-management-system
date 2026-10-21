@@ -2,7 +2,7 @@
 
 This file is generated from the installed production dependency graph. License and notice wording below is copied either from files distributed inside the corresponding installed package or from exact-commit files in the package publisher's official repository recorded in `third_party/license-sources.json`. Only a UTF-8 byte-order mark and trailing whitespace are removed for Markdown presentation. Package metadata is informational and does not replace license text.
 
-- Package-lock SHA-256: `f150134210d82cfcc5dc275de80aebc06fae2c9ebcfdefad9ee15c4aecedbe40`
+- Package-lock SHA-256: `909cad0e25cb3f422ed0d7da73d4eafad5ab743b2da96661d85e271905c01206`
 - Pinned license-source manifest SHA-256: `6a5fadfb2cd8698f64b378ff214a7b887d07a6362f3c3b4a8b8f0bab69665963`
 - Unique runtime package versions: 519
 - Packages resolved from pinned official upstream sources: 49

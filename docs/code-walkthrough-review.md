@@ -1,8 +1,8 @@
-# LMS App Architectural Breakdown
+# Learning Management System architectural breakdown
 
 ## System Context
 
-`lms-app` is an Expo Router / React Native learning-management prototype with two connected product surfaces:
+`learning-management-system` is an Expo Router / React Native learning-management prototype with two connected product surfaces:
 
 - A role-aware LMS for courses, timelines, assignments, grading, chat, announcements, live quizzes, institution imports, and deployment-readiness workflows.
 - A flashcard study system that can run locally and can also be scoped to the currently authenticated institution principal.

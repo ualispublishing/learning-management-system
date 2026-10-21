@@ -17,12 +17,12 @@
       }
     ],
     "component": {
-      "bom-ref": "lms-reference-auth@0.1.0",
+      "bom-ref": "learning-management-system-auth@0.1.0",
       "type": "library",
-      "name": "lms-reference-auth",
+      "name": "learning-management-system-auth",
       "version": "0.1.0",
       "scope": "required",
-      "purl": "pkg:npm/lms-reference-auth@0.1.0",
+      "purl": "pkg:npm/learning-management-system-auth@0.1.0",
       "properties": [
         {
           "name": "cdx:npm:package:private",
@@ -34,7 +34,7 @@
     "properties": [
       {
         "name": "lms:package-lock:sha256",
-        "value": "55297ea9c37585e9634d8a4e8d418c437ed75b08b09fd513609837b6e5495901"
+        "value": "5a177d8eef6ea1647b88daa5a77d8bde8d59dc9af3baef6ec2d10b3239c7b93a"
       }
     ]
   },
@@ -148,7 +148,7 @@
       "dependsOn": []
     },
     {
-      "ref": "lms-reference-auth@0.1.0",
+      "ref": "learning-management-system-auth@0.1.0",
       "dependsOn": [
         "openid-client@6.8.8"
       ]

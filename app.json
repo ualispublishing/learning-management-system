@@ -1,7 +1,7 @@
 {
   "expo": {
-    "name": "LMS App",
-    "slug": "lms-app",
+    "name": "Learning Management System",
+    "slug": "learning-management-system",
     "version": "1.0.0",
     "orientation": "default",
     "icon": "./assets/brand/institution-icon.png",
@@ -117,7 +117,7 @@
       [
         "expo-audio",
         {
-          "microphonePermission": "Allow LMS App to record audio that you choose to add to flashcards.",
+          "microphonePermission": "Allow Learning Management System to record audio that you choose to add to flashcards.",
           "recordAudioAndroid": true,
           "enableBackgroundRecording": false,
           "enableBackgroundPlayback": false
@@ -133,9 +133,9 @@
       [
         "expo-image-picker",
         {
-          "photosPermission": "Allow LMS App to choose images that you add to flashcards or course conversations.",
+          "photosPermission": "Allow Learning Management System to choose images that you add to flashcards or course conversations.",
           "cameraPermission": false,
-          "microphonePermission": "Allow LMS App to record audio that you choose to add to flashcards."
+          "microphonePermission": "Allow Learning Management System to record audio that you choose to add to flashcards."
         }
       ],
       [

@@ -1,6 +1,6 @@
 # Institution branding and demo setup
 
-Replace three PNG files in the **main `lms-app` folder**, alongside `package.json`:
+Replace three PNG files in the **project root folder**, alongside `package.json`:
 
 | File | What to supply | What it updates |
 | --- | --- | --- |
@@ -25,7 +25,7 @@ The name can contain up to 80 characters and the tagline up to 160. Keep both no
 
 ## Launch and refresh
 
-From the `lms-app` folder:
+From the project root folder:
 
 ```bash
 npm run demo:multiuser

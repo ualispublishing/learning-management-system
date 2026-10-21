@@ -51,7 +51,7 @@ test('showcase navigation uses the app router without a full-page sign-out', asy
   const paths: string[] = [];
   ui.render(React.createElement(PreparedAIShowcase, { onNavigate: path => paths.push(path) }));
   await ui.screen.findByRole('button', { name: 'Syllabus' });
-  assert.equal(ui.fireEvent.click(ui.screen.getByRole('link', { name: 'Back to LMS →' })), false, 'default page navigation is prevented');
+  assert.equal(ui.fireEvent.click(ui.screen.getByRole('link', { name: 'Back to app →' })), false, 'default page navigation is prevented');
   assert.equal(ui.fireEvent.click(ui.screen.getByRole('link', { name: 'Demo guide' })), false);
   assert.deepEqual(paths, ['/admin', '/demo']);
 });

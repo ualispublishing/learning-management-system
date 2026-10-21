@@ -31,7 +31,7 @@ test.after(() => { hooks.deregister(); dom.window.close(); });
 test('every guide destination is operable and maps to the bundled courses or a supported feature', () => {
   const opened: string[] = [];
   ui.render(React.createElement(DemoGuide, { onOpen: key => opened.push(key), onAI: () => opened.push('ai'), onBranding: () => opened.push('branding'), onActivation: () => opened.push('activation') }));
-  assert.ok(ui.screen.getByText('Choose a role when you open an LMS feature'));
+  assert.ok(ui.screen.getByText('Choose a role when you open an app feature'));
   for (const item of DEMO_DESTINATIONS) {
     ui.fireEvent.click(ui.screen.getByRole('button', { name: `Open ${item.title}` }));
     if (item.path.startsWith('/admin/course/')) assert.ok(demoCourses.some(course => course.id === item.path.split('/').at(-1)));

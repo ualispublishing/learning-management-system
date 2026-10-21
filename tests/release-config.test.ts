@@ -117,7 +117,7 @@ test('media runtime uses maintained modules with least-privilege native configur
     (entry: unknown) => Array.isArray(entry) && entry[0] === 'expo-audio',
   );
   assert.deepEqual(audioPlugin, ['expo-audio', {
-    microphonePermission: 'Allow LMS App to record audio that you choose to add to flashcards.',
+    microphonePermission: 'Allow Learning Management System to record audio that you choose to add to flashcards.',
     recordAudioAndroid: true,
     enableBackgroundRecording: false,
     enableBackgroundPlayback: false,

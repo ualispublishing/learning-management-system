@@ -1,0 +1,101 @@
+{
+  "date": "2026-10-21",
+  "scope": "Learning Management System product name, package identity, institution branding, navigation labels and upload handoff",
+  "status": "passed_for_recorded_scope",
+  "app_name": "Learning Management System",
+  "repository_name": "learning-management-system",
+  "auth_package_name": "learning-management-system-auth",
+  "changes": [
+    "Updated default branding, Expo name/slug, app and reference-service package identities, permission prompts and documentation.",
+    "Permission descriptions now use the configured base name when applying institution branding.",
+    "Updated app navigation labels and removed the launcher test dependency on a particular checkout folder name.",
+    "Regenerated root/server dependency metadata without changing dependency versions or graphs.",
+    "API paths, environment variable names and stored-data identifiers remain compatible."
+  ],
+  "stages": [
+    {
+      "command": [
+        "npm",
+        "run",
+        "check"
+      ],
+      "exit_code": 0,
+      "elapsed_seconds": 33.0
+    },
+    {
+      "command": [
+        "npm",
+        "--prefix",
+        "server",
+        "run",
+        "check"
+      ],
+      "exit_code": 0,
+      "elapsed_seconds": 2.2
+    },
+    {
+      "command": [
+        "npm",
+        "run",
+        "build:web"
+      ],
+      "exit_code": 0,
+      "elapsed_seconds": 2.6
+    },
+    {
+      "command": [
+        "npm",
+        "run",
+        "verify:web-build"
+      ],
+      "exit_code": 0,
+      "elapsed_seconds": 0.1
+    },
+    {
+      "command": [
+        "npm",
+        "run",
+        "sbom:check"
+      ],
+      "exit_code": 0,
+      "elapsed_seconds": 0.6
+    }
+  ],
+  "bounded_run": {
+    "exit_code": 0,
+    "cutoff": null,
+    "peak_group_rss_mib": 1778.7,
+    "elapsed_seconds": 38.6,
+    "memory_cutoff_mib": 3072,
+    "time_cutoff_seconds": 300,
+    "sampling_interval_ms": 250,
+    "node_heap_mib": 1536,
+    "test_heap_mib": 512
+  },
+  "app_tests": 556,
+  "server_tests": 54,
+  "synthetic_journeys": 270,
+  "synthetic_steps": 1620,
+  "web_files_verified": 30,
+  "branded_native_permission_prompts_checked": 3,
+  "source_sha256": {
+    "app.json": "d0cb74e2be130bf9fd9392b9df86b262271ff842c26a0ad267aef098d2423286",
+    "app.config.js": "6005ea8814d3b76024edc1f81cb60309685f89d798ecfe1495c687d502f31f7c",
+    "institution.json": "9f4ac0ba84a6bc2417432b154ae2686013b19aa90022a1c43a79ee2a114d2fd4",
+    "src/lib/branding.generated.json": "e6912f8854e9905a28bcbcc9893d412bb3ca52e71bdd8b62fc16d9d4fc269ce1",
+    "package.json": "aca89795c48dbefc07458be41f44f79697fd79fdaa7a7ce4d4ecc01953898106",
+    "package-lock.json": "909cad0e25cb3f422ed0d7da73d4eafad5ab743b2da96661d85e271905c01206",
+    "server/package.json": "1776d1abbc21a0777e480399dc2a4f06a95b1b66e748c3a1737c3dfa1246faa4",
+    "server/package-lock.json": "5a177d8eef6ea1647b88daa5a77d8bde8d59dc9af3baef6ec2d10b3239c7b93a",
+    "scripts/sync-branding.mjs": "302fa1b94b3d4e75c84755e761a50f985c1221e7efeeb7422af4daba44fad4c7",
+    "tests/demo-launcher.test.ts": "183eecfcf7d50e7d3e19513e3d7e0fa2a0e014283877d905ba71b1e6abbc5dea",
+    "tests/release-config.test.ts": "6d6c7dcb86c8c97acb1ca6811b065bb454b4c40e2ee13340b604b66ecffce68e"
+  },
+  "review": "TSX changes alter labels only; existing event handling, accessibility roles, hooks and data flow are preserved. Existing rendered tests exercise the updated navigation and startup labels.",
+  "limitations": [
+    "No new interactive browser, native installation, live-provider or institution acceptance was performed.",
+    "The chosen name is a product label; this check does not establish trademark or repository-name availability.",
+    "Historical verification records, source asset filenames and internal LMS contract terminology retain their original meaning.",
+    "No GitHub repository was created or uploaded; the local checkout path remains unchanged."
+  ]
+}

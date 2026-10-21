@@ -27,7 +27,7 @@ export function DemoGuide({ signedInName, onOpen, onAI, onBranding, onActivation
       <Text accessibilityRole="header" style={[styles.title, { color: colors.text }]}>Demo guide</Text>
       <Text style={[styles.intro, { color: colors.textSecondary }]}>Everything in one place. Start with the AI comparison, explore a course, then show learning and collaboration.</Text>
       <View style={[styles.notice, { borderColor: colors.border, backgroundColor: colors.card }]}>
-        <Text style={{ color: colors.text, fontWeight: '700' }}>{signedInName ? `Signed in as ${signedInName}` : 'Choose a role when you open an LMS feature'}</Text>
+        <Text style={{ color: colors.text, fontWeight: '700' }}>{signedInName ? `Signed in as ${signedInName}` : 'Choose a role when you open an app feature'}</Text>
         <Text style={[styles.description, { color: colors.textSecondary }]}>{signedInName ? 'Your current role is kept when you follow these links. Change roles from Courses, or sign out from the account menu.' : 'The role picker will take you straight to the feature you selected. AI, colours and the setup walkthrough can be explored without signing in.'}</Text>
       </View>
       <View style={styles.grid}>

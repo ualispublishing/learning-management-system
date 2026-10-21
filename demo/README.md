@@ -1,4 +1,4 @@
-# LMS demo
+# Learning Management System demo
 
 This directory contains the prepared AI demonstration and its recorded evidence.
 The demo runs within the app and uses its course-information, syllabus-review and

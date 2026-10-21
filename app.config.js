@@ -14,7 +14,7 @@ module.exports = ({ config }) => {
     plugins: release.plugins.map(plugin => {
       if (!Array.isArray(plugin)) return plugin;
       if (plugin[0] === 'expo-splash-screen') return [plugin[0], { ...plugin[1], backgroundColor: branding.logoBackground }];
-      if (['expo-audio', 'expo-image-picker'].includes(plugin[0])) return [plugin[0], Object.fromEntries(Object.entries(plugin[1]).map(([key, value]) => [key, typeof value === 'string' ? value.replaceAll('LMS App', branding.name) : value]))];
+      if (['expo-audio', 'expo-image-picker'].includes(plugin[0])) return [plugin[0], Object.fromEntries(Object.entries(plugin[1]).map(([key, value]) => [key, typeof value === 'string' && config.name ? value.replaceAll(config.name, branding.name) : value]))];
       return plugin;
     }),
   };

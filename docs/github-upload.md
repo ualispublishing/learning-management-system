@@ -1,12 +1,12 @@
 # Upload V1 to a private GitHub repository using a token
 
-Checked: **21 October 2026**. Run these commands from the existing `lms-app`
+Checked: **21 October 2026**. Run these commands from the existing project
 checkout in your local terminal. The code is already committed on `master`;
 initializing Git again is unnecessary.
 
 ## Create the destination and token
 
-1. On GitHub, create a **private** repository named **lms-app** under your account.
+1. On GitHub, create a **private** repository named **learning-management-system** under your account.
    Leave README, licence and `.gitignore` initialization unchecked: those files
    are already in this project. See GitHub's
    [existing-repository upload instructions](https://docs.github.com/en/migrations/importing-source-code/using-the-command-line-to-import-source-code/adding-locally-hosted-code-to-github).
@@ -23,7 +23,7 @@ Replace `YOUR_USERNAME` with the repository owner's GitHub username. These
 commands assume `git remote -v` shows no existing remote.
 
 ```sh
-git remote add origin https://github.com/YOUR_USERNAME/lms-app.git
+git remote add origin https://github.com/YOUR_USERNAME/learning-management-system.git
 git -c credential.helper= -c core.askPass= push -u origin master
 ```
 
@@ -54,7 +54,7 @@ passed or deploy the application.
 
 | Problem | Next action |
 | --- | --- |
-| `remote origin already exists` | Inspect `git remote -v`. If the URL is wrong, use `git remote set-url origin https://github.com/YOUR_USERNAME/lms-app.git`. |
+| `remote origin already exists` | Inspect `git remote -v`. If the URL is wrong, use `git remote set-url origin https://github.com/YOUR_USERNAME/learning-management-system.git`. |
 | Authentication failure or repository not found | Check the owner/name, token expiry, selected repository and account access; use the token at the password prompt. |
 | Workflow permission rejected | Add Workflows write permission to the token and repeat the push. |
 | Push rejected because the remote has commits | Inspect the remote history before merging; this first-upload procedure assumes an empty repository. Do not force-push over work you intend to keep. |
@@ -70,7 +70,7 @@ repository access even though the local commit authors were anonymized.
 To refresh a source-only archive after later committed changes:
 
 ```sh
-git archive --format=zip --prefix=lms-app/ --output=../lms-app-v1-sanitized.zip HEAD
+git archive --format=zip --prefix=learning-management-system/ --output=../learning-management-system-v1-sanitized.zip HEAD
 ```
 
 That archive is useful for handing over source files. Use the Git push above when
