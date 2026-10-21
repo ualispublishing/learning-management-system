@@ -16,6 +16,8 @@ scope, open risks and production checklist.
 
 See [repository privacy](./docs/repository-privacy.md) for the identifier cleanup,
 retained attribution and safe source-sharing scope.
+The [GitHub upload guide](./docs/github-upload.md) provides the private-repository
+and token-based CLI steps, including verification of the first hosted CI run.
 
 ## Quick start
 
@@ -183,11 +185,11 @@ npm run check:server
 npm run check:release
 ```
 
-The latest local verification on **19 October 2026** passed **556 app tests**, **54
+The latest local verification on **20 October 2026** passed **556 app tests**, **54
 server tests**, **270 synthetic journeys / 1,620 steps**, lint, both TypeScript
 checks, fixture/security/notices checks, server metadata checks, web export and
 verification of 30 exported files. See the
-[verification record](./docs/verification/asset-transport-check-2026-10-19.json).
+[verification record](./docs/verification/repository-privacy-check-2026-10-20.json).
 These results cover the commands in that record; they are not a fresh dependency
 audit, hosted CI result or production acceptance. `npm run check:production`
 additionally enforces institution configuration, provider acceptance and audit

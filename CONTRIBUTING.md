@@ -35,11 +35,11 @@ all application code. Independent instructor review remains pending.
 
 ## Verified baseline
 
-The 19 October 2026 local run passed 556 application tests, 54 server tests and
+The 20 October 2026 local run passed 556 application tests, 54 server tests and
 270 synthetic journeys / 1,620 steps, plus lint, type checks, configuration and
 metadata checks, web export and exported-file verification. Its process group
-peaked at 1,752.6 MiB sampled RSS under a 3,072 MiB cutoff. The
-[machine-readable record](./docs/verification/asset-transport-check-2026-10-19.json)
+peaked at 1,691.1 MiB sampled RSS under a 3,072 MiB cutoff. The
+[machine-readable record](./docs/verification/repository-privacy-check-2026-10-20.json)
 lists the exact commands, source hashes and limitations. This is not hosted CI,
 load testing, production acceptance or a guarantee against future memory leaks.
 
