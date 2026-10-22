@@ -4,6 +4,8 @@ Glory Be To God.
 
 To All That Inspires.
 
+Made with ChatGPT.
+
 This guide records completed work and explains how to contribute to the app,
 reference services and prepared demonstration. The application existed before
 the recent assisted development; this record summarizes the recent work rather
